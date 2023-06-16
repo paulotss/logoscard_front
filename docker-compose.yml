@@ -1,0 +1,11 @@
+version: "3"
+
+services:
+  frontend:
+    build: .
+    working_dir: /app
+    ports:
+      - 3000:3000
+    restart: always
+    volumes:
+      - ./:/app
