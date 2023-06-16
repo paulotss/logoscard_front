@@ -1,10 +1,14 @@
 import Header from "../components/Header";
+import Invoices from "../components/Invoices";
 
 const HomePage = () => {
   return (
     <>
       <Header />
-      <h1>Home Page</h1>
+      <main className="p-5">
+        <p className="font-bold mb-3">Faturas</p>
+        <Invoices />
+      </main>
     </>
   )
 }
