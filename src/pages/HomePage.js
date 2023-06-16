@@ -4,7 +4,7 @@ import Header from "../components/Header";
 import Invoices from "../components/Invoices";
 import { HiUserGroup } from 'react-icons/hi2';
 import { HiDocumentText } from 'react-icons/hi2';
-import { HiRectangleGroup } from 'react-icons/hi2';
+import { HiUserPlus } from 'react-icons/hi2';
 import imgSeraphisPremium from '../media/seraphis-premium.png';
 import imgMaatPremium from '../media/maat-premium.png';
 import imgMaatSeraphisPremium from '../media/ms-gold.png';
@@ -23,13 +23,13 @@ const HomePage = () => {
             path="/"
           />
           <ButtonSection
-            title="Faturas"
-            image={ <HiDocumentText /> }
+            title="Novo cliente"
+            image={ <HiUserPlus /> }
             path="/"
           />
           <ButtonSection
-            title="Planos"
-            image={ <HiRectangleGroup /> }
+            title="Faturas"
+            image={ <HiDocumentText /> }
             path="/"
           />
         </section>
