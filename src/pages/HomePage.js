@@ -20,7 +20,7 @@ const HomePage = () => {
           <ButtonSection
             title="Clientes"
             image={ <HiUserGroup /> }
-            path="/"
+            path="/clients"
           />
           <ButtonSection
             title="Novo cliente"
