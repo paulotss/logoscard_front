@@ -6,7 +6,7 @@ import loading from "../media/isLoading.gif";
 
 const ClientPage = () => {
   const [user, setUser] = useState({});
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const { id } = useParams();
 
   useEffect(() => {
@@ -43,8 +43,12 @@ const ClientPage = () => {
               <p>{`${user.firstName} ${user.lastName}`}</p>
               <p className="mt-5">Email</p>
               <p>{user.email}</p>
+              <p className="mt-5">RG</p>
+              <p>{user.rg}</p>
               <p className="mt-5">CPF</p>
               <p>{user.cpf}</p>
+              <p className="mt-5">Celular</p>
+              <p>({user.phone.area}) {user.phone.number}</p>
               <p className="mt-5">Planos</p>
                 {
                   user.plans.map((plan) => (

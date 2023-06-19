@@ -5,7 +5,7 @@ import loading from "../media/isLoading.gif";
 
 const ClientsListPage = () => {
   const [users, setUsers] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   
   useEffect(() => {
     const getUsers = async () => {
