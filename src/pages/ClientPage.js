@@ -5,6 +5,7 @@ import Header from "../components/Header";
 import loading from "../media/isLoading.gif";
 
 const ClientPage = () => {
+  const AWS_BUCKET = process.env.REACT_APP_AWS_BUCKET;
   const [user, setUser] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const { id } = useParams();
@@ -34,22 +35,26 @@ const ClientPage = () => {
                 <p>Inscrição</p>
                 <p className="font-bold text-4xl">00{user.id}</p>
               </div>
-              <div className="w-24 h-24 bg-gray-900 rounded-full">
-                {}
+              <div className="w-32 h-32 bg-gray-900 rounded-full">
+                <img
+                  className="object-cover rounded-full"
+                  src={AWS_BUCKET + user.photo}
+                  alt=""
+                />
               </div>
             </section>
             <section>
-              <p className="mt-5">Nome</p>
+              <p className="mt-5 text-sm">Nome</p>
               <p>{`${user.firstName} ${user.lastName}`}</p>
-              <p className="mt-5">Email</p>
+              <p className="mt-5 text-sm">Email</p>
               <p>{user.email}</p>
-              <p className="mt-5">RG</p>
+              <p className="mt-5 text-sm">RG</p>
               <p>{user.rg}</p>
-              <p className="mt-5">CPF</p>
+              <p className="mt-5 text-sm">CPF</p>
               <p>{user.cpf}</p>
-              <p className="mt-5">Celular</p>
+              <p className="mt-5 text-sm">Celular</p>
               <p>({user.phone.area}) {user.phone.number}</p>
-              <p className="mt-5">Planos</p>
+              <p className="mt-5 text-sm">Planos</p>
                 {
                   user.plans.map((plan) => (
                     <p key={plan.id} className="font-bold">
