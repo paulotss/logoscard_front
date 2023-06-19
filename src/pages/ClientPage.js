@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import axios from "../http";
 import Header from "../components/Header";
 import loading from "../media/isLoading.gif";
+import InvoicesList from "../components/InvoicesList";
 
 const ClientPage = () => {
   const AWS_BUCKET = process.env.REACT_APP_AWS_BUCKET;
@@ -69,6 +70,7 @@ const ClientPage = () => {
                 Adicionar Plano
               </button>
             </section>
+            <InvoicesList invoices={user.invoices} />
           </main>
       }
       
