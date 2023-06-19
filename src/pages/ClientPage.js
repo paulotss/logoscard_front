@@ -4,6 +4,7 @@ import axios from "../http";
 import Header from "../components/Header";
 import loading from "../media/isLoading.gif";
 import InvoicesList from "../components/InvoicesList";
+import { HiArchiveBoxXMark } from 'react-icons/hi2';
 
 const ClientPage = () => {
   const AWS_BUCKET = process.env.REACT_APP_AWS_BUCKET;
@@ -57,11 +58,17 @@ const ClientPage = () => {
               <p>({user.phone.area}) {user.phone.number}</p>
               <p className="mt-5 text-sm">Planos</p>
                 {
-                  user.plans.map((plan) => (
-                    <p key={plan.id} className="font-bold">
-                      {plan.title.toUpperCase()}
-                    </p>
-                  ))
+                  user.plans.length > 0
+                  ? user.plans.map((plan) => (
+                      <div
+                        key={plan.id}
+                        className="font-bold bg-gray-400 p-1 rounded-md mb-2 w-80 flex justify-between"
+                      >
+                        <div>{plan.title.toUpperCase()}</div>
+                        <div className="pt-1 pr-2 text-red-900"><HiArchiveBoxXMark /></div>
+                      </div>
+                    ))
+                  : <p className="italic">Nenhum</p>
                 }
               <button
                 type="button"
