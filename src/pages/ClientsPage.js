@@ -5,12 +5,13 @@ import loading from "../media/isLoading.gif";
 
 const ClientsPage = () => {
   const [users, setUsers] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   
   useEffect(() => {
     const getUsers = async () => {
       setIsLoading(true);
       const result = await axios.get('/users');
+      console.log(result.data);
       setUsers(result.data);
       setIsLoading(false);
     }
@@ -39,7 +40,13 @@ const ClientsPage = () => {
                   >
                     <div>{ user.id }</div>
                     <div className="col-span-2">{ `${user.firstName} ${user.lastName}` }</div>
-                    <div className="text-right pr-2">ok</div>
+                    <div className="text-right pr-2">
+                      { user.plans.every((plan) => (
+                          new Date(plan.UserPlanModel.createdAt) < new Date()
+                        )) ? <div className="w-3 h-3 bg-green-900 rounded-full inline-block"> </div> 
+                           : <div className="w-3 h-3 bg-red-900 rounded-full inline-block"> </div> 
+                      }
+                    </div>
                   </div>
                 ))
           }
