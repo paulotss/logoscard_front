@@ -2,7 +2,6 @@ const InvoicesList = (props) => {
   const { invoices } = props;
 
   const formatDate = (date) => {
-    console.log(date);
     const format = new Date(date);
     return `${format.getUTCDate()}/${format.getMonth() + 1}/${format.getUTCFullYear()}`;
   }

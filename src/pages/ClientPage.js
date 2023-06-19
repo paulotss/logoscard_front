@@ -70,7 +70,7 @@ const ClientPage = () => {
                 Adicionar Plano
               </button>
             </section>
-            <InvoicesList invoices={user.invoices} />
+            {user.invoices.length > 0 && <InvoicesList invoices={user.invoices} />}
           </main>
       }
       
