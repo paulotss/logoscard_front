@@ -3,15 +3,14 @@ import Header from "../components/Header";
 import axios from "../http";
 import loading from "../media/isLoading.gif";
 
-const ClientsPage = () => {
+const ClientsListPage = () => {
   const [users, setUsers] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   
   useEffect(() => {
     const getUsers = async () => {
       setIsLoading(true);
       const result = await axios.get('/users');
-      console.log(result.data);
       setUsers(result.data);
       setIsLoading(false);
     }
@@ -56,4 +55,4 @@ const ClientsPage = () => {
   )
 }
 
-export default ClientsPage;
+export default ClientsListPage;
