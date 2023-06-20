@@ -12,8 +12,23 @@ const ClientPage = () => {
   const AWS_BUCKET = process.env.REACT_APP_AWS_BUCKET;
   const [user, setUser] = useState({});
   const [isLoading, setIsLoading] = useState(true);
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState({status: false, payload: {}});
   const { id } = useParams();
+
+  const handleClickRemove = async () => {
+    try {
+      const result = await axios.delete('/plan', {
+        data: {
+          userId: open.payload.userId,
+          planId: open.payload.planId
+        }
+      });
+      setUser(result.data);
+      setOpen({...open, status: false});
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   useEffect(() => {
     const getUser = async () => {
@@ -71,7 +86,14 @@ const ClientPage = () => {
                         <button
                           type="button"
                           className="pt-1 pr-2 text-red-900"
-                          onClick={() => { setOpen(true) }}
+                          onClick={() => { setOpen({
+                              payload: {
+                                userId: plan.UserPlanModel.user_id,
+                                planId: plan.UserPlanModel.plan_id
+                              },
+                              status: true
+                            })
+                          }}
                         >
                           <HiArchiveBoxXMark />
                         </button>
@@ -88,16 +110,16 @@ const ClientPage = () => {
             </section>
             {user.invoices.length > 0 && <InvoicesList invoices={user.invoices} />}
             <Dialog
-              open={open}
-              onClose={() => { setOpen(false) }}
+              open={open.status}
+              onClose={() => { setOpen({...open, status: false}) }}
               aria-labelledby="alert-delete"
             >
               <DialogTitle id="alert-delete">
                 {"Tem certeza que deseja remover este plano?"}
               </DialogTitle>
               <DialogActions>
-                <Button>Confirmar</Button>
-                <Button onClick={() => { setOpen(false) }}>Cancelar</Button>
+                <Button onClick={handleClickRemove}>Confirmar</Button>
+                <Button onClick={() => { setOpen({...open, status: false}) }}>Cancelar</Button>
               </DialogActions>
             </Dialog>
           </main>
