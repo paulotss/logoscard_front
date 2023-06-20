@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { Dialog, DialogActions, Button, DialogTitle } from "@mui/material";
 import axios from "../http";
 import Header from "../components/Header";
+
 import loading from "../media/isLoading.gif";
 import InvoicesList from "../components/InvoicesList";
 import { HiArchiveBoxXMark } from 'react-icons/hi2';
@@ -10,6 +12,7 @@ const ClientPage = () => {
   const AWS_BUCKET = process.env.REACT_APP_AWS_BUCKET;
   const [user, setUser] = useState({});
   const [isLoading, setIsLoading] = useState(true);
+  const [open, setOpen] = useState(false);
   const { id } = useParams();
 
   useEffect(() => {
@@ -65,7 +68,13 @@ const ClientPage = () => {
                         className="font-bold bg-gray-400 p-1 rounded-md mb-2 w-80 flex justify-between"
                       >
                         <div>{plan.title.toUpperCase()}</div>
-                        <div className="pt-1 pr-2 text-red-900"><HiArchiveBoxXMark /></div>
+                        <button
+                          type="button"
+                          className="pt-1 pr-2 text-red-900"
+                          onClick={() => { setOpen(true) }}
+                        >
+                          <HiArchiveBoxXMark />
+                        </button>
                       </div>
                     ))
                   : <p className="italic">Nenhum</p>
@@ -78,6 +87,19 @@ const ClientPage = () => {
               </button>
             </section>
             {user.invoices.length > 0 && <InvoicesList invoices={user.invoices} />}
+            <Dialog
+              open={open}
+              onClose={() => { setOpen(false) }}
+              aria-labelledby="alert-delete"
+            >
+              <DialogTitle id="alert-delete">
+                {"Tem certeza que deseja remover este plano?"}
+              </DialogTitle>
+              <DialogActions>
+                <Button>Confirmar</Button>
+                <Button onClick={() => { setOpen(false) }}>Cancelar</Button>
+              </DialogActions>
+            </Dialog>
           </main>
       }
       
