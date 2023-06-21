@@ -7,6 +7,7 @@ import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import InvoicePage from './pages/InvoicePage';
+import NotFoundPage from './pages/NotFoundPage';
 
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
         <Route path='/clients' element={<ClientsListPage />} />
         <Route path='/client/:id' element={<ClientPage />} />
         <Route path='/invoice/:id' element={<InvoicePage />} />
+        <Route path='/404' element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>
   );

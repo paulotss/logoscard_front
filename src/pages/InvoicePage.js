@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from '../http';
 import Header from '../components/Header'
 import loading from '../media/isLoading.gif';
 
 const InvoicePage = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [invoice, setInvoice] = useState({});
   const [isLoading, setIsLoading] = useState(true);
 
@@ -57,13 +58,17 @@ const InvoicePage = () => {
 
   useEffect(() => {
     const getInvoice = async () => {
-      setIsLoading(true)
-      const result = await axios.get(`/invoice/${id}`);
-      setInvoice(result.data);
+      setIsLoading(true);
+      try {
+        const result = await axios.get(`/invoice/${id}`);
+        setInvoice(result.data);
+      } catch (error) {
+        navigate('/404');
+      }
       setIsLoading(false);
     }
     getInvoice();
-  }, [id]);
+  }, [id, navigate]);
 
   return (
     <>
@@ -74,32 +79,46 @@ const InvoicePage = () => {
             <img src={loading} alt="" />
           </div>
         : <main className="p-5">
-            <p className="font-bold">{ formatDate(invoice.expiration) }</p>
-            { new Date(invoice.expiration) < new Date()
-              ? <>
-                  <p className="font-bold text-red-600 text-3xl mt-3">
-                    R$
-                    { invoice.amount.toLocaleString('pt-br', {minimumFractionDigits: 2}) }
-                  </p>
-                  <p className="text-red-600 mb-2">Aguardando pagamento</p>
-                  <button
-                    type="button"
-                    className="p-2 bg-red-600 mt-2 mr-2 rounded-full w-24 font-bold"
-                  >
-                    Pagar
-                  </button>
-                </>
-              :  <p className="font-bold text-green-600 text-3xl mt-3">
-                  R$
-                  { invoice.amount.toLocaleString('pt-br', {minimumFractionDigits: 2}) }
-                </p>
-            }
-            <button
-              type="button"
-              className="p-2 bg-gray-400 mt-2 mr-2 rounded-full w-24 font-bold"
-            >
-              Voltar
-            </button>
+            <section className="pb-3 border-b-2 border-b-gray-400">
+              <p className="font-bold mb-2">Fatura</p>
+              <p className="font-bold">{ formatDate(invoice.expiration) }</p>
+              { new Date(invoice.expiration) < new Date()
+                ? <>
+                    <p className="font-bold text-red-600 text-3xl mt-3">
+                      R$
+                      { invoice.amount.toLocaleString('pt-br', {minimumFractionDigits: 2}) }
+                    </p>
+                    <p className="text-red-600 mb-2">Aguardando pagamento</p>
+                    <button
+                      type="button"
+                      className="p-2 bg-red-600 mt-2 mr-2 rounded-full w-24 font-bold"
+                    >
+                      Pagar
+                    </button>
+                  </>
+                : <>
+                    <p className="font-bold text-green-600 text-3xl mt-3">
+                      R$
+                      { invoice.amount.toLocaleString('pt-br', {minimumFractionDigits: 2}) }
+                    </p>
+                    <p className="text-green-600 mb-2">Fagura paga</p>
+                  </>
+              }
+              <button
+                type="button"
+                className="p-2 bg-gray-400 mt-2 mr-2 rounded-full w-24 font-bold"
+              >
+                Voltar
+              </button>
+            </section>
+            <section className="mt-3">
+              <p className="text-sm mt-3">Inscrição</p>
+              <p>00{invoice.user.id}</p>
+              <p className="text-sm mt-3">Nome</p>
+              <p>{`${invoice.user.firstName} ${invoice.user.lastName}`}</p>
+              <p className="text-sm mt-3">CPF</p>
+              <p>{invoice.user.cpf}</p>
+            </section>
           </main>
       }
     </>
