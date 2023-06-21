@@ -56,6 +56,20 @@ const InvoicePage = () => {
     return `${month} | ${format.getFullYear()}`;
   }
 
+  const handleClickPay = async () => {
+    try {
+      await axios.put('/invoice/pay', {
+        invoiceId: invoice.id
+      });
+      setInvoice({
+        ...invoice,
+        paid: 1,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   useEffect(() => {
     const getInvoice = async () => {
       setIsLoading(true);
@@ -82,7 +96,7 @@ const InvoicePage = () => {
             <section className="pb-3 border-b-2 border-b-gray-400">
               <p className="font-bold mb-2">Fatura</p>
               <p className="font-bold">{ formatDate(invoice.expiration) }</p>
-              { new Date(invoice.expiration) < new Date()
+              { !invoice.paid
                 ? <>
                     <p className="font-bold text-red-600 text-3xl mt-3">
                       R$
@@ -92,6 +106,7 @@ const InvoicePage = () => {
                     <button
                       type="button"
                       className="p-2 bg-red-600 mt-2 mr-2 rounded-full w-24 font-bold"
+                      onClick={handleClickPay}
                     >
                       Pagar
                     </button>
@@ -107,6 +122,7 @@ const InvoicePage = () => {
               <button
                 type="button"
                 className="p-2 bg-gray-400 mt-2 mr-2 rounded-full w-24 font-bold"
+                onClick={() => { navigate(-1) }}
               >
                 Voltar
               </button>
