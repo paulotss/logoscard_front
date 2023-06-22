@@ -2,13 +2,25 @@ import useValidateImage from "../hooks/useValidateImage";
 import Header from "../components/Header";
 import { Formik } from "formik";
 import * as Yup from "yup";
-// import axios from "../http";
+import axios from "../http";
 
 const NewClientForm = () => {
   const { image, message, handleChangeFile } = useValidateImage();
 
   const submitForm = async (values) => {
+    const result = await axios.post('/user', {
+      ...values,
+      photo: image.photo,
+      file: image.file,
+    },
+    {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      }
+    });
+    console.log(result.data);
     console.log(values);
+    console.log(image);
   }
 
   return (
