@@ -1,26 +1,35 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import useValidateImage from "../hooks/useValidateImage";
 import Header from "../components/Header";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import axios from "../http";
+import loading from "../media/isLoading.gif";
 
 const NewClientForm = () => {
   const { image, message, handleChangeFile } = useValidateImage();
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
   const submitForm = async (values) => {
-    const result = await axios.post('/user', {
-      ...values,
-      photo: image.photo,
-      file: image.file,
-    },
-    {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      }
-    });
-    console.log(result.data);
-    console.log(values);
-    console.log(image);
+    setIsLoading(true);
+    try {
+      await axios.post('/user', {
+        ...values,
+        photo: image.photo,
+        file: image.file,
+      },
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        }
+      });
+      navigate('/clients')
+    } catch (error) {
+      console.log(error);
+    }
+    setIsLoading(false);
   }
 
   return (
@@ -32,6 +41,7 @@ const NewClientForm = () => {
             initialValues={{
               firstName: "",
               lastName: "",
+              cellPhone: "",
               email: "",
               password: "",
               rg: "",
@@ -40,6 +50,7 @@ const NewClientForm = () => {
             validationSchema={Yup.object({
               firstName: Yup.string().required('Obrigatório'),
               lastName: Yup.string().required('Obrigatório'),
+              cellPhone: Yup.string().required('Obrigatório'),
               email: Yup.string().email('Email inválido').required('Obrigatório'),
               password: Yup.string().required('Obrigatório'),
               rg: Yup.string().required('Obrigatório'),
@@ -117,6 +128,20 @@ const NewClientForm = () => {
                   </div>
 
                   <div className="mb-5">
+                    <label htmlFor="cellPhone">Celular</label>
+                    <br/>
+                    <input
+                      id="cellPhone"
+                      type="text"
+                      className="w-full p-2"
+                      {...formik.getFieldProps('cellPhone')}
+                    />
+                    {formik.touched.cellPhone && formik.errors.cellPhone ? (
+                      <div className="text-red-600 text-sm">{formik.errors.cellPhone}</div>
+                    ) : null}
+                  </div>
+
+                  <div className="mb-5">
                     <label htmlFor="password">Senha</label>
                     <br/>
                     <input
@@ -157,13 +182,22 @@ const NewClientForm = () => {
                       <div className="text-red-600 text-sm">{formik.errors.cpf}</div>
                     ) : null}
                   </div>
-
-                  <button
-                    type="submit"
-                    className="p-3 bg-green-900 text-white rounded-full"
-                  >
-                    Cadastrar
-                  </button>
+                  {
+                    isLoading
+                    ? <button
+                        type="button"
+                        disabled={true}
+                        className="p-2 w-24 bg-gray-600 text-white rounded-full flex justify-center"
+                      >
+                        <img src={loading} alt="" className="h-7" />
+                      </button>
+                    : <button
+                        type="submit"
+                        className="p-3 w-24 bg-green-900 text-white rounded-full"
+                      >
+                        Cadastrar
+                      </button>
+                  }
                 </form>
               )
             }

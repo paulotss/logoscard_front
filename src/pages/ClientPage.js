@@ -73,7 +73,7 @@ const ClientPage = () => {
               <p className="mt-5 text-sm">CPF</p>
               <p>{user.cpf}</p>
               <p className="mt-5 text-sm">Celular</p>
-              <p>({user.phone.area}) {user.phone.number}</p>
+              <p>{user.cellPhone}</p>
               <p className="mt-5 text-sm">Planos</p>
                 {
                   user.plans.length > 0
