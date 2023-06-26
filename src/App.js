@@ -9,6 +9,7 @@ import '@fontsource/roboto/700.css';
 import InvoicePage from './pages/InvoicePage';
 import NotFoundPage from './pages/NotFoundPage';
 import NewClientForm from './pages/NewClientForm';
+import AddPlanPage from './pages/AddPlanPage';
 
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
         <Route path='/client/:id' element={<ClientPage />} />
         <Route path='/client/create' element={<NewClientForm />} />
         <Route path='/invoice/:id' element={<InvoicePage />} />
+        <Route path='/plan/add' element={ <AddPlanPage /> } />
         <Route path='/404' element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { Dialog, DialogActions, Button, DialogTitle } from "@mui/material";
 import axios from "../http";
 import Header from "../components/Header";
@@ -101,12 +101,13 @@ const ClientPage = () => {
                     ))
                   : <p className="italic">Nenhum</p>
                 }
-              <button
-                type="button"
-                className="bg-green-900 p-2 rounded-full text-white mt-5"
-              >
-                Adicionar Plano
-              </button>
+              <Link to="/plan/add">
+                <div
+                  className="bg-green-900 p-2 w-40 text-center rounded-full text-white mt-5"
+                >
+                  Adicionar Plano
+                </div>
+              </Link>
             </section>
             {user.invoices.length > 0 && <InvoicesList invoices={user.invoices} />}
             <Dialog
