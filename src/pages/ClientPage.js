@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { Dialog, DialogActions, Button, DialogTitle } from "@mui/material";
 import axios from "../http";
 import Header from "../components/Header";
@@ -7,11 +7,13 @@ import Header from "../components/Header";
 import loading from "../media/isLoading.gif";
 import InvoicesList from "../components/InvoicesList";
 import { HiArchiveBoxXMark } from 'react-icons/hi2';
+import AddPlan from "../components/AddPlan";
 
 const ClientPage = () => {
   const AWS_BUCKET = process.env.REACT_APP_AWS_BUCKET;
   const [user, setUser] = useState({});
   const [isLoading, setIsLoading] = useState(true);
+  const [isShowingAddPlans, setIsShowingAddPlans] = useState(false);
   const [open, setOpen] = useState({status: false, payload: {}});
   const { id } = useParams();
 
@@ -28,6 +30,29 @@ const ClientPage = () => {
     } catch (error) {
       console.log(error);
     }
+  }
+
+  const getExpirationDay = () => {
+    const day = new Date().getDate();
+    const month = new Date().getMonth() + 1;
+    const year = new Date().getFullYear() + 1
+    return `${year}/${month}/${day}`;
+  }
+
+  const submitPlanForm = async (values) => {
+    setIsLoading(true);
+    try {
+      const result = await axios.post('/plan/add', {
+        planId: values.plan,
+        userId: user.id,
+        expiration: getExpirationDay(),
+      });
+      setUser(result.data);
+    } catch (error) {
+      console.log(error);
+    }
+    setIsShowingAddPlans(false);
+    setIsLoading(false);
   }
 
   useEffect(() => {
@@ -101,13 +126,20 @@ const ClientPage = () => {
                     ))
                   : <p className="italic">Nenhum</p>
                 }
-              <Link to="/plan/add">
-                <div
-                  className="bg-green-900 p-2 w-40 text-center rounded-full text-white mt-5"
-                >
-                  Adicionar Plano
-                </div>
-              </Link>
+              {
+                isShowingAddPlans
+                ? <AddPlan
+                    submitPlanForm={submitPlanForm}
+                    setIsShowingAddPlans={setIsShowingAddPlans}
+                  />
+                : <button
+                    type="button"
+                    onClick={() => { setIsShowingAddPlans(true) }}
+                    className="bg-green-900 p-2 w-40 text-center rounded-full text-white mt-5"
+                  >
+                    Adicionar Plano
+                  </button>
+              }
             </section>
             {user.invoices.length > 0 && <InvoicesList invoices={user.invoices} />}
             <Dialog
