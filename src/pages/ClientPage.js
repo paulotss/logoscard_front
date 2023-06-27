@@ -16,6 +16,12 @@ const ClientPage = () => {
   const [isShowingAddPlans, setIsShowingAddPlans] = useState(false);
   const [open, setOpen] = useState({status: false, payload: {}});
   const { id } = useParams();
+  const [actPlan, setActPlan] = useState({
+    planId: "1",
+    expiration: "10",
+    parcels: "1",
+    price: 300,
+  });
 
   const handleClickRemove = async () => {
     try {
@@ -39,14 +45,20 @@ const ClientPage = () => {
     return `${year}/${month}/${day}`;
   }
 
-  const submitPlanForm = async (values) => {
+  const submitPlanForm = async () => {
     setIsLoading(true);
     try {
       const result = await axios.post('/plan/add', {
-        planId: values.plan,
+        planId: actPlan.planId,
         userId: user.id,
         expiration: getExpirationDay(),
       });
+      await axios.post('/invoices', {
+        parcels: actPlan.parcels,
+        day: actPlan.expiration,
+        userId: user.id,
+        totalPrice: actPlan.price,
+      })
       setUser(result.data);
     } catch (error) {
       console.log(error);
@@ -63,7 +75,7 @@ const ClientPage = () => {
       setIsLoading(false);
     }
     getUser();
-  }, [id]);
+  }, [id, isShowingAddPlans]);
 
   return (
     <>
@@ -131,6 +143,8 @@ const ClientPage = () => {
                 ? <AddPlan
                     submitPlanForm={submitPlanForm}
                     setIsShowingAddPlans={setIsShowingAddPlans}
+                    setActPlan={setActPlan}
+                    actPlan={actPlan}
                   />
                 : <button
                     type="button"
