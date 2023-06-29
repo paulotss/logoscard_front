@@ -13,6 +13,7 @@ const ClientPage = () => {
   const AWS_BUCKET = process.env.REACT_APP_AWS_BUCKET;
   const [user, setUser] = useState({});
   const [isLoading, setIsLoading] = useState(true);
+  const [removed, setRemoved] = useState();
   const [isShowingAddPlans, setIsShowingAddPlans] = useState(false);
   const [open, setOpen] = useState({status: false, payload: {}});
   const { id } = useParams();
@@ -25,13 +26,8 @@ const ClientPage = () => {
 
   const handleClickRemove = async () => {
     try {
-      const result = await axios.delete('/plan', {
-        data: {
-          userId: open.payload.userId,
-          planId: open.payload.planId
-        }
-      });
-      setUser(result.data);
+      const result = await axios.delete(`/assignment/${open.payload.assignmentId}`);
+      setRemoved(result.data)
       setOpen({...open, status: false});
     } catch (error) {
       console.log(error);
@@ -48,7 +44,7 @@ const ClientPage = () => {
   const submitPlanForm = async () => {
     setIsLoading(true);
     try {
-      const result = await axios.post('/plan/add', {
+      await axios.post('/assignment', {
         planId: actPlan.planId,
         userId: user.id,
         expiration: getExpirationDay(),
@@ -58,8 +54,7 @@ const ClientPage = () => {
         day: actPlan.expiration,
         userId: user.id,
         totalPrice: actPlan.price,
-      })
-      setUser(result.data);
+      });
     } catch (error) {
       console.log(error);
     }
@@ -75,7 +70,7 @@ const ClientPage = () => {
       setIsLoading(false);
     }
     getUser();
-  }, [id, isShowingAddPlans]);
+  }, [id, isShowingAddPlans, removed]);
 
   return (
     <>
@@ -111,51 +106,45 @@ const ClientPage = () => {
               <p>{user.cpf}</p>
               <p className="mt-5 text-sm">Celular</p>
               <p>{user.cellPhone}</p>
-              <p className="mt-5 text-sm">Planos</p>
+              <p className="mt-5 text-sm">Plano</p>
                 {
-                  user.plans.length > 0
-                  ? user.plans.map((plan) => (
-                      <div
-                        key={plan.id}
-                        className="font-bold bg-gray-400 p-1 rounded-md mb-2 w-80 flex justify-between"
+                  user.assignment
+                  ? <div
+                      key={user.assignment.id}
+                      className="font-bold bg-gray-400 p-1 rounded-md mb-2 w-80 flex justify-between"
+                    >
+                      <div>{user.assignment.plan.title.toUpperCase()}</div>
+                      <button
+                        type="button"
+                        className="pt-1 pr-2 text-red-900"
+                        onClick={() => { setOpen({
+                          payload: {
+                            assignmentId: user.assignment.id,
+                          },
+                            status: true
+                          })
+                        }}
                       >
-                        <div>{plan.title.toUpperCase()}</div>
-                        <button
-                          type="button"
-                          className="pt-1 pr-2 text-red-900"
-                          onClick={() => { setOpen({
-                              payload: {
-                                userId: plan.UserPlanModel.user_id,
-                                planId: plan.UserPlanModel.plan_id
-                              },
-                              status: true
-                            })
-                          }}
-                        >
-                          <HiArchiveBoxXMark />
-                        </button>
-                      </div>
-                    ))
-                  : <p className="italic">Nenhum</p>
+                        <HiArchiveBoxXMark />
+                      </button>
+                    </div>
+                  : isShowingAddPlans
+                    ? <AddPlan
+                        submitPlanForm={submitPlanForm}
+                        setIsShowingAddPlans={setIsShowingAddPlans}
+                        setActPlan={setActPlan}
+                        actPlan={actPlan}
+                      />
+                    : <button
+                        type="button"
+                        onClick={() => { setIsShowingAddPlans(true) }}
+                        className="bg-green-900 p-2 w-40 text-center rounded-full text-white mt-2"
+                      >
+                        Adicionar Plano
+                      </button>
                 }
-              {
-                isShowingAddPlans
-                ? <AddPlan
-                    submitPlanForm={submitPlanForm}
-                    setIsShowingAddPlans={setIsShowingAddPlans}
-                    setActPlan={setActPlan}
-                    actPlan={actPlan}
-                  />
-                : <button
-                    type="button"
-                    onClick={() => { setIsShowingAddPlans(true) }}
-                    className="bg-green-900 p-2 w-40 text-center rounded-full text-white mt-5"
-                  >
-                    Adicionar Plano
-                  </button>
-              }
             </section>
-            {user.invoices.length > 0 && <InvoicesList invoices={user.invoices} />}
+            {user.invoices && user.invoices.length > 0 && <InvoicesList invoices={user.invoices} />}
             <Dialog
               open={open.status}
               onClose={() => { setOpen({...open, status: false}) }}

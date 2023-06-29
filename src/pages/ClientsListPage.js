@@ -41,12 +41,8 @@ const ClientsListPage = () => {
                     <div>{ user.id }</div>
                     <div className="col-span-2">{ `${user.firstName} ${user.lastName}` }</div>
                     <div className="text-right pr-2">
-                      { user.plans.length > 0
-                        ? user.plans.every((plan) => (
-                            new Date(plan.UserPlanModel.expiration) < new Date()
-                          ))
-                            ? <div className="w-3 h-3 bg-green-900 rounded-full inline-block"> </div> 
-                            : <div className="w-3 h-3 bg-red-900 rounded-full inline-block"> </div> 
+                      { user.assignment
+                        ? <div className="w-3 h-3 bg-green-900 rounded-full inline-block"> </div> 
                         : <div className="w-3 h-3 bg-yellow-600 rounded-full inline-block"> </div>
                       }
                     </div>
