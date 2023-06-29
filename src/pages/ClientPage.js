@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { Dialog, DialogActions, Button, DialogTitle } from "@mui/material";
 import axios from "../http";
 import Header from "../components/Header";
@@ -113,7 +113,9 @@ const ClientPage = () => {
                       key={user.assignment.id}
                       className="font-bold bg-gray-400 p-1 rounded-md mb-2 w-80 flex justify-between"
                     >
-                      <div>{user.assignment.plan.title.toUpperCase()}</div>
+                      <Link to={`/client/benefit/${user.id}`}>
+                        {user.assignment.plan.title.toUpperCase()}
+                      </Link>
                       <button
                         type="button"
                         className="pt-1 pr-2 text-red-900"
