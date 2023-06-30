@@ -39,25 +39,49 @@ const BenefitsPage = () => {
                 <p className="text-sm">Plano</p>
                 <p>{ user.assignment.plan.title }</p>
               </div>
+              <p className="font-bold mt-5">Benefícios ativos</p>
               <div className="grid grid-gap grid-cols-3 grid-rows-1 p-2 text-sm">
-              <div>Benefícios</div>
-              <div className="text-right">Qnt.</div>
-              <div className="text-right">Uso</div>
-            </div>
-            {
-              user.assignment.benefits.map((benefit) => (
-                <Link
-                  to={`/invoice/${benefit.id}`}
-                  key={benefit.id}
-                  className="grid grid-gap grid-cols-3 grid-rows-1 bg-gray-400 rounded-lg p-2 mb-2"
-                >
-                  <div>{benefit.title}</div>
-                  <div className="text-right">{benefit.amount}</div>
-                  <div className="text-right">{benefit.AssignmentBenefitModel.amount}</div>
-                </Link>
-              ))
-            }
-          </section>
+                <div>Benefício</div>
+                <div className="text-right">Qnt.</div>
+                <div className="text-right">Uso</div>
+              </div>
+              {
+                user.assignment.benefits.map((benefit) => {
+                  if (benefit.type === 'active') {
+                    return (<Link
+                      to={`/invoice/${benefit.id}`}
+                      key={benefit.id}
+                      className="grid grid-gap grid-cols-3 grid-rows-1 bg-gray-400 rounded-lg p-2 mb-2"
+                    >
+                      <div>{benefit.title}</div>
+                      <div className="text-right">{benefit.amount}</div>
+                      <div className="text-right">{benefit.AssignmentBenefitModel.amount}</div>
+                    </Link>)
+                  }
+                })
+              }
+              <p className="font-bold mt-3">Benefícios passivos</p>
+              <div className="grid grid-gap grid-cols-3 grid-rows-1 p-2 text-sm">
+                <div>Benefício</div>
+                <div className="text-right">Qnt.</div>
+                <div className="text-right">Uso</div>
+              </div>
+              {
+                user.assignment.benefits.map((benefit) => {
+                  if (benefit.type === 'passive') {
+                    return (<Link
+                      to={`/invoice/${benefit.id}`}
+                      key={benefit.id}
+                      className="grid grid-gap grid-cols-3 grid-rows-1 bg-gray-400 rounded-lg p-2 mb-2"
+                    >
+                      <div>{benefit.title}</div>
+                      <div className="text-right">{benefit.amount}</div>
+                      <div className="text-right">{benefit.AssignmentBenefitModel.amount}</div>
+                    </Link>)
+                  }
+                })
+              }
+            </section>
           : <div className="flex justify-center mt-5">
               <img src={loading} alt="" />
             </div>

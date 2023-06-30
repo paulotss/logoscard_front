@@ -44,7 +44,7 @@ const ClientPage = () => {
   const getPlanBenefits = (payload) => {
     const { benefits } = payload.assignment.plan;
     const result = benefits.map((benefit) => ({
-      amount: benefit.amount,
+      amount: benefit.amount && 0,
       benefitId: benefit.id,
       assignmentId: payload.assignment.id,
     }));
