@@ -14,15 +14,18 @@ const BenefitsPage = () => {
   const handleButtonUsageBenefit = async ({ target }) => {
     setIsLoading(true);
     const { id, value } = target;
-    try {
-      const result = await axios.put('/assignment/benefit', {
-        amount: Number(value) + 1,
-        benefitId: id,
-        assignmentId: user.assignment.id,
-      });
-      setBenefitUp(result.data);
-    } catch (error) {
-      console.log(error);
+    const benefit = user.assignment.benefits.find((benefit) => benefit.id === Number(id));
+    if (benefit.amount > Number(value)) {
+      try {
+        const result = await axios.put('/assignment/benefit', {
+          amount: Number(value) + 1,
+          benefitId: id,
+          assignmentId: user.assignment.id,
+        });
+        setBenefitUp(result.data);
+      } catch (error) {
+        console.log(error);
+      }
     }
     setIsLoading(false);
   }
