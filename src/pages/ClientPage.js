@@ -41,10 +41,20 @@ const ClientPage = () => {
     return `${year}/${month}/${day}`;
   }
 
+  const getPlanBenefits = (payload) => {
+    const { benefits } = payload.assignment.plan;
+    const result = benefits.map((benefit) => ({
+      amount: benefit.amount,
+      benefitId: benefit.id,
+      assignmentId: payload.assignment.id,
+    }));
+    return result;
+  }
+
   const submitPlanForm = async () => {
     setIsLoading(true);
     try {
-      await axios.post('/assignment', {
+      const newUser = await axios.post('/assignment', {
         planId: actPlan.planId,
         userId: user.id,
         expiration: getExpirationDay(),
@@ -55,6 +65,7 @@ const ClientPage = () => {
         userId: user.id,
         totalPrice: actPlan.price,
       });
+      await axios.post('/assignment/benefit', getPlanBenefits(newUser.data));
     } catch (error) {
       console.log(error);
     }
