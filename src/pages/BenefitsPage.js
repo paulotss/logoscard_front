@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import axios from "../http";
 import Header from "../components/Header";
+import { HiArrowUpCircle } from "react-icons/hi2";
 import loading from "../media/isLoading.gif";
 
 const BenefitsPage = () => {
@@ -48,15 +49,19 @@ const BenefitsPage = () => {
               {
                 user.assignment.benefits.map((benefit) => {
                   if (benefit.type === 'active') {
-                    return (<Link
+                    return (
+                    <div
                       to={`/invoice/${benefit.id}`}
                       key={benefit.id}
                       className="grid grid-gap grid-cols-3 grid-rows-1 bg-gray-400 rounded-lg p-2 mb-2"
                     >
                       <div>{benefit.title}</div>
                       <div className="text-right">{benefit.amount}</div>
-                      <div className="text-right">{benefit.AssignmentBenefitModel.amount}</div>
-                    </Link>)
+                      <div className="text-right flex justify-end">
+                        <div>{benefit.AssignmentBenefitModel.amount}</div>
+                        <div className="mt-1 ml-1"><HiArrowUpCircle /></div>
+                      </div>
+                    </div>)
                   }
                 })
               }
@@ -69,7 +74,8 @@ const BenefitsPage = () => {
               {
                 user.assignment.benefits.map((benefit) => {
                   if (benefit.type === 'passive') {
-                    return (<Link
+                    return (
+                    <div
                       to={`/invoice/${benefit.id}`}
                       key={benefit.id}
                       className="grid grid-gap grid-cols-3 grid-rows-1 bg-gray-400 rounded-lg p-2 mb-2"
@@ -77,7 +83,7 @@ const BenefitsPage = () => {
                       <div>{benefit.title}</div>
                       <div className="text-right">{benefit.amount}</div>
                       <div className="text-right">{benefit.AssignmentBenefitModel.amount}</div>
-                    </Link>)
+                    </div>)
                   }
                 })
               }
