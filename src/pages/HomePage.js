@@ -25,7 +25,7 @@ const HomePage = () => {
           <ButtonSection
             title="Novo cliente"
             image={ <HiUserPlus /> }
-            path="/"
+            path="/client/create"
           />
           <ButtonSection
             title="Faturas"
