@@ -2,13 +2,30 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "../http";
 import Header from "../components/Header";
-import { HiArrowUpCircle } from "react-icons/hi2";
+//import { HiArrowUpCircle } from "react-icons/hi2";
 import loading from "../media/isLoading.gif";
 
 const BenefitsPage = () => {
   const [user, setUser] = useState({});
+  const [benefitUp, setBenefitUp] = useState();
   const [isLoading, setIsLoading] = useState(true);
   const { id } = useParams();
+
+  const handleButtonUsageBenefit = async ({ target }) => {
+    setIsLoading(true);
+    const { id, value } = target;
+    try {
+      const result = await axios.put('/assignment/benefit', {
+        amount: Number(value) + 1,
+        benefitId: id,
+        assignmentId: user.assignment.id,
+      });
+      setBenefitUp(result.data);
+    } catch (error) {
+      console.log(error);
+    }
+    setIsLoading(false);
+  }
 
   useEffect(() => {
     const getUser = async () => {
@@ -22,7 +39,7 @@ const BenefitsPage = () => {
       setIsLoading(false);
     }
     getUser();
-  }, [id]);
+  }, [id, benefitUp]);
 
   return (
     <>
@@ -59,7 +76,15 @@ const BenefitsPage = () => {
                       <div className="text-right">{benefit.amount}</div>
                       <div className="text-right flex justify-end">
                         <div>{benefit.AssignmentBenefitModel.amount}</div>
-                        <div className="mt-1 ml-1"><HiArrowUpCircle /></div>
+                        <button
+                          type="button"
+                          className="ml-1 font-bold"
+                          onClick={handleButtonUsageBenefit}
+                          value={benefit.AssignmentBenefitModel.amount}
+                          id={benefit.AssignmentBenefitModel.benefitId}
+                        >
+                          ^
+                        </button>
                       </div>
                     </div>)
                   }
