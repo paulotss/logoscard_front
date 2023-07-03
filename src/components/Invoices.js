@@ -1,11 +1,25 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from '../http';
 
 const Invoices = () => {
-  const [invoice] = useState({
+  const [invoice, setInvoice] = useState({
     paid: 168,
     pending: 51,
     overdue: 32
   });
+
+  useEffect(() => {
+    const getTotalInvoices = async () => {
+      const paid = await axios.get('/invoices/total/paid');
+      setInvoice((prevState) => (
+        {
+          ...prevState,
+          paid: paid.data,
+        }
+      ));
+    }
+    getTotalInvoices();
+  }, []);
 
   return (
     <section className="flex justify-between">
