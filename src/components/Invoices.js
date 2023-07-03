@@ -11,10 +11,12 @@ const Invoices = () => {
   useEffect(() => {
     const getTotalInvoices = async () => {
       const paid = await axios.get('/invoices/total/paid');
+      const pending = await axios.get('/invoices/total/pending');
       setInvoice((prevState) => (
         {
           ...prevState,
           paid: paid.data,
+          pending: pending.data,
         }
       ));
     }
