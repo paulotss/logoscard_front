@@ -1,13 +1,52 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import './index.css';
-import App from './App';
 import reportWebVitals from './reportWebVitals';
+import RouteGuard from './components/RouteGuard';
+import HomePage from './pages/HomePage';
+import LoginPage from './pages/LoginPage';
+import ClientsListPage from './pages/ClientsListPage';
+import ClientPage from './pages/ClientPage';
+import NewClientForm from './pages/NewClientForm';
+import BenefitsPage from './pages/BenefitsPage';
+import InvoicePage from './pages/InvoicePage';
+
+const router = createBrowserRouter([
+  {
+    path:"/",
+    element: <RouteGuard><HomePage /></RouteGuard>
+  },
+  {
+    path: "/login",
+    element: <LoginPage />
+  },
+  {
+    path: "/clients",
+    element: <RouteGuard><ClientsListPage /></RouteGuard>
+  },
+  {
+    path: "/client/:id",
+    element: <RouteGuard><ClientPage /></RouteGuard>
+  },
+  {
+    path: "/client/create",
+    element: <RouteGuard><NewClientForm /></RouteGuard>
+  },
+  {
+    path: "/client/benefit/:id",
+    element: <RouteGuard><BenefitsPage /></RouteGuard>
+  },
+  {
+    path: "/invoice/:id",
+    element: <RouteGuard><InvoicePage /></RouteGuard>
+  },
+]);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+    <RouterProvider router={router} />
   </React.StrictMode>
 );
 

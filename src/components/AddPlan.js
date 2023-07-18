@@ -1,16 +1,70 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import axios from "../http";
 import loading from "../media/isLoading.gif";
 
-const AddPlan = (props) => {
-  const {
-    submitPlanForm,
-    setIsShowingAddPlans,
-    setActPlan,
-    actPlan,
-  } = props;
-  const [plans, setPlans] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+const AddPlan = ({ user, setUser }) => {
+  const [ isShowing, setIsShowing ] = useState(false);
+  const [ isLoading, setIsLoading ] = useState(false);
+  const [ plans, setPlans ] = useState(null);
+  const [ activePlan, setActivePlan ] = useState({
+    expiration: "",
+    parcels: 1,
+  });
+  
+  const getExpirationDay = () => {
+    const day = new Date().getDate();
+    const month = new Date().getMonth() + 1;
+    const year = new Date().getFullYear() + 1
+    return `${year}/${month}/${day}`;
+  }
+
+  const getPlanBenefits = (payload) => {
+    const { benefits } = payload.assignment.plan;
+    const result = benefits.map((benefit) => ({
+      amount: benefit.amount && 0,
+      benefitId: benefit.id,
+      assignmentId: payload.assignment.id,
+    }));
+    return result;
+  }
+
+  const submitPlanForm = async () => {
+    setIsLoading(true);
+    console.log(activePlan.id);
+    try {
+      const newUser = await axios.post('/assignment', {
+        planId: activePlan.id,
+        userId: user.id,
+        expiration: getExpirationDay(),
+      });
+      await axios.post('/invoices', {
+        parcels: activePlan.parcels,
+        day: activePlan.expiration,
+        userId: user.id,
+        totalPrice: activePlan.price,
+      });
+      await axios.post('/assignment/benefit', getPlanBenefits(newUser.data));
+      const result = await axios.get(`/user/${user.id}`);
+      setUser(result.data);
+      console.log(result.data);
+    } catch (error) {
+      console.log(error);
+    }
+    setIsLoading(false);
+  }
+
+  const handleAddPlanButton = async () => {
+    setIsLoading(true);
+    setIsShowing(true);
+      try {
+        const result = await axios.get('/plans');
+        setPlans(result.data);
+        setActivePlan({ ...activePlan, ...result.data[0]});
+      } catch (error) {
+        console.log(error);
+      }
+    setIsLoading(false);
+  }
 
   const getPriceById = (planId) => {
     const plan = plans.find((plan) => plan.id === Number(planId));
@@ -20,32 +74,30 @@ const AddPlan = (props) => {
   const handleChange = ({ target }) => {
     const { name, value } = target;
     if (name === "planId") {
-      setActPlan({
-        ...actPlan,
+      setActivePlan({
+        ...activePlan,
         [name]: value,
         price: getPriceById(value)
       });
     } else {
-      setActPlan({
-        ...actPlan,
+      setActivePlan({
+        ...activePlan,
         [name]: value,
       });
     }
   }
 
-  useEffect(() => { 
-    const getPlans = async () => {
-      setIsLoading(true);
-      try {
-        const result = await axios.get('/plans');
-        setPlans(result.data);
-      } catch (error) {
-        console.log(error);
-      }
-      setIsLoading(false);
-    }
-    getPlans();
-  }, []);
+  if (!isShowing) {
+    return (
+      <button
+        type="button"
+        className="bg-green-900 p-2 w-40 text-center rounded-full text-white mt-2"
+        onClick={handleAddPlanButton}
+      >
+        Adicionar Plano
+      </button>
+    )
+  }
 
   return (
     <main className="p-3">
@@ -64,7 +116,7 @@ const AddPlan = (props) => {
                   name="planId"
                   className="p-2"
                   onChange={handleChange}
-                  value={actPlan.planId}
+                  value={activePlan.id}
                 >
                 {
                   plans.map((plan) => (
@@ -84,7 +136,7 @@ const AddPlan = (props) => {
               <div>
                 <p className="mb-3">
                   Valor do plano: R$ { 
-                    actPlan.price.toLocaleString('pt-br', {minimumFractionDigits: 2})
+                    activePlan.price.toLocaleString('pt-br', {minimumFractionDigits: 2})
                   }
                 </p>
               </div>
@@ -96,7 +148,7 @@ const AddPlan = (props) => {
                   type="text"
                   className="w-12 p-2"
                   onChange={handleChange}
-                  value={actPlan.expiration}
+                  value={activePlan.expiration}
                 />
               </div>
               <div>
@@ -106,7 +158,7 @@ const AddPlan = (props) => {
                   name="parcels"
                   className="p-2 mb-3"
                   onChange={handleChange}
-                  value={actPlan.parcels}
+                  value={activePlan.parcels}
                 >
                   <option value="1">1x</option>
                   <option value="2">2x</option>
@@ -131,7 +183,7 @@ const AddPlan = (props) => {
               </button>
               <button
                 type="button"
-                onClick={() => {setIsShowingAddPlans()}}
+                onClick={() => {setIsShowing()}}
                 className="bg-gray-600 ml-2 p-2 text-center rounded-full text-white"
               >
                 Fechar
