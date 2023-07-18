@@ -17,7 +17,8 @@ const LoginPage = () => {
   }
 
   return (
-    <main className="flex justify-center m-20">
+    <main className="flex flex-col justify-center m-20">
+      <h1 className="font-bold text-2xl mb-2">Login</h1>
       <Formik
         initialValues={{
           email: "",
