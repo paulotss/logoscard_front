@@ -1,7 +1,5 @@
 FROM node
 WORKDIR /app
-RUN chown node:node /app
-USER node
 COPY package*.json ./
 RUN ["npm", "install"]
 COPY . .
