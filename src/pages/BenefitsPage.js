@@ -46,11 +46,12 @@ const BenefitsPage = () => {
 
   return (
     <>
-      <Header />
-      <main className="p-5">
         {
           !isLoading
-          ? <section>
+          ? <>
+            <Header name={user.firstName} />
+            <main className="p-5">
+            <section>
               <p className="font-bold mb-3">Benefícios</p>
               <div className="mb-3">
                 <p className="text-sm">Cliente</p>
@@ -116,12 +117,12 @@ const BenefitsPage = () => {
                 })
               }
             </section>
+          </main>
+          </>
           : <div className="flex justify-center mt-5">
               <img src={loading} alt="" />
             </div>
         }
-        
-      </main>
     </>
   )
 }

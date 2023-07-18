@@ -1,11 +1,7 @@
-import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 const Header = () => {
   const navigate = useNavigate();
-  const [user] = useState({
-    firstName: "Paulo de Tarso",
-  });
 
   const logout = () => {
     sessionStorage.removeItem('auth');
@@ -20,9 +16,6 @@ const Header = () => {
         LOGOSCARD
       </Link>
       <div className="flex">
-        <div className="mr-5 pt-2">
-          Olá, <span className="font-bold">{user.firstName}</span>
-        </div>
         <button
           onClick={logout}
           className="bg-gray-300 p-2 rounded-full font-bold text-gray-900 w-20 text-center"

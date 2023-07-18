@@ -40,7 +40,7 @@ const router = createBrowserRouter([
   {
     path: "/invoice/:id",
     element: <RouteGuard><InvoicePage /></RouteGuard>
-  }
+  },
 ]);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
