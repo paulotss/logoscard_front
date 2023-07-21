@@ -11,6 +11,7 @@ import ClientPage from './pages/ClientPage';
 import NewClientForm from './pages/NewClientForm';
 import BenefitsPage from './pages/BenefitsPage';
 import InvoicePage from './pages/InvoicePage';
+import AddPlanPage from './pages/AddPlanPage';
 
 const router = createBrowserRouter([
   {
@@ -41,6 +42,10 @@ const router = createBrowserRouter([
     path: "/invoice/:id",
     element: <RouteGuard><InvoicePage /></RouteGuard>
   },
+  {
+    path: "/plan/add",
+    element: <RouteGuard><AddPlanPage /></RouteGuard>
+  }
 ]);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));

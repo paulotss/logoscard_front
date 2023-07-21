@@ -1,12 +1,11 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { Dialog, DialogActions, Button, DialogTitle } from "@mui/material";
 import axios from "../http";
 import Header from "../components/Header";
 import loading from "../media/isLoading.gif";
 import InvoicesList from "../components/InvoicesList";
 import PlanLink from "../components/Plan/PlanLink";
-import AddPlan from "../components/AddPlan";
 
 const ClientPage = () => {
   const AWS_BUCKET = process.env.REACT_APP_AWS_BUCKET;
@@ -79,7 +78,14 @@ const ClientPage = () => {
                       assignmentTitle={user.assignment.plan.title}
                       userId={user.id}
                     />
-                  : <AddPlan user={user} setUser={setUser} />
+                  : <div className="mt-2">
+                      <Link
+                        to="/plan/add"
+                        className="bg-green-900 p-2 w-40 text-center rounded-full text-white"
+                      >
+                        Adicionar Plano
+                      </Link>
+                    </div>
                 }
             </section>
             {user.invoices && user.invoices.length > 0 && <InvoicesList invoices={user.invoices} />}
