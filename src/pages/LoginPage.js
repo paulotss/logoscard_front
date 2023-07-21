@@ -8,7 +8,7 @@ const LoginPage = () => {
 
   const submitForm = async (values) => {
     try {
-      const result = await axios.post('/login', { ...values, admin: true });
+      const result = await axios.post('/login', { ...values });
       sessionStorage.setItem('auth', result.data.token);
       navigate('/');
     } catch (error) {
