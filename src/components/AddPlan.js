@@ -7,6 +7,7 @@ const AddPlan = ({ user, setUser }) => {
   const [ isLoading, setIsLoading ] = useState(false);
   const [ plans, setPlans ] = useState(null);
   const [ activePlan, setActivePlan ] = useState({
+    planId: 1,
     expiration: "",
     parcels: 1,
   });
@@ -30,7 +31,6 @@ const AddPlan = ({ user, setUser }) => {
 
   const submitPlanForm = async () => {
     setIsLoading(true);
-    console.log(activePlan.id);
     try {
       const newUser = await axios.post('/assignment', {
         planId: activePlan.id,
@@ -74,9 +74,11 @@ const AddPlan = ({ user, setUser }) => {
   const handleChange = ({ target }) => {
     const { name, value } = target;
     if (name === "planId") {
+      console.log(name, value);
+      console.log(activePlan);
       setActivePlan({
         ...activePlan,
-        [name]: value,
+        [name]: Number(value),
         price: getPriceById(value)
       });
     } else {
@@ -116,7 +118,7 @@ const AddPlan = ({ user, setUser }) => {
                   name="planId"
                   className="p-2"
                   onChange={handleChange}
-                  value={activePlan.id}
+                  value={activePlan.planId}
                 >
                 {
                   plans.map((plan) => (
