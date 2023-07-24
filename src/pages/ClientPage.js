@@ -80,7 +80,7 @@ const ClientPage = () => {
                     />
                   : <div className="mt-2">
                       <Link
-                        to="/plan/add"
+                        to={`/plan/add/${user.id}`}
                         className="bg-green-900 p-2 w-40 text-center rounded-full text-white"
                       >
                         Adicionar Plano

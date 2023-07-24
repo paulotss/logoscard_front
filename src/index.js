@@ -43,7 +43,7 @@ const router = createBrowserRouter([
     element: <RouteGuard><InvoicePage /></RouteGuard>
   },
   {
-    path: "/plan/add",
+    path: "/plan/add/:userId",
     element: <RouteGuard><AddPlanPage /></RouteGuard>
   }
 ]);

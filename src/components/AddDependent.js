@@ -7,6 +7,7 @@ const AddDependent = ({ setDependents, dependents }) => {
 
   const submitForm = (values) => {
     setDependents([...dependents, values]);
+    setIsShowing(false);
   }
 
   if (!isShowing) {
