@@ -1,15 +1,24 @@
 import { useState, useEffect } from 'react';
 import axios from '../http';
 import loading from '../media/isLoading.gif';
+import AddDependent from '../components/AddDependent';
+import { HiMinusCircle } from 'react-icons/hi2';
 
 const AddPlanPage = (user) => {
-  const [ isLoading, setIsLoading ] = useState(false);
+  const [ isLoading, setIsLoading ] = useState(true);
+  const [ dependents, setDependents ] = useState([]);
   const [ plans, setPlans ] = useState(null);
   const [ activePlan, setActivePlan ] = useState({
     planId: 1,
     expiration: "",
     parcels: 1,
+    price: 0,
   });
+
+  const handleRemoveDependent = (cpf) => {
+    const update = dependents.filter((d) => d.cpf !== cpf);
+    setDependents(update);
+  }
   
   const getExpirationDay = () => {
     const day = new Date().getDate();
@@ -77,6 +86,7 @@ const AddPlanPage = (user) => {
       setIsLoading(true);
         try {
           const result = await axios.get('/plans');
+          setActivePlan(result.data[0]);
           setPlans(result.data);
         } catch (error) {
           console.log(error);
@@ -95,7 +105,7 @@ const AddPlanPage = (user) => {
           </div>
         : <>
           <p className="font-bold mb-3">Adicionar plano</p>
-            <form>
+            <form className="mb-3">
               <div className="mb-3">
                 <label htmlFor="plan">Plano: </label>
                 <select
@@ -169,6 +179,25 @@ const AddPlanPage = (user) => {
                 Adicionar
               </button>
             </form>
+            {
+              dependents.length > 0
+              ? dependents.map((d) => (
+                <div
+                  key={d.cpf}
+                  className="p-2 w-96 font-bold bg-gray-500 rounded-lg m-2 flex justify-between"
+                >
+                  <div>{ `${d.firstName} ${d.lastName}` }</div>
+                  <button
+                    type='button'
+                    onClick={() => { handleRemoveDependent(d.cpf) }}
+                  >
+                    <HiMinusCircle color='red' />
+                  </button>
+                </div>
+              ))
+              : null
+            }
+            <AddDependent setDependents={setDependents} dependents={dependents} />
           </>
       }
     </main>
