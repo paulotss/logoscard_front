@@ -13,6 +13,7 @@ import BenefitsPage from './pages/BenefitsPage';
 import InvoicePage from './pages/InvoicePage';
 import AddPlanPage from './pages/AddPlanPage';
 import DependentPage from './pages/DependentPage';
+import DependentsListPage from './pages/DependentsListPage';
 
 const router = createBrowserRouter([
   {
@@ -50,6 +51,10 @@ const router = createBrowserRouter([
   {
     path: "/dependent/:id",
     element: <RouteGuard><DependentPage /></RouteGuard>
+  },
+  {
+    path: "/dependents",
+    element: <RouteGuard><DependentsListPage /></RouteGuard>
   }
 ]);
 

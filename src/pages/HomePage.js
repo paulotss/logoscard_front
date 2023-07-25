@@ -28,6 +28,11 @@ const HomePage = () => {
             path="/client/create"
           />
           <ButtonSection
+            title="Dependentes"
+            image={ <HiUserGroup /> }
+            path="/dependents"
+          />
+          <ButtonSection
             title="Faturas"
             image={ <HiDocumentText /> }
             path="/"
