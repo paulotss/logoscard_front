@@ -55,10 +55,9 @@ const AddPlanPage = () => {
         parcels: activePlan.parcels,
         day: activePlan.expiration,
         method: activePlan.method,
+        dependents: dependents.length,
         userId: userId,
-        totalPrice: activePlan.parcels > 1
-          ? activePlan.price + activePlan.price * 10 / 100
-          : activePlan.price,
+        totalPrice: activePlan.price,
       });
       await axios.post('/assignment/benefit', getPlanBenefits(newUser.data));
       if (dependents.length > 0) {
@@ -75,7 +74,7 @@ const AddPlanPage = () => {
     setIsLoading(false);
   }
 
-  const getPriceById = (planId = activePlan.planId, parcels = 1) => {
+  const getPriceById = (planId, parcels = activePlan.parcels) => {
     const plan = plans.find((plan) => plan.id === Number(planId));
     let finalPrice;
     if (dependents.length === 1) {
@@ -84,7 +83,10 @@ const AddPlanPage = () => {
       finalPrice = 834;
     } else if (parcels > 1) {
       finalPrice = plan.price + plan.price * 10 / 100
-    } else {
+    } else if (parcels < 2) {
+      finalPrice = plan.price
+    }
+    else {
       finalPrice = plan.price;
     }
     return finalPrice;
@@ -100,11 +102,17 @@ const AddPlanPage = () => {
         [name]: Number(value),
         price: getPriceById(value)
       });
-    } else {
+    } else if (name === "parcels") {
       setActivePlan({
         ...activePlan,
         [name]: value,
-        price: getPriceById()
+        price: getPriceById(activePlan.planId, value)
+      });
+    }
+    else {
+      setActivePlan({
+        ...activePlan,
+        [name]: value,
       });
     }
   }
