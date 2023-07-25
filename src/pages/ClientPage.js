@@ -87,6 +87,15 @@ const ClientPage = () => {
                       </Link>
                     </div>
                 }
+              <p className="mt-5 text-sm">Dependentes</p>
+                { user.assignment.dependents.map(d => (
+                  <div
+                    key={d.id}
+                    className="font-bold bg-gray-400 p-1 rounded-md mb-2 w-80 flex justify-between"
+                  >
+                    { `${d.user.firstName} ${d.user.lastName}` }
+                </div>
+                )) }
             </section>
             {user.invoices && user.invoices.length > 0 && <InvoicesList invoices={user.invoices} />}
             <Dialog
