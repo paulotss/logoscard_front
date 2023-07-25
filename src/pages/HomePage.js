@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+import axios from "../http";
 import ButtonPlan from "../components/ButtonPlan";
 import ButtonSection from "../components/ButtonSection";
 import Header from "../components/Header";
@@ -10,13 +12,40 @@ import imgMaatPremium from '../media/maat-premium.png';
 import imgMaatSeraphisPremium from '../media/ms-gold.png';
 
 const HomePage = () => {
+  const [ total, setTotal ] = useState({
+    clients: 0,
+    dependents: 0,
+  })
+
+  useEffect(() => {
+    const getTotal = async () => {
+      const clients = await axios.get('/clients/total');
+      const dependents = await axios.get('/dependents/total');
+      setTotal({
+        clients: clients.data,
+        dependents: dependents.data,
+      });
+    }
+    getTotal();
+  }, []);
+
   return (
     <>
       <Header />
       <main className="p-5">
         <p className="font-bold mb-3">Faturas</p>
         <Invoices />
-        <section className="flex justify-around p-5 mt-5 border-t-2 border-gray-400">
+        <section className="flex justify-around mt-5 border-t-2 border-gray-400">
+          <div className="m-2 text-center">
+            <p className="font-bold">Titulares</p>
+            <p className="font-bold text-green-600 text-2xl">{ total.clients }</p>
+          </div>
+          <div className="m-2 text-center">
+            <p className="font-bold">Dependentes</p>
+            <p className="font-bold text-green-600 text-2xl">{ total.dependents }</p>
+          </div>
+        </section>
+        <section className="flex justify-around p-5 border-t-2 border-gray-400">
           <ButtonSection
             title="Clientes"
             image={ <HiUserGroup /> }
