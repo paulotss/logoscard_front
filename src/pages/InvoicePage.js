@@ -95,6 +95,7 @@ const InvoicePage = () => {
         : <main className="p-5">
             <section className="pb-3 border-b-2 border-b-gray-400">
               <p className="font-bold mb-2">Fatura</p>
+              <p className="font-bold mb-2 text-gray-600">{`Método: ${invoice.method}`}</p>
               <p className="font-bold">{ formatDate(invoice.expiration) }</p>
               { !invoice.paid
                 ? <>

@@ -14,6 +14,7 @@ const AddPlanPage = () => {
   const [ plans, setPlans ] = useState(null);
   const [ activePlan, setActivePlan ] = useState({
     planId: 1,
+    method: 'PIX',
     expiration: "10",
     parcels: 1,
     price: 0,
@@ -53,8 +54,11 @@ const AddPlanPage = () => {
       await axios.post('/invoices', {
         parcels: activePlan.parcels,
         day: activePlan.expiration,
+        method: activePlan.method,
         userId: userId,
-        totalPrice: activePlan.price,
+        totalPrice: activePlan.parcels > 1
+          ? activePlan.price + activePlan.price * 10 / 100
+          : activePlan.price,
       });
       await axios.post('/assignment/benefit', getPlanBenefits(newUser.data));
       if (dependents.length > 0) {
@@ -71,9 +75,19 @@ const AddPlanPage = () => {
     setIsLoading(false);
   }
 
-  const getPriceById = (planId) => {
+  const getPriceById = (planId = activePlan.planId, parcels = 1) => {
     const plan = plans.find((plan) => plan.id === Number(planId));
-    return plan.price;
+    let finalPrice;
+    if (dependents.length === 1) {
+      finalPrice = 582
+    } else if (dependents.length === 2) {
+      finalPrice = 834;
+    } else if (parcels > 1) {
+      finalPrice = plan.price + plan.price * 10 / 100
+    } else {
+      finalPrice = plan.price;
+    }
+    return finalPrice;
   }
 
   const handleChange = ({ target }) => {
@@ -90,6 +104,7 @@ const AddPlanPage = () => {
       setActivePlan({
         ...activePlan,
         [name]: value,
+        price: getPriceById()
       });
     }
   }
@@ -187,6 +202,21 @@ const AddPlanPage = () => {
                     <option value="10">10x</option>
                     <option value="11">11x</option>
                     <option value="12">12x</option>
+                  </select>
+                </div>
+                <div>
+                  <label htmlFor="method">Forma de pagamento: </label>
+                  <select
+                    id="method"
+                    name="method"
+                    className="p-2 mb-3"
+                    onChange={handleChange}
+                    value={activePlan.method}
+                  >
+                    <option value="PIX">PIX</option>
+                    <option value="CRÉDITO">CRÉDITO</option>
+                    <option value="DÉBITO">DÉBITO</option>
+                    <option value="DINHEIRO">DINHEIRO</option>
                   </select>
                 </div>
                 {

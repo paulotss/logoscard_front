@@ -73,11 +73,24 @@ const ClientPage = () => {
               <p className="mt-5 text-sm">Plano</p>
                 {
                   user.assignment
-                  ? <PlanLink
+                  ? <>
+                    <PlanLink
                       assignmentId={user.assignment.id}
                       assignmentTitle={user.assignment.plan.title}
                       userId={user.id}
                     />
+                    <p className="mt-5 text-sm">Dependentes</p>
+                      { user.assignment.dependents.map(d => (
+                        <div
+                          key={d.id}
+                          className="font-bold bg-gray-400 p-1 rounded-md mb-2 w-80 flex justify-between"
+                        >
+                          <Link to={`/dependent/${d.id}`}>
+                            { `${d.user.firstName} ${d.user.lastName}` }
+                          </Link>
+                      </div>
+                      )) }
+                    </>
                   : <div className="mt-2">
                       <Link
                         to={`/plan/add/${user.id}`}
@@ -87,15 +100,6 @@ const ClientPage = () => {
                       </Link>
                     </div>
                 }
-              <p className="mt-5 text-sm">Dependentes</p>
-                { user.assignment.dependents.map(d => (
-                  <div
-                    key={d.id}
-                    className="font-bold bg-gray-400 p-1 rounded-md mb-2 w-80 flex justify-between"
-                  >
-                    { `${d.user.firstName} ${d.user.lastName}` }
-                </div>
-                )) }
             </section>
             {user.invoices && user.invoices.length > 0 && <InvoicesList invoices={user.invoices} />}
             <Dialog

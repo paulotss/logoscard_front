@@ -12,6 +12,7 @@ import NewClientForm from './pages/NewClientForm';
 import BenefitsPage from './pages/BenefitsPage';
 import InvoicePage from './pages/InvoicePage';
 import AddPlanPage from './pages/AddPlanPage';
+import DependentPage from './pages/DependentPage';
 
 const router = createBrowserRouter([
   {
@@ -45,6 +46,10 @@ const router = createBrowserRouter([
   {
     path: "/plan/add/:userId",
     element: <RouteGuard><AddPlanPage /></RouteGuard>
+  },
+  {
+    path: "/dependent/:id",
+    element: <RouteGuard><DependentPage /></RouteGuard>
   }
 ]);
 
