@@ -23,10 +23,9 @@ const DependentsListPage = () => {
       <main className="p-5">
         <p className="font-bold mb-3">Dependentes</p>
         <div className="w-full">
-          <div className="grid grid-gap grid-cols-4 grid-rows-1 p-2 text-sm">
+          <div className="grid grid-gap grid-cols-3 grid-rows-1 p-2 text-sm">
             <div>Inscrição</div>
             <div className="col-span-2">Nome</div>
-            <div className="text-right">Status</div>
           </div>
           {
             isLoading
@@ -36,16 +35,10 @@ const DependentsListPage = () => {
               : dependents.map((d) => (
                   <Link to={`/dependent/${d.id}`}
                     key={ d.id }
-                    className="grid grid-gap grid-cols-4 grid-rows-1 bg-gray-400 rounded-lg p-2 mb-2"
+                    className="grid grid-gap grid-cols-3 grid-rows-1 bg-gray-400 rounded-lg p-2 mb-2"
                   >
                     <div>{ d.id }</div>
                     <div className="col-span-2">{ `${d.user.firstName} ${d.user.lastName}` }</div>
-                    <div className="text-right pr-2">
-                      { d.user.assignment
-                        ? <div className="w-3 h-3 bg-green-900 rounded-full inline-block"> </div> 
-                        : <div className="w-3 h-3 bg-yellow-600 rounded-full inline-block"> </div>
-                      }
-                    </div>
                   </Link>
                 ))
           }
