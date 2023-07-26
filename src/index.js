@@ -14,6 +14,8 @@ import InvoicePage from './pages/InvoicePage';
 import AddPlanPage from './pages/AddPlanPage';
 import DependentPage from './pages/DependentPage';
 import DependentsListPage from './pages/DependentsListPage';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 const router = createBrowserRouter([
   {
@@ -61,7 +63,9 @@ const router = createBrowserRouter([
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <RouterProvider router={router} />
+    </LocalizationProvider>
   </React.StrictMode>
 );
 
