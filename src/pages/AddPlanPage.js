@@ -47,10 +47,11 @@ const AddPlanPage = () => {
   const getPlanBenefits = (payload) => {
     const { benefits } = payload.assignment.plan;
     const result = benefits.map((benefit) => ({
-      amount: benefit.amount && 0,
-      benefitId: benefit.id,
-      assignmentId: payload.assignment.id,
-    }));
+        amount: benefit.amount && 0,
+        benefitId: benefit.id,
+        assignmentId: payload.assignment.id,
+      })
+    );
     return result;
   }
 
