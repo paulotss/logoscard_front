@@ -2,11 +2,11 @@ import { useState } from 'react';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 
-const AddDependent = ({ setDependents, dependents }) => {
+const AddDependent = ({ setDependents }) => {
   const [ isShowing, setIsShowing ] = useState(false);
 
   const submitForm = (values) => {
-    setDependents([...dependents, values]);
+    setDependents(values);
     setIsShowing(false);
   }
 

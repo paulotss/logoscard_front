@@ -15,13 +15,25 @@ const AddPlanPage = () => {
   const [ activePlan, setActivePlan ] = useState({
     planId: 1,
     method: 'PIX',
-    expiration: "10",
+    expiration: '10',
     parcels: 1,
-    price: 0,
+    price: 300,
   });
+
+  const handleAddDependent = (values) => {
+    setDependents([...dependents, values]);
+    setActivePlan({
+      ...activePlan,
+      price: getPriceById(activePlan.planId, activePlan.price, dependents.length + 1)
+    });
+  }
 
   const handleRemoveDependent = (cpf) => {
     const update = dependents.filter((d) => d.cpf !== cpf);
+    setActivePlan({
+      ...activePlan,
+      price: getPriceById(activePlan.planId, activePlan.price, dependents.length - 1)
+    });
     setDependents(update);
   }
   
@@ -46,7 +58,7 @@ const AddPlanPage = () => {
     setIsLoading(true);
     try {
       const newUser = await axios.post('/assignment', {
-        planId: activePlan.id,
+        planId: activePlan.planId,
         userId: userId,
         expiration: getExpirationDay(),
       });
@@ -74,21 +86,11 @@ const AddPlanPage = () => {
     setIsLoading(false);
   }
 
-  const getPriceById = (planId, parcels = activePlan.parcels) => {
-    const plan = plans.find((plan) => plan.id === Number(planId));
-    let finalPrice;
-    if (dependents.length === 1) {
-      finalPrice = 582
-    } else if (dependents.length === 2) {
-      finalPrice = 834;
-    } else if (parcels > 1) {
-      finalPrice = plan.price + plan.price * 10 / 100
-    } else if (parcels < 2) {
-      finalPrice = plan.price
-    }
-    else {
-      finalPrice = plan.price;
-    }
+  const getPriceById = (planId, parcels = activePlan.parcels, depLenth = dependents.length) => {
+    const { price } = plans.find((plan) => plan.id === Number(planId));
+    let finalPrice = price;
+    finalPrice += depLenth * 230;
+    if (parcels > 1) finalPrice += finalPrice * 10 / 100;
     return finalPrice;
   }
 
@@ -106,7 +108,7 @@ const AddPlanPage = () => {
       setActivePlan({
         ...activePlan,
         [name]: value,
-        price: getPriceById(activePlan.planId, value)
+        price: getPriceById(activePlan.planId, value),
       });
     }
     else {
@@ -122,10 +124,6 @@ const AddPlanPage = () => {
       setIsLoading(true);
         try {
           const result = await axios.get('/plans');
-          setActivePlan((prevState) => ({
-            ...prevState,
-            ...result.data[0],
-          }));
           setPlans(result.data);
         } catch (error) {
           console.log(error);
@@ -148,7 +146,8 @@ const AddPlanPage = () => {
             <p className="font-bold mb-3">Adicionar plano</p>
               <form className="mb-3">
                 <div className="mb-3">
-                  <label htmlFor="plan">Plano: </label>
+                  <label htmlFor="plan">Plano</label>
+                  <br/>
                   <select
                     id="planId"
                     name="planId"
@@ -164,33 +163,28 @@ const AddPlanPage = () => {
                   </select>
                 </div>
                 <div className="mb-3">
-                  <p>
-                    Expira em:
+                  <p>Expira em</p>
+                  <p className='italic font-bold'>
                     {
                       ` ${new Date().getDate()}/${new Date().getMonth() + 1}/${new Date().getFullYear() + 1}`
                     }
                   </p>
                 </div>
-                <div>
-                  <p className="mb-3">
-                    Valor do plano: R$ { 
-                      activePlan.price.toLocaleString('pt-br', {minimumFractionDigits: 2})
-                    }
-                  </p>
-                </div>
                 <div className="mb-3">
-                  <label htmlFor="expiration">Dia de vencimento da fatura: </label>
+                  <label htmlFor="expiration">Dia de vencimento da fatura</label>
+                  <br/>
                   <input
                     id="expiration"
                     name="expiration"
                     type="text"
-                    className="w-12 p-2"
+                    className="w-24 p-2"
                     onChange={handleChange}
                     value={activePlan.expiration}
                   />
                 </div>
                 <div>
-                  <label htmlFor="parcels">Parcelas: </label>
+                  <label htmlFor="parcels">Parcelas</label>
+                  <br/>
                   <select
                     id="parcels"
                     name="parcels"
@@ -213,7 +207,8 @@ const AddPlanPage = () => {
                   </select>
                 </div>
                 <div>
-                  <label htmlFor="method">Forma de pagamento: </label>
+                  <label htmlFor="method">Forma de pagamento</label>
+                  <br/>
                   <select
                     id="method"
                     name="method"
@@ -226,6 +221,16 @@ const AddPlanPage = () => {
                     <option value="DÉBITO">DÉBITO</option>
                     <option value="DINHEIRO">DINHEIRO</option>
                   </select>
+                </div>
+                <div className="mb-3">
+                  <p>
+                    Valor do plano
+                  </p>
+                  <p className='font-bold text-2xl'>
+                  R$ { 
+                      activePlan.price.toLocaleString('pt-br', {minimumFractionDigits: 2})
+                    }
+                  </p>
                 </div>
                 {
                   dependents.length > 0
@@ -253,7 +258,7 @@ const AddPlanPage = () => {
                   Adicionar
                 </button>
               </form>
-              <AddDependent setDependents={setDependents} dependents={dependents} />
+              <AddDependent setDependents={handleAddDependent} />
             </section>
           </>
       }
