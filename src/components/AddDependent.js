@@ -1,12 +1,15 @@
 import { useState } from 'react';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import { DatePicker } from "@mui/x-date-pickers";
+import dayjs from "dayjs";
 
 const AddDependent = ({ setDependents }) => {
   const [ isShowing, setIsShowing ] = useState(false);
+  const [birthday, setBirthday] = useState(dayjs());
 
   const submitForm = (values) => {
-    setDependents(values);
+    setDependents({ ...values, birthday });
     setIsShowing(false);
   }
 
@@ -146,6 +149,17 @@ const AddDependent = ({ setDependents }) => {
                       <div className="text-red-600 text-sm">{formik.errors.cpf}</div>
                     ) : null}
                   </div>
+
+                  <div className="mb-5">
+                    <label htmlFor="cpf">Data de nascimento</label>
+                    <br/>
+                    <DatePicker
+                      value={birthday}
+                      format="DD/MM/YYYY"
+                      onChange={(v) => {setBirthday(v) }}
+                    />
+                  </div>
+
                   <button
                     type="submit"
                     className="p-2 w-24 bg-green-600 text-white rounded-full"

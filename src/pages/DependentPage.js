@@ -11,6 +11,11 @@ const DependentPage = () => {
   const [ client, setClient ] = useState({});
   const { id } = useParams();
 
+  const formatDate = (value) => {
+    const date = new Date(value);
+    return `${date.getDay()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+  }
+
   useEffect(() => {
     const getDependent = async () => {
       setIsLoading(true);
@@ -58,6 +63,8 @@ const DependentPage = () => {
                 <p>{dependent.user.cpf}</p>
                 <p className="mt-5 text-sm">Celular</p>
                 <p>{dependent.user.cellPhone}</p>
+                <p className="mt-5 text-sm">Nascimento</p>
+                <p>{formatDate(dependent.user.birthday)}</p>
                 <p className="mt-5 text-sm">Plano</p>
                 <PlanDependentLink
                   assignmentId={dependent.assignments.id}
