@@ -57,7 +57,7 @@ const router = createBrowserRouter([
   {
     path: "/dependents",
     element: <RouteGuard><DependentsListPage /></RouteGuard>
-  }
+  },
 ]);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
