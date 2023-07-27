@@ -25,6 +25,11 @@ const ClientPage = () => {
     }
   }
 
+  const formatDate = (value) => {
+    const date = new Date(value);
+    return `${date.getDay()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+  }
+
   useEffect(() => {
     const getUser = async () => {
       setIsLoading(true);
@@ -70,6 +75,8 @@ const ClientPage = () => {
               <p>{user.cpf}</p>
               <p className="mt-5 text-sm">Celular</p>
               <p>{user.cellPhone}</p>
+              <p className="mt-5 text-sm">Nascimento</p>
+              <p>{formatDate(user.birthday)}</p>
               <p className="mt-5 text-sm">Plano</p>
                 {
                   user.assignment
