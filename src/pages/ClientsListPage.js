@@ -12,6 +12,7 @@ const ClientsListPage = () => {
     const getUsers = async () => {
       setIsLoading(true);
       const result = await axios.get('/clients');
+      console.log(result.data);
       setClients(result.data);
       setIsLoading(false);
     }
@@ -34,7 +35,7 @@ const ClientsListPage = () => {
                   <img src={ loading } alt="" />
                 </div>
               : clients.map((client) => (
-                  <Link to={`/client/${client.id}`}
+                  <Link to={`/client/${client.user.id}`}
                     key={ client.id }
                     className="grid grid-gap grid-cols-4 grid-rows-1 bg-gray-400 rounded-lg p-2 mb-2"
                   >

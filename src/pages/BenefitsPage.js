@@ -15,7 +15,8 @@ const BenefitsPage = () => {
     setIsLoading(true);
     const { id, value } = target;
     const benefit = user.assignment.benefits.find((benefit) => benefit.id === Number(id));
-    if (benefit.amount > Number(value)) {
+    const nDependents = user.assignment.dependents.length;
+    if (benefit.amount + nDependents > Number(value)) {
       try {
         const result = await axios.put('/assignment/benefit', {
           amount: Number(value) + 1,
@@ -36,6 +37,7 @@ const BenefitsPage = () => {
       try {
         const result = await axios(`/user/${id}`);
         setUser(result.data);
+        console.log(result.data);
       } catch (error) {
         console.log(error);
       }
@@ -77,7 +79,7 @@ const BenefitsPage = () => {
                       className="grid grid-gap grid-cols-3 grid-rows-1 bg-gray-400 rounded-lg p-2 mb-2"
                     >
                       <div>{benefit.title}</div>
-                      <div className="text-right">{benefit.amount}</div>
+                      <div className="text-right">{benefit.amount + user.assignment.dependents.length}</div>
                       <div className="text-right flex justify-end">
                         <div>{benefit.AssignmentBenefitModel.amount}</div>
                         <button

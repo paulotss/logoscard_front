@@ -6,19 +6,23 @@ import { Formik } from "formik";
 import * as Yup from "yup";
 import axios from "../http";
 import loading from "../media/isLoading.gif";
+import { DatePicker } from "@mui/x-date-pickers";
+import dayjs from "dayjs";
 
 const NewClientForm = () => {
   const { image, message, handleChangeFile } = useValidateImage();
   const [isLoading, setIsLoading] = useState(false);
+  const [birthday, setBirthday] = useState(dayjs());
   const navigate = useNavigate();
 
   const submitForm = async (values) => {
     setIsLoading(true);
     try {
-      await axios.post('/user', {
+      await axios.post('/client', {
         ...values,
         photo: image.photo,
         file: image.file,
+        birthday: `${birthday.$y}-${birthday.$M + 1}-${birthday.$D}`
       },
       {
         headers: {
@@ -182,6 +186,17 @@ const NewClientForm = () => {
                       <div className="text-red-600 text-sm">{formik.errors.cpf}</div>
                     ) : null}
                   </div>
+
+                  <div className="mb-5">
+                    <label htmlFor="cpf">Data de nascimento</label>
+                    <br/>
+                    <DatePicker
+                      value={birthday}
+                      format="DD/MM/YYYY"
+                      onChange={(v) => {setBirthday(v) }}
+                    />
+                  </div>
+
                   {
                     isLoading
                     ? <button
