@@ -3,6 +3,14 @@ import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import logo from "../media/logo1.png";
 
 const CardPage = ({ client }) => {
+  const formatDate = (value) => {
+    const date = new Date(value);
+    const day = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate();
+    const month = (date.getMonth() + 1) < 10 ? `0${date.getMonth() + 1}` : (date.getMonth() + 1);
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+  }
+  
   return (
     <div
       className="p-5 bg-gradient-to-r from-green-300 to-white w-96 h-fit flex justify-between rounded-lg"
@@ -23,7 +31,7 @@ const CardPage = ({ client }) => {
         <div>
           <p className="text-sm">Válido até</p>
           <p className="font-bold">
-            { client.assignment ? client.assignment.expiration : "DD/MM/YYYY" }
+            { client.assignment ? formatDate(client.assignment.expiration) : "DD/MM/YYYY" }
           </p>
         </div>
       </div>
