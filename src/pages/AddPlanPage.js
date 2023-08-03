@@ -5,6 +5,8 @@ import loading from '../media/isLoading.gif';
 import AddDependent from '../components/AddDependent';
 import Header from '../components/Header';
 import { HiMinusCircle } from 'react-icons/hi2';
+import { DatePicker } from '@mui/x-date-pickers';
+import dayjs from "dayjs";
 
 const AddPlanPage = () => {
   const { userId } = useParams();
@@ -12,6 +14,7 @@ const AddPlanPage = () => {
   const [ isLoading, setIsLoading ] = useState(true);
   const [ dependents, setDependents ] = useState([]);
   const [ plans, setPlans ] = useState(null);
+  const [ expiration, setExpiration ] = useState(dayjs());
   const [ activePlan, setActivePlan ] = useState({
     planId: 1,
     method: 'PIX',
@@ -36,13 +39,6 @@ const AddPlanPage = () => {
     });
     setDependents(update);
   }
-  
-  const getExpirationDay = () => {
-    const day = new Date().getDate();
-    const month = new Date().getMonth() + 1;
-    const year = new Date().getFullYear() + 1
-    return `${year}/${month}/${day}`;
-  }
 
   const getPlanBenefits = (payload) => {
     const { benefits } = payload.assignment.plan;
@@ -61,7 +57,7 @@ const AddPlanPage = () => {
       const newUser = await axios.post('/assignment', {
         planId: activePlan.planId,
         userId: userId,
-        expiration: getExpirationDay(),
+        expiration,
       });
       console.log(newUser.data);
       await axios.post('/invoices', {
@@ -165,11 +161,11 @@ const AddPlanPage = () => {
                 </div>
                 <div className="mb-3">
                   <p>Expira em</p>
-                  <p className='italic font-bold'>
-                    {
-                      ` ${new Date().getDate()}/${new Date().getMonth() + 1}/${new Date().getFullYear() + 1}`
-                    }
-                  </p>
+                  <DatePicker
+                    value={expiration}
+                    format="DD/MM/YYYY"
+                    onChange={(v) => {setExpiration(v) }}
+                  />
                 </div>
                 <div className="mb-3">
                   <label htmlFor="expiration">Dia de vencimento da fatura</label>

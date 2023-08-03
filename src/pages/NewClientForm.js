@@ -22,7 +22,7 @@ const NewClientForm = () => {
         ...values,
         photo: image.photo,
         file: image.file,
-        birthday: `${birthday.$y}-${birthday.$M + 1}-${birthday.$D}`
+        birthday,
       },
       {
         headers: {
