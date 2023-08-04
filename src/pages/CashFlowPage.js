@@ -3,20 +3,35 @@ import axios from "../http";
 import Header from "../components/Header";
 
 const CashFlowPage = () => {
-  const [withdraw, setWithdraw] = useState(0);
-  const [deposit, setDeposit] = useState(0);
+  const [totalWithdraw, setTotalWithdraw] = useState(0);
+  const [totalDeposit, setTotalDeposit] = useState(0);
+
+  const [withdraws, setWithdraws] = useState([]);
+
+  const convertDate = (stringDate) => {
+    const dateObj = new Date(stringDate);
+    const day = dateObj.getDay() < 10 ? `0${dateObj.getDay()}` : dateObj.getDay();
+    const month = dateObj.getMonth() < 9 ? `0${dateObj.getMonth() + 1}` : dateObj.getMonth() + 1;
+    const year = dateObj.getFullYear();
+    return `${day}/${month}/${year}`;
+  }
 
   useEffect(() => {
-    const getWithdraw = async () => {
+    const getTotalWithdraw = async () => {
       const result = await axios.get('/withdraw');
-      setWithdraw(result.data);
+      setTotalWithdraw(result.data);
     }
-    const getDeposit = async () => {
+    const getTotalDeposit = async () => {
       const result = await axios.get('/deposit');
-      setDeposit(result.data);
+      setTotalDeposit(result.data);
     }
-    getWithdraw();
-    getDeposit();
+    const getWithdraws = async () => {
+      const result = await axios.get('/withdraws');
+      setWithdraws(result.data);
+    }
+    getTotalWithdraw();
+    getTotalDeposit();
+    getWithdraws();
   }, []);
 
   return (
@@ -33,10 +48,31 @@ const CashFlowPage = () => {
               <p
                 className="font-bold text-red-600 text-xl"
               >
-                R$ {withdraw.toLocaleString('pt-br', {minimumFractionDigits: 2})}
+                R$ {totalWithdraw.toLocaleString('pt-br', {minimumFractionDigits: 2})}
               </p>
             </div>
           </div>
+          <div className="grid grid-gap grid-cols-3 grid-rows-1 p-2 text-sm">
+            <div>Usuário</div>
+            <div>Data</div>
+            <div className="text-right">Valor</div>
+          </div>
+          {
+            withdraws.map((withdraw) => (
+              <div
+                key={withdraw.id}
+                className="grid grid-gap grid-cols-3 grid-rows-1 bg-gray-400 rounded-lg p-2 mb-2"
+              >
+                <div>{withdraw.user.firstName}</div>
+                <div>{convertDate(withdraw.createdAt)}</div>
+                <div className="text-right">
+                  R$ {
+                    withdraw.amount.toLocaleString('pt-br', {minimumFractionDigits: 2})
+                  }
+                </div>
+              </div>
+            ))
+          }
         </section>
         <section className="mb-3">
           <div className="flex justify-between">
@@ -48,9 +84,19 @@ const CashFlowPage = () => {
               <p
                 className="font-bold text-green-900 text-xl"
               >
-                R$ {deposit.toLocaleString('pt-br', {minimumFractionDigits: 2})}
+                R$ {totalDeposit.toLocaleString('pt-br', {minimumFractionDigits: 2})}
               </p>
             </div>
+          </div>
+          <div className="grid grid-gap grid-cols-3 grid-rows-1 p-2 text-sm">
+            <div>Nº Fatura</div>
+            <div>Data</div>
+            <div className="text-right">Valor</div>
+          </div>
+          <div className="grid grid-gap grid-cols-3 grid-rows-1 bg-gray-400 rounded-lg p-2 mb-2">
+            <div>Nº Fatura</div>
+            <div>Data</div>
+            <div className="text-right">Valor</div>
           </div>
         </section>
       </main>
