@@ -7,6 +7,7 @@ const CashFlowPage = () => {
   const [totalDeposit, setTotalDeposit] = useState(0);
 
   const [withdraws, setWithdraws] = useState([]);
+  const [deposits, setDeposits] = useState([]);
 
   const convertDate = (stringDate) => {
     const dateObj = new Date(stringDate);
@@ -29,9 +30,14 @@ const CashFlowPage = () => {
       const result = await axios.get('/withdraws');
       setWithdraws(result.data);
     }
+    const getDeposits = async () => {
+      const result = await axios.get('/deposits');
+      setDeposits(result.data);
+    }
     getTotalWithdraw();
     getTotalDeposit();
     getWithdraws();
+    getDeposits();
   }, []);
 
   return (
@@ -93,11 +99,22 @@ const CashFlowPage = () => {
             <div>Data</div>
             <div className="text-right">Valor</div>
           </div>
-          <div className="grid grid-gap grid-cols-3 grid-rows-1 bg-gray-400 rounded-lg p-2 mb-2">
-            <div>Nº Fatura</div>
-            <div>Data</div>
-            <div className="text-right">Valor</div>
-          </div>
+          {
+            deposits.map((deposit) => (
+              <div
+                key={deposit.id}
+                className="grid grid-gap grid-cols-3 grid-rows-1 bg-gray-400 rounded-lg p-2 mb-2"
+              >
+                <div>{deposit.id}</div>
+                <div>{convertDate(deposit.createdAt)}</div>
+                <div className="text-right">
+                  R$ {
+                    deposit.amount.toLocaleString('pt-br', {minimumFractionDigits: 2})
+                  }
+                </div>
+              </div>
+            ))
+          }
         </section>
       </main>
     </>
