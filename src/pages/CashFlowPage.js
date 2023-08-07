@@ -41,8 +41,8 @@ const CashFlowPage = () => {
       userId: user.id,
     });
     setWithdraws([
+      result.data,
       ...withdraws,
-      result.data
     ]);
     setOpenDialog(false)
   }
