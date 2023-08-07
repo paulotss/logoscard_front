@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "../http";
 import Header from "../components/Header";
+import { Dialog, DialogContent, DialogTitle, DialogActions, Button, TextField } from "@mui/material";
 
 const CashFlowPage = () => {
   const [totalWithdraw, setTotalWithdraw] = useState(0);
@@ -8,6 +9,33 @@ const CashFlowPage = () => {
 
   const [withdraws, setWithdraws] = useState([]);
   const [deposits, setDeposits] = useState([]);
+
+  const [openDialog, setOpenDialog] = useState(false);
+  const [withdrawForm, setWithdrawForm] = useState({
+    amount: "",
+    description: ""
+  });
+
+  const handleClickOpen = () => {
+    setOpenDialog(true);
+  }
+
+  const handleClose = () => {
+    setOpenDialog(false)
+  }
+
+  const handleChange = ({ target }) => {
+    const { name, value } = target;
+    setWithdrawForm({
+      ...withdrawForm,
+      [name]: value,
+    });
+  }
+
+  const handleSubmitWithdraw = () => {
+    console.log("ok");
+    setOpenDialog(false)
+  }
 
   const convertDate = (stringDate) => {
     const dateObj = new Date(stringDate);
@@ -44,7 +72,7 @@ const CashFlowPage = () => {
     <>
       <Header />
       <main className="p-5">
-        <section className="mb-3">
+        <section className="mb-5">
           <div className="flex justify-between">
             <div>
               <h1 className="font-bold">Saídas</h1>
@@ -79,6 +107,12 @@ const CashFlowPage = () => {
               </div>
             ))
           }
+          <button
+            onClick={handleClickOpen}
+            className="p-2 bg-red-900 text-white rounded-lg w-24"
+          >
+            Retirar
+          </button>
         </section>
         <section className="mb-3">
           <div className="flex justify-between">
@@ -116,6 +150,46 @@ const CashFlowPage = () => {
             ))
           }
         </section>
+        <Dialog open={openDialog} onClose={handleClose}>
+          <DialogTitle>Retirar</DialogTitle>
+          <DialogContent>
+            <TextField
+              margin="dense"
+              id="amount"
+              name="amount"
+              label="Valor"
+              type="text"
+              value={withdrawForm.amount}
+              onChange={handleChange}
+              fullWidth
+            />
+            <TextField
+              margin="dense"
+              id="description"
+              name="description"
+              label="Descrição"
+              type="text"
+              value={withdrawForm.description}
+              onChange={handleChange}
+              fullWidth
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button
+              color="success"
+              variant="contained"
+              onClick={handleSubmitWithdraw}
+            >
+              Confirmar
+            </Button>
+            <Button
+              variant="contained"
+              onClick={handleClose}
+            >
+              Cancelar
+            </Button>
+          </DialogActions>
+        </Dialog>
       </main>
     </>
   )
