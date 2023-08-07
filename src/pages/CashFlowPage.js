@@ -39,12 +39,10 @@ const CashFlowPage = () => {
       amount: withdrawForm.amount,
       userId: user.id,
     });
-    // setWithdraws([
-    //   ...withdraws,
-    //   result.data
-    // ])
-    console.log(result.data);
-    console.log("ok");
+    setWithdraws([
+      ...withdraws,
+      result.data
+    ]);
     setOpenDialog(false)
   }
 
