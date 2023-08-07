@@ -16,6 +16,7 @@ import DependentPage from './pages/DependentPage';
 import DependentsListPage from './pages/DependentsListPage';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import CashFlowPage from './pages/CashFlowPage';
 
 const router = createBrowserRouter([
   {
@@ -57,6 +58,10 @@ const router = createBrowserRouter([
   {
     path: "/dependents",
     element: <RouteGuard><DependentsListPage /></RouteGuard>
+  },
+  {
+    path: "/cashflow",
+    element: <RouteGuard><CashFlowPage /></RouteGuard>
   },
 ]);
 

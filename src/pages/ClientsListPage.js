@@ -12,7 +12,6 @@ const ClientsListPage = () => {
     const getUsers = async () => {
       setIsLoading(true);
       const result = await axios.get('/clients');
-      console.log(result.data);
       setClients(result.data);
       setIsLoading(false);
     }

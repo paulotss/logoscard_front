@@ -7,7 +7,8 @@ const Invoices = () => {
   const [invoice, setInvoice] = useState({
     paid: 168,
     pending: 51,
-    overdue: 32
+    overdue: 32,
+    current: 32,
   });
 
   useEffect(() => {
@@ -16,10 +17,13 @@ const Invoices = () => {
       const paid = await axios.get('/invoices/total/paid');
       const pending = await axios.get('/invoices/total/pending');
       const overdue = await axios.get('/invoices/total/overdue');
+      const deposit = await axios.get('/deposit');
+      const withdraw = await axios.get('/withdraw')
       setInvoice({
         paid: paid.data,
         pending: pending.data,
         overdue: overdue.data,
+        current: deposit.data - withdraw.data,
       });
       setIsLoading(false);
     }
@@ -50,6 +54,12 @@ const Invoices = () => {
               <p>Vencidas</p>
               <p className="font-bold text-rose-600 text-2xl">
                 R$ {invoice.overdue.toLocaleString('pt-br', {minimumFractionDigits: 2})}
+              </p>
+            </div>
+            <div>
+              <p>Caixa</p>
+              <p className="font-bold text-green-900 text-2xl">
+                R$ {invoice.current.toLocaleString('pt-br', {minimumFractionDigits: 2})}
               </p>
             </div>
           </>

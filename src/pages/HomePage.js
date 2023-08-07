@@ -62,9 +62,9 @@ const HomePage = () => {
             path="/dependents"
           />
           <ButtonSection
-            title="Faturas"
+            title="Caixa"
             image={ <HiDocumentText /> }
-            path="/"
+            path="/cashflow"
           />
         </section>
         <section className="flex flex-wrap justify-around p-5 mt-5 border-t-2 border-gray-400">
