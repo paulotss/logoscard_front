@@ -9,7 +9,7 @@ const LoginPage = () => {
   const submitForm = async (values) => {
     try {
       const result = await axios.post('/login', { ...values });
-      sessionStorage.setItem('auth', result.data.token);
+      sessionStorage.setItem('auth', result.data);
       navigate('/');
     } catch (error) {
       console.log(error);

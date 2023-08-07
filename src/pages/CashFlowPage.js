@@ -4,6 +4,8 @@ import Header from "../components/Header";
 import { Dialog, DialogContent, DialogTitle, DialogActions, Button, TextField } from "@mui/material";
 
 const CashFlowPage = () => {
+  const [user, setUser] = useState({});
+  
   const [totalWithdraw, setTotalWithdraw] = useState(0);
   const [totalDeposit, setTotalDeposit] = useState(0);
 
@@ -32,7 +34,16 @@ const CashFlowPage = () => {
     });
   }
 
-  const handleSubmitWithdraw = () => {
+  const handleSubmitWithdraw = async () => {
+    const result = await axios.post('/withdraw',{
+      amount: withdrawForm.amount,
+      userId: user.id,
+    });
+    // setWithdraws([
+    //   ...withdraws,
+    //   result.data
+    // ])
+    console.log(result.data);
     console.log("ok");
     setOpenDialog(false)
   }
@@ -46,6 +57,10 @@ const CashFlowPage = () => {
   }
 
   useEffect(() => {
+    const getUser = async () => {
+      const result = await axios.get(`/user/${sessionStorage.getItem('auth')}`);
+      setUser(result.data);
+    }
     const getTotalWithdraw = async () => {
       const result = await axios.get('/withdraw');
       setTotalWithdraw(result.data);
@@ -62,6 +77,7 @@ const CashFlowPage = () => {
       const result = await axios.get('/deposits');
       setDeposits(result.data);
     }
+    getUser();
     getTotalWithdraw();
     getTotalDeposit();
     getWithdraws();
