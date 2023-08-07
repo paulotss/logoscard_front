@@ -61,6 +61,10 @@ const InvoicePage = () => {
       await axios.put('/invoice/pay', {
         invoiceId: invoice.id
       });
+      await axios.post('/deposit', {
+        amount: invoice.amount,
+        invoiceId: invoice.id,
+      });
       setInvoice({
         ...invoice,
         paid: 1,
