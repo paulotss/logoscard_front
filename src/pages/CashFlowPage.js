@@ -37,6 +37,7 @@ const CashFlowPage = () => {
   const handleSubmitWithdraw = async () => {
     const result = await axios.post('/withdraw',{
       amount: withdrawForm.amount,
+      description: withdrawForm.description,
       userId: user.id,
     });
     setWithdraws([
@@ -100,19 +101,21 @@ const CashFlowPage = () => {
               </p>
             </div>
           </div>
-          <div className="grid grid-gap grid-cols-3 grid-rows-1 p-2 text-sm">
+          <div className="grid grid-gap grid-cols-4 grid-rows-1 p-2 text-sm">
             <div>Usuário</div>
             <div>Data</div>
+            <div>Descrição</div>
             <div className="text-right">Valor</div>
           </div>
           {
             withdraws.map((withdraw) => (
               <div
                 key={withdraw.id}
-                className="grid grid-gap grid-cols-3 grid-rows-1 bg-gray-400 rounded-lg p-2 mb-2"
+                className="grid grid-gap grid-cols-4 grid-rows-1 bg-gray-400 rounded-lg p-2 mb-2"
               >
                 <div>{withdraw.user.firstName}</div>
                 <div>{convertDate(withdraw.createdAt)}</div>
+                <div>{withdraw.description}</div>
                 <div className="text-right">
                   R$ {
                     withdraw.amount.toLocaleString('pt-br', {minimumFractionDigits: 2})
