@@ -14,9 +14,11 @@ const BenefitsPage = () => {
   const handleButtonUsageBenefit = async ({ target }) => {
     setIsLoading(true);
     const { id, value } = target;
-    const benefit = user.assignment.benefits.find((benefit) => benefit.id === Number(id));
+    const assignmentBenefit = user.assignment.assignmentBenefit.find(
+      (ab) => ab.benefit.id === Number(id)
+    );
     const nDependents = user.assignment.dependents.length;
-    if (benefit.amount + nDependents > Number(value)) {
+    if (assignmentBenefit.benefit.amount + nDependents > Number(value)) {
       try {
         const result = await axios.put('/assignment/benefit', {
           amount: Number(value) + 1,
@@ -70,24 +72,24 @@ const BenefitsPage = () => {
                 <div className="text-right">Uso</div>
               </div>
               {
-                user.assignment.benefits.map((benefit) => {
-                  if (benefit.type === 'active') {
+                user.assignment.assignmentBenefit.map((ab) => {
+                  if (ab.benefit.type === 'active') {
                     return (
                     <div
-                      to={`/invoice/${benefit.id}`}
-                      key={benefit.id}
+                      to={`/invoice/${ab.benefit.id}`}
+                      key={ab.benefit.id}
                       className="grid grid-gap grid-cols-3 grid-rows-1 bg-gray-400 rounded-lg p-2 mb-2"
                     >
-                      <div>{benefit.title}</div>
-                      <div className="text-right">{benefit.amount + user.assignment.dependents.length}</div>
+                      <div>{ab.benefit.title}</div>
+                      <div className="text-right">{ab.benefit.amount + user.assignment.dependents.length}</div>
                       <div className="text-right flex justify-end">
-                        <div>{benefit.AssignmentBenefitModel.amount}</div>
+                        <div>{ab.amount}</div>
                         <button
                           type="button"
                           className="ml-1 font-bold"
                           onClick={handleButtonUsageBenefit}
-                          value={benefit.AssignmentBenefitModel.amount}
-                          id={benefit.AssignmentBenefitModel.benefitId}
+                          value={ab.amount}
+                          id={ab.benefitId}
                         >
                           ^
                         </button>
@@ -103,17 +105,17 @@ const BenefitsPage = () => {
                 <div className="text-right">Uso</div>
               </div>
               {
-                user.assignment.benefits.map((benefit) => {
-                  if (benefit.type === 'passive') {
+                user.assignment.assignmentBenefit.map((ab) => {
+                  if (ab.benefit.type === 'passive') {
                     return (
                     <div
-                      to={`/invoice/${benefit.id}`}
-                      key={benefit.id}
+                      to={`/invoice/${ab.benefit.id}`}
+                      key={ab.benefit.id}
                       className="grid grid-gap grid-cols-3 grid-rows-1 bg-gray-400 rounded-lg p-2 mb-2"
                     >
-                      <div>{benefit.title}</div>
-                      <div className="text-right">{benefit.amount}</div>
-                      <div className="text-right">{benefit.AssignmentBenefitModel.amount}</div>
+                      <div>{ab.benefit.title}</div>
+                      <div className="text-right">{ab.benefit.amount}</div>
+                      <div className="text-right">{ab.amount}</div>
                     </div>)
                   }
                 })
