@@ -75,26 +75,40 @@ const BenefitsPage = () => {
                 user.assignment.assignmentBenefit.map((ab) => {
                   if (ab.benefit.type === 'active') {
                     return (
-                    <div
-                      to={`/invoice/${ab.benefit.id}`}
-                      key={ab.benefit.id}
-                      className="grid grid-gap grid-cols-3 grid-rows-1 bg-gray-400 rounded-lg p-2 mb-2"
-                    >
-                      <div>{ab.benefit.title}</div>
-                      <div className="text-right">{ab.benefit.amount + user.assignment.dependents.length}</div>
-                      <div className="text-right flex justify-end">
-                        <div>{ab.amount}</div>
-                        <button
-                          type="button"
-                          className="ml-1 font-bold"
-                          onClick={handleButtonUsageBenefit}
-                          value={ab.amount}
-                          id={ab.benefitId}
-                        >
-                          ^
-                        </button>
+                    <div key={ab.benefit.id}>
+                      <div
+                        to={`/invoice/${ab.benefit.id}`}
+                        className="grid grid-gap grid-cols-3 grid-rows-1 bg-gray-400 rounded-lg p-2 mb-2"
+                      >
+                        <div>{ab.benefit.title}</div>
+                        <div className="text-right">{ab.benefit.amount + user.assignment.dependents.length}</div>
+                        <div className="text-right flex justify-end">
+                          <div>{ab.amount}</div>
+                          <button
+                            type="button"
+                            className="ml-1 font-bold"
+                            onClick={handleButtonUsageBenefit}
+                            value={ab.amount}
+                            id={ab.benefitId}
+                          >
+                            ^
+                          </button>
+                        </div>
                       </div>
-                    </div>)
+                      <div  className="flex flex-col">
+                        {
+                          ab.notes.map((note, index) => (
+                            <div
+                              key={note.id}
+                              className="p-1 bg-blue-500 text-white mb-2"
+                            >
+                              {index + 1}. {note.description}
+                            </div>
+                          ))
+                        }
+                      </div>
+                    </div>
+                    )
                   }
                 })
               }
