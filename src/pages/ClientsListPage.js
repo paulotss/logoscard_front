@@ -7,11 +7,25 @@ import { Link } from 'react-router-dom';
 const ClientsListPage = () => {
   const [clients, setClients] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  const checkLateInvoice = (invoices) => {
+    const today = new Date();
+    const late = invoices.some((invoice) => (
+      new Date(invoice.expiration) < today && !invoice.paid
+    ));
+    return late;
+  }
+
+  const checkPendingInvoice = (invoices) => {
+    const pending = invoices.some((invoice) => !invoice.paid);
+    return pending;
+  }
   
   useEffect(() => {
     const getUsers = async () => {
       setIsLoading(true);
       const result = await axios.get('/clients');
+      console.log(result.data);
       setClients(result.data);
       setIsLoading(false);
     }
@@ -41,9 +55,13 @@ const ClientsListPage = () => {
                     <div>{ client.id }</div>
                     <div className="col-span-2">{ `${client.user.firstName} ${client.user.lastName}` }</div>
                     <div className="text-right pr-2">
-                      { client.user.assignment
-                        ? <div className="w-3 h-3 bg-green-900 rounded-full inline-block"> </div> 
-                        : <div className="w-3 h-3 bg-yellow-600 rounded-full inline-block"> </div>
+                      { !client.user.assignment
+                        ? <div className="w-3 h-3 bg-slate-700 rounded-full inline-block"> </div> 
+                        : checkLateInvoice(client.user.invoices)
+                          ? <div className="w-3 h-3 bg-red-700 rounded-full inline-block"> </div>
+                          : checkPendingInvoice(client.user.invoices)
+                            ? <div className="w-3 h-3 bg-amber-500 rounded-full inline-block"> </div>
+                            : <div className="w-3 h-3 bg-green-700 rounded-full inline-block"> </div>
                       }
                     </div>
                   </Link>
