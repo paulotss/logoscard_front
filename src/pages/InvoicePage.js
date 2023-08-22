@@ -3,12 +3,22 @@ import { useParams, useNavigate } from 'react-router-dom';
 import axios from '../http';
 import Header from '../components/Header'
 import loading from '../media/isLoading.gif';
+import { Button, Dialog, DialogActions, DialogTitle } from '@mui/material';
 
 const InvoicePage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [invoice, setInvoice] = useState({});
+  const [openDialog, setOpenDialog] = useState();
   const [isLoading, setIsLoading] = useState(true);
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  }
+
+  const handleOpenDialog = () => {
+    setOpenDialog(true);
+  }
 
   const formatDate = (date) => {
     const format = new Date(date);
@@ -69,6 +79,7 @@ const InvoicePage = () => {
         ...invoice,
         paid: 1,
       });
+      setOpenDialog(false);
     } catch (error) {
       console.log(error);
     }
@@ -111,7 +122,7 @@ const InvoicePage = () => {
                     <button
                       type="button"
                       className="p-2 bg-red-600 mt-2 mr-2 rounded-full w-24 font-bold"
-                      onClick={handleClickPay}
+                      onClick={handleOpenDialog}
                     >
                       Pagar
                     </button>
@@ -140,6 +151,24 @@ const InvoicePage = () => {
               <p className="text-sm mt-3">CPF</p>
               <p>{invoice.user.cpf}</p>
             </section>
+            <Dialog open={openDialog} onClose={handleCloseDialog}>
+              <DialogTitle>Tem certeza?</DialogTitle>
+              <DialogActions>
+                <Button
+                  color="success"
+                  variant="contained"
+                  onClick={handleClickPay}
+                >
+                  Confimar
+                </Button>
+                <Button
+                  variant="contained"
+                  onClick={handleCloseDialog}
+                >
+                  Cancelar
+                </Button>
+              </DialogActions>
+            </Dialog>
           </main>
       }
     </>
