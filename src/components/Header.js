@@ -18,25 +18,25 @@ const Header = () => {
       <nav className="flex list-none w-full p-2 justify-center">
         <Link
           to="/"
-          className="p-2 hover:bg-gray-300 hover:text-gray-900 rounded-md"
+          className="p-2 hover:bg-gray-300 hover:text-gray-900 rounded-md border border-white mr-2"
         >
           Home
         </Link>
         <Link
           to="/clients"
-          className="p-2 hover:bg-gray-300 hover:text-gray-900 rounded-md"
+          className="p-2 hover:bg-gray-300 hover:text-gray-900 rounded-md border border-white mr-2"
         >
           Clientes
         </Link>
         <Link
           to="/dependents"
-          className="p-2 hover:bg-gray-300 hover:text-gray-900 rounded-md"
+          className="p-2 hover:bg-gray-300 hover:text-gray-900 rounded-md border border-white mr-2"
         >
           Dependentes
         </Link>
         <Link
           to="/cashflow"
-          className="p-2 hover:bg-gray-300 hover:text-gray-900 rounded-md"
+          className="p-2 hover:bg-gray-300 hover:text-gray-900 rounded-md border border-white"
         >
           Caixa
         </Link>
