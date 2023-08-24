@@ -97,6 +97,7 @@ const ClientsListPage = () => {
                       </div>
                     </Link>
                     {
+                      client.user.assignment &&
                       client.user.assignment.dependents.map((dependent) => (
                         <Link to={`/dependent/${dependent.id}`}
                           key={ dependent.id }
