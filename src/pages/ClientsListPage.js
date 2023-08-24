@@ -78,9 +78,8 @@ const ClientsListPage = () => {
                   <img src={ loading } alt="" />
                 </div>
               : filterClients.map((client) => (
-                  <>
+                  <div key={ client.id }>
                     <Link to={`/client/${client.user.id}`}
-                      key={ client.id }
                       className="grid grid-gap grid-cols-4 grid-rows-1 bg-gray-400 rounded-lg p-2 mt-2"
                     >
                       <div>{ client.id }</div>
@@ -109,7 +108,7 @@ const ClientsListPage = () => {
                         </Link>
                       ))
                     }
-                  </>
+                  </div>
                 ))
           }
         </div>
