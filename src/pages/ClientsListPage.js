@@ -22,7 +22,8 @@ const ClientsListPage = () => {
     const result = clients.filter((client) => {
       const { firstName, lastName } = client.user;
       const fullNameClient = `${firstName} ${lastName}`.toLowerCase();
-      const fullNamesDependents = extractNameDependents(client.user.assignment.dependents);
+      const fullNamesDependents = client.user.assignment
+      ? extractNameDependents(client.user.assignment.dependents) : "";
       const term = value.toLowerCase();
       return fullNameClient.includes(term) || fullNamesDependents.includes(term);
     });
@@ -78,9 +79,8 @@ const ClientsListPage = () => {
                   <img src={ loading } alt="" />
                 </div>
               : filterClients.map((client) => (
-                  <>
+                  <div key={ client.id }>
                     <Link to={`/client/${client.user.id}`}
-                      key={ client.id }
                       className="grid grid-gap grid-cols-4 grid-rows-1 bg-gray-400 rounded-lg p-2 mt-2"
                     >
                       <div>{ client.id }</div>
@@ -97,6 +97,7 @@ const ClientsListPage = () => {
                       </div>
                     </Link>
                     {
+                      client.user.assignment &&
                       client.user.assignment.dependents.map((dependent) => (
                         <Link to={`/dependent/${dependent.id}`}
                           key={ dependent.id }
@@ -108,7 +109,7 @@ const ClientsListPage = () => {
                         </Link>
                       ))
                     }
-                  </>
+                  </div>
                 ))
           }
         </div>
