@@ -22,7 +22,8 @@ const ClientsListPage = () => {
     const result = clients.filter((client) => {
       const { firstName, lastName } = client.user;
       const fullNameClient = `${firstName} ${lastName}`.toLowerCase();
-      const fullNamesDependents = extractNameDependents(client.user.assignment.dependents);
+      const fullNamesDependents = client.user.assignment
+      ? extractNameDependents(client.user.assignment.dependents) : "";
       const term = value.toLowerCase();
       return fullNameClient.includes(term) || fullNamesDependents.includes(term);
     });
