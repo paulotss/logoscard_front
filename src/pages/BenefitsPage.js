@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import axios from "../http";
 import Header from "../components/Header";
 //import { HiArrowUpCircle } from "react-icons/hi2";
@@ -168,6 +168,13 @@ const BenefitsPage = () => {
                   }
                 })
               }
+              <Link
+                to={`/client/${id}`}
+              >
+                <div className="bg-gray-600 p-2 mt-5 w-24 text-center text-white rounded-lg">
+                  Voltar
+                </div>
+              </Link>
             </section>
             <Dialog open={openUsage} onClose={handleCloseUsage}>
               <DialogTitle>Uso de benefício</DialogTitle>
