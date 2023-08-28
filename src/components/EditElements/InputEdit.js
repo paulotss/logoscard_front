@@ -4,7 +4,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import axios from '../../http';
 
 const InputEdit = (props) => {
-  const { title, entity, valueInput } = props;
+  const { title, entity, valueInput, userId } = props;
 
   const [isEditing, setIsEditing] = useState(false);
   const [editValue, setEditValue] = useState(valueInput)
@@ -15,8 +15,9 @@ const InputEdit = (props) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await axios.put('client/edit', {
-      [entity]: editValue
+    await axios.put('user/edit', {
+      userId,
+      data: { [entity]: editValue }
     });
     setIsEditing(false)
   }
@@ -28,7 +29,7 @@ const InputEdit = (props) => {
         ? <form>
             <input
               type="text"
-              value={valueInput}
+              value={editValue}
               onChange={handleChange}
               className="p-2 mr-2"
             />
@@ -37,7 +38,7 @@ const InputEdit = (props) => {
             </button>
           </form>
         : <div>
-            <span>{ valueInput }</span>
+            <span>{ editValue }</span>
             <button
               className="ml-2 cursor-pointer"
               onClick={() => { setIsEditing(true) }}
