@@ -41,11 +41,11 @@ const AddPlanPage = () => {
   }
 
   const getPlanBenefits = (payload) => {
-    const { benefits } = payload.assignment.plan;
+    const { benefits } = payload.assignments[0].plan;
     const result = benefits.map((benefit) => ({
         amount: benefit.amount && 0,
         benefitId: benefit.id,
-        assignmentId: payload.assignment.id,
+        assignmentId: payload.assignments[0].id,
       })
     );
     return result;
@@ -72,7 +72,7 @@ const AddPlanPage = () => {
       if (dependents.length > 0) {
         const dependentsData = dependents.map((d) => ({
           user: d,
-          assignmentId: newUser.data.assignment.id,
+          assignmentId: newUser.data.assignments[0].id,
         }));
         await axios.post('/user/dependent', dependentsData);
       }
@@ -94,8 +94,6 @@ const AddPlanPage = () => {
   const handleChange = ({ target }) => {
     const { name, value } = target;
     if (name === "planId") {
-      console.log(name, value);
-      console.log(activePlan);
       setActivePlan({
         ...activePlan,
         [name]: Number(value),

@@ -1,13 +1,34 @@
 import { Link } from 'react-router-dom';
 
-const PlanLink = ({ assignmentId, assignmentTitle, userId }) => {
+const PlanLink = (props) => {
+  const { assignmentId, assignmentTitle, userId, expiration } = props;
+
+  const formatDate = (value) => {
+    const date = new Date(value);
+    const day = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate();
+    const month = (date.getMonth() + 1) < 10 ? `0${date.getMonth() + 1}` : (date.getMonth() + 1);
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+  }
+
+  const isExpired = (date) => {
+    const today = new Date();
+    const dateObj = new Date(date);
+    return dateObj < today;
+  }
+
   return (
     <div
-      key={assignmentId}
-      className="font-bold bg-gray-400 p-1 rounded-md mb-2 w-80 flex justify-between"
+      className={`${isExpired(expiration) ? "bg-red-400" : "bg-green-500"} p-2 rounded-md mb-2`}
     >
-      <Link to={`/client/benefit/${userId}`}>
-        {assignmentTitle.toUpperCase()}
+      <Link
+        key={assignmentId}
+        to={`/client/benefit/${userId}`}
+      >
+        <p className="w-full font-bold">
+          {assignmentTitle.toUpperCase()}
+        </p>
+        <p className="text-sm">Vencimento: {formatDate(expiration)}</p>
       </Link>
     </div>
   )
