@@ -7,6 +7,8 @@ import loading from "../media/isLoading.gif";
 import InvoicesList from "../components/InvoicesList";
 import PlanLink from "../components/Plan/PlanLink";
 import Card from "../components/Card";
+import EditIcon from '@mui/icons-material/Edit';
+import InputEdit from "../components/EditElements/InputEdit";
 
 const ClientPage = () => {
   const AWS_BUCKET = process.env.REACT_APP_AWS_BUCKET;
@@ -70,8 +72,25 @@ const ClientPage = () => {
             </section>
             <section className="flex justify-between">
               <div>
-                <p className="mt-5 text-sm">Nome</p>
-                <p>{`${user.firstName} ${user.lastName}`}</p>
+                <InputEdit
+                  title="Nome"
+                  valueInput={user.firstName}
+                  entity="firstName"
+                />
+                <InputEdit
+                  title="Sobrenome"
+                  valueInput={user.lastName}
+                  entity="lastName"
+                />
+                <div>
+                  <p className="mt-5 text-sm">Nome</p>
+                  <div>
+                    <span>{`${user.firstName} ${user.lastName}`}</span>
+                    <span className="ml-2 cursor-pointer">
+                      <EditIcon fontSize="small" />
+                    </span>
+                  </div>
+                </div>
                 <p className="mt-5 text-sm">Email</p>
                 <p>{user.email}</p>
                 <p className="mt-5 text-sm">RG</p>
