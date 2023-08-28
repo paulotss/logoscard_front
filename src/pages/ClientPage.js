@@ -8,6 +8,7 @@ import InvoicesList from "../components/InvoicesList";
 import PlanLink from "../components/Plan/PlanLink";
 import Card from "../components/Card";
 import InputEdit from "../components/EditElements/InputEdit";
+import DateEdit from "../components/EditElements/DateEdit";
 
 const ClientPage = () => {
   const AWS_BUCKET = process.env.REACT_APP_AWS_BUCKET;
@@ -83,16 +84,36 @@ const ClientPage = () => {
                   entity="lastName"
                   userId={user.id}
                 />
-                <p className="mt-5 text-sm">Email</p>
-                <p>{user.email}</p>
-                <p className="mt-5 text-sm">RG</p>
-                <p>{user.rg}</p>
-                <p className="mt-5 text-sm">CPF</p>
-                <p>{user.cpf}</p>
-                <p className="mt-5 text-sm">Celular</p>
-                <p>{user.cellPhone}</p>
-                <p className="mt-5 text-sm">Nascimento</p>
-                <p>{formatDate(user.birthday)}</p>
+                <InputEdit
+                  title="Email"
+                  valueInput={user.email}
+                  entity="email"
+                  userId={user.id}
+                />
+                <InputEdit
+                  title="RG"
+                  valueInput={user.rg}
+                  entity="rg"
+                  userId={user.id}
+                />
+                <InputEdit
+                  title="CPF"
+                  valueInput={user.cpf}
+                  entity="cpf"
+                  userId={user.id}
+                />
+                <InputEdit
+                  title="Celular"
+                  valueInput={user.cellPhone}
+                  entity="cellPhone"
+                  userId={user.id}
+                />
+                <DateEdit
+                  title="Nascimento"
+                  valueInput={formatDate(user.birthday)}
+                  entity="birthday"
+                  userId={user.id}
+                />
                 <p className="mt-5 text-sm">Plano</p>
                   {
                     user.assignment
