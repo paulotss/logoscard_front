@@ -123,14 +123,17 @@ const ClientPage = () => {
                         </div>
                       ))
                     }
-                    <div className="mt-2">
-                      <Link
-                        to={`/plan/add/${user.id}`}
-                        className="bg-green-900 p-2 w-40 text-center rounded-md text-white"
-                      >
-                        Adicionar Plano
-                      </Link>
-                    </div>
+                    {
+                      new Date() > new Date(user.assignments[0].expiration) &&
+                      <div className="mt-2">
+                        <Link
+                          to={`/plan/add/${user.id}`}
+                          className="bg-green-900 p-2 w-40 text-center rounded-md text-white"
+                        >
+                          Adicionar Plano
+                        </Link>
+                      </div>
+                    }
                   </div>
                 : <div className="mt-2">
                     <Link
