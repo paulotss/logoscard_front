@@ -148,7 +148,7 @@ const ClientPage = () => {
             <p className="font-bold mb-3">Cartão</p>
             <section className="flex justify-between">
               <div className="mt-2">
-                <Card client={user} />
+                <Card clientId={user.id} />
               </div>
             </section>
             {user.invoices && user.invoices.length > 0 && <InvoicesList invoices={user.invoices} />}
