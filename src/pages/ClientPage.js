@@ -109,18 +109,24 @@ const ClientPage = () => {
                       assignmentId={user.assignment.id}
                       assignmentTitle={user.assignment.plan.title}
                       userId={user.id}
+                      expiration={user.assignment.expiration}
                     />
-                    <p className="mt-5 text-sm">Dependentes</p>
-                      { user.assignment.dependents.map(d => (
-                        <div
-                          key={d.id}
-                          className="font-bold bg-gray-400 p-2 rounded-md mb-2 w-80 flex justify-between"
-                        >
-                          <Link to={`/dependent/${d.id}`}>
-                            { `${d.user.firstName} ${d.user.lastName}` }
-                          </Link>
-                      </div>
-                      )) }
+                    {
+                      user.assignment.dependents.length > 0 && 
+                      <>
+                        <p className="mt-5 text-sm">Dependentes</p>
+                        { user.assignment.dependents.map(d => (
+                          <div
+                            key={d.id}
+                            className="font-bold bg-gray-400 p-2 rounded-md mb-2 w-80 flex justify-between"
+                          >
+                            <Link to={`/dependent/${d.id}`}>
+                              { `${d.user.firstName} ${d.user.lastName}` }
+                            </Link>
+                          </div>
+                        )) }
+                      </>
+                    }
                     </>
                   : <div className="mt-2">
                       <Link
