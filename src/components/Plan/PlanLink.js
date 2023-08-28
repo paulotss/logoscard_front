@@ -19,7 +19,7 @@ const PlanLink = (props) => {
 
   return (
     <div
-      className={`${isExpired(expiration) ? "bg-red-600" : "bg-green-500"} p-2 rounded-md mb-2 w-80`}
+      className={`${isExpired(expiration) ? "bg-red-400" : "bg-green-500"} p-2 rounded-md mb-2`}
     >
       <Link
         key={assignmentId}

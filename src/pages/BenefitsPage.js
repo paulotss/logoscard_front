@@ -44,16 +44,16 @@ const BenefitsPage = () => {
     setOpenUsage(false);
     setIsLoading(true);
     const { id, amount } = currentBenefit;
-    const assignmentBenefit = user.assignment.assignmentBenefit.find(
+    const assignmentBenefit = user.assignments[0].assignmentBenefit.find(
       (ab) => ab.benefit.id === Number(id)
     );
-    const nDependents = user.assignment.dependents.length;
+    const nDependents = user.assignments[0].dependents.length;
     if (assignmentBenefit.benefit.amount + nDependents > Number(amount)) {
       try {
         const result = await axios.put('/assignment/benefit', {
           amount: Number(amount) + 1,
           benefitId: id,
-          assignmentId: user.assignment.id,
+          assignmentId: user.assignments[0].id,
         });
         await axios.post('/benefit/note', {
           assignmentBenefitId: assignmentBenefit.id,
@@ -97,7 +97,7 @@ const BenefitsPage = () => {
               </div>
               <div className="mb-3">
                 <p className="text-sm">Plano</p>
-                <p>{ user.assignment.plan.title }</p>
+                <p>{ user.assignments[0].plan.title }</p>
               </div>
               <p className="font-bold mt-5">Benefícios ativos</p>
               <div className="grid grid-gap grid-cols-3 grid-rows-1 p-2 text-sm">
@@ -106,7 +106,7 @@ const BenefitsPage = () => {
                 <div className="text-right">Uso</div>
               </div>
               {
-                user.assignment.assignmentBenefit.map((ab) => {
+                user.assignments[0].assignmentBenefit.map((ab) => {
                   if (ab.benefit.type === 'active') {
                     return (
                     <div key={ab.benefit.id}>
@@ -115,7 +115,7 @@ const BenefitsPage = () => {
                         className="grid grid-gap grid-cols-3 grid-rows-1 bg-gray-400 rounded-lg p-2 mb-2"
                       >
                         <div>{ab.benefit.title}</div>
-                        <div className="text-right">{ab.benefit.amount + user.assignment.dependents.length}</div>
+                        <div className="text-right">{ab.benefit.amount + user.assignments[0].dependents.length}</div>
                         <div className="text-right flex justify-end">
                           <button
                             type="button"
@@ -153,7 +153,7 @@ const BenefitsPage = () => {
                 <div className="text-right">Uso</div>
               </div>
               {
-                user.assignment.assignmentBenefit.map((ab) => {
+                user.assignments[0].assignmentBenefit.map((ab) => {
                   if (ab.benefit.type === 'passive') {
                     return (
                     <div

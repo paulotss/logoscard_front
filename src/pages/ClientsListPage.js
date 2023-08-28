@@ -22,8 +22,8 @@ const ClientsListPage = () => {
     const result = clients.filter((client) => {
       const { firstName, lastName } = client.user;
       const fullNameClient = `${firstName} ${lastName}`.toLowerCase();
-      const fullNamesDependents = client.user.assignment
-      ? extractNameDependents(client.user.assignment.dependents) : "";
+      const fullNamesDependents = client.user.assignments[0]
+      ? extractNameDependents(client.user.assignments[0].dependents) : "";
       const term = value.toLowerCase();
       return fullNameClient.includes(term) || fullNamesDependents.includes(term);
     });
@@ -86,7 +86,7 @@ const ClientsListPage = () => {
                       <div>{ client.id }</div>
                       <div className="col-span-2">{ `${client.user.firstName} ${client.user.lastName}` }</div>
                       <div className="text-right pr-2">
-                        { !client.user.assignment
+                        { !client.user.assignments[0]
                           ? <div className="w-3 h-3 bg-slate-700 rounded-full inline-block"> </div> 
                           : checkLateInvoice(client.user.invoices)
                             ? <div className="w-3 h-3 bg-red-700 rounded-full inline-block"> </div>
