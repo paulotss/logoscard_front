@@ -11,7 +11,6 @@ import InputEdit from "../components/EditElements/InputEdit";
 import DateEdit from "../components/EditElements/DateEdit";
 
 const ClientPage = () => {
-  const AWS_BUCKET = process.env.REACT_APP_AWS_BUCKET;
   const [user, setUser] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [removed, setRemoved] = useState();
@@ -57,97 +56,86 @@ const ClientPage = () => {
           <Header name={user.firstName} />
           <main className="p-5">
             <p className="font-bold mb-3">Cliente</p>
-            <section className="flex justify-between border-b-2 border-gray-400 pb-5">
-              <div>
-                <p>Inscrição</p>
-                <p className="font-bold text-4xl">00{user.id}</p>
-              </div>
-              <div className="w-32 h-32 bg-gray-900 rounded-full">
-                <img
-                  className="object-cover rounded-full"
-                  src={AWS_BUCKET + user.photo}
-                  alt=""
-                />
-              </div>
+            <section className="flex flex-wrap border-b-2 border-gray-400 pb-5 mb-5">
+              <InputEdit
+                title="Nome"
+                valueInput={user.firstName}
+                entity="firstName"
+                userId={user.id}
+              />
+              <InputEdit
+                title="Sobrenome"
+                valueInput={user.lastName}
+                entity="lastName"
+                userId={user.id}
+              />
+              <InputEdit
+                title="Email"
+                valueInput={user.email}
+                entity="email"
+                userId={user.id}
+              />
+              <InputEdit
+                title="RG"
+                valueInput={user.rg}
+                entity="rg"
+                userId={user.id}
+              />
+              <InputEdit
+                title="CPF"
+                valueInput={user.cpf}
+                entity="cpf"
+                userId={user.id}
+              />
+              <InputEdit
+                title="Celular"
+                valueInput={user.cellPhone}
+                entity="cellPhone"
+                userId={user.id}
+              />
+              <DateEdit
+                title="Nascimento"
+                valueInput={formatDate(user.birthday)}
+                entity="birthday"
+                userId={user.id}
+              />
+            </section>
+            <p className="font-bold mb-3">Plano</p>
+            <section className="border-b-2 border-gray-400 pb-5 mb-5">
+              {
+                user.assignment
+                ? <>
+                    <PlanLink
+                      assignmentId={user.assignment.id}
+                      assignmentTitle={user.assignment.plan.title}
+                      userId={user.id}
+                    />
+                    <p className="mt-5 text-sm">Dependentes</p>
+                      { user.assignment.dependents.map(d => (
+                        <div
+                          key={d.id}
+                          className="font-bold bg-gray-400 p-2 rounded-md mb-2 w-80 flex justify-between"
+                        >
+                          <Link to={`/dependent/${d.id}`}>
+                            { `${d.user.firstName} ${d.user.lastName}` }
+                          </Link>
+                      </div>
+                      )) }
+                    </>
+                  : <div className="mt-2">
+                      <Link
+                        to={`/plan/add/${user.id}`}
+                        className="bg-green-900 p-2 w-40 text-center rounded-md text-white"
+                      >
+                        Adicionar Plano
+                      </Link>
+                    </div>
+                }
             </section>
             <section className="flex justify-between">
-              <div>
-                <InputEdit
-                  title="Nome"
-                  valueInput={user.firstName}
-                  entity="firstName"
-                  userId={user.id}
-                />
-                <InputEdit
-                  title="Sobrenome"
-                  valueInput={user.lastName}
-                  entity="lastName"
-                  userId={user.id}
-                />
-                <InputEdit
-                  title="Email"
-                  valueInput={user.email}
-                  entity="email"
-                  userId={user.id}
-                />
-                <InputEdit
-                  title="RG"
-                  valueInput={user.rg}
-                  entity="rg"
-                  userId={user.id}
-                />
-                <InputEdit
-                  title="CPF"
-                  valueInput={user.cpf}
-                  entity="cpf"
-                  userId={user.id}
-                />
-                <InputEdit
-                  title="Celular"
-                  valueInput={user.cellPhone}
-                  entity="cellPhone"
-                  userId={user.id}
-                />
-                <DateEdit
-                  title="Nascimento"
-                  valueInput={formatDate(user.birthday)}
-                  entity="birthday"
-                  userId={user.id}
-                />
-                <p className="mt-5 text-sm">Plano</p>
-                  {
-                    user.assignment
-                    ? <>
-                      <PlanLink
-                        assignmentId={user.assignment.id}
-                        assignmentTitle={user.assignment.plan.title}
-                        userId={user.id}
-                      />
-                      <p className="mt-5 text-sm">Dependentes</p>
-                        { user.assignment.dependents.map(d => (
-                          <div
-                            key={d.id}
-                            className="font-bold bg-gray-400 p-1 rounded-md mb-2 w-80 flex justify-between"
-                          >
-                            <Link to={`/dependent/${d.id}`}>
-                              { `${d.user.firstName} ${d.user.lastName}` }
-                            </Link>
-                        </div>
-                        )) }
-                      </>
-                    : <div className="mt-2">
-                        <Link
-                          to={`/plan/add/${user.id}`}
-                          className="bg-green-900 p-2 w-40 text-center rounded-full text-white"
-                        >
-                          Adicionar Plano
-                        </Link>
-                      </div>
-                  }
-                </div>
-                <div className="mt-2">
-                  <Card client={user} />
-                </div>
+              <div className="mt-2">
+                <Card client={user} />
+              </div>
             </section>
             {user.invoices && user.invoices.length > 0 && <InvoicesList invoices={user.invoices} />}
             <Dialog

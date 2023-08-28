@@ -29,7 +29,7 @@ const DateEdit = (props) => {
   }
 
   return (
-    <div>
+    <div className="min-w-[256px] p-2 rounded-lg border mr-2 mb-2">
       <p className="text-sm">{ title }</p>
       {
         isEditing
