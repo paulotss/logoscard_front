@@ -101,7 +101,7 @@ const ClientsListPage = () => {
                       client.user.assignments[0].dependents.map((dependent) => (
                         <Link to={`/dependent/${dependent.id}`}
                           key={ dependent.id }
-                          className="grid grid-gap grid-cols-4 grid-rows-1 bg-[#6DBDB7] p-2 mb-2"
+                          className="grid grid-gap grid-cols-4 grid-rows-1 bg-[#6DBDB7] p-2"
                         >
                           <div>{ dependent.id }</div>
                           <div className="col-span-2">{ `${dependent.user.firstName} ${dependent.user.lastName}` }</div>
