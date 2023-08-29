@@ -31,32 +31,32 @@ const Invoices = () => {
   }, []);
 
   return (
-    <section className="flex justify-between">
+    <section className="flex justify-center">
       {
         isLoading
         ? <div className="flex justify-center w-full">
             <img src={loading} alt="" />
           </div>
         : <>
-            <div>
+            <div className="m-5">
               <p>Pagas</p>
               <p className="font-bold text-green-600 text-2xl">
                 R$ {invoice.paid.toLocaleString('pt-br', {minimumFractionDigits: 2})}
               </p>
             </div>
-            <div>
+            <div className="m-5">
               <p>Pendentes</p>
               <p className="font-bold text-yellow-600 text-2xl">
                 R$ {invoice.pending.toLocaleString('pt-br', {minimumFractionDigits: 2})}
               </p>
             </div>
-            <div>
+            <div className="m-5">
               <p>Vencidas</p>
               <p className="font-bold text-rose-600 text-2xl">
                 R$ {invoice.overdue.toLocaleString('pt-br', {minimumFractionDigits: 2})}
               </p>
             </div>
-            <div>
+            <div className="m-5">
               <p>Caixa</p>
               <p className="font-bold text-green-900 text-2xl">
                 R$ {invoice.current.toLocaleString('pt-br', {minimumFractionDigits: 2})}
