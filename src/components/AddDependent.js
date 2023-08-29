@@ -17,7 +17,7 @@ const AddDependent = ({ setDependents }) => {
     return (
       <button
         type='button'
-        className="p-2 bg-green-600 text-white rounded-full mb-2"
+        className="p-2 bg-green-600 text-white rounded-md m-2"
         onClick={() => { setIsShowing(true) }}
       >
         Adicionar dependente

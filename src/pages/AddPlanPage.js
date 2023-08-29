@@ -140,115 +140,117 @@ const AddPlanPage = () => {
             <section className='p-3'>
             <p className="font-bold mb-3">Adicionar plano</p>
               <form className="mb-3">
-                <div className="mb-3">
-                  <label htmlFor="plan">Plano</label>
-                  <br/>
-                  <select
-                    id="planId"
-                    name="planId"
-                    className="p-2"
-                    onChange={handleChange}
-                    value={activePlan.planId}
-                  >
-                  {
-                    plans.map((plan) => (
-                      <option value={plan.id} key={plan.id}>{plan.title}</option>
-                    ))
-                  }
-                  </select>
-                </div>
-                <div className="mb-3">
-                  <p>Expira em</p>
-                  <DatePicker
-                    value={expiration}
-                    format="DD/MM/YYYY"
-                    onChange={(v) => {setExpiration(v) }}
-                  />
-                </div>
-                <div className="mb-3">
-                  <label htmlFor="expiration">Dia de vencimento da fatura</label>
-                  <br/>
-                  <input
-                    id="expiration"
-                    name="expiration"
-                    type="text"
-                    className="w-24 p-2"
-                    onChange={handleChange}
-                    value={activePlan.expiration}
-                  />
-                </div>
-                <div>
-                  <label htmlFor="parcels">Parcelas</label>
-                  <br/>
-                  <select
-                    id="parcels"
-                    name="parcels"
-                    className="p-2 mb-3"
-                    onChange={handleChange}
-                    value={activePlan.parcels}
-                  >
-                    <option value="1">1x</option>
-                    <option value="2">2x</option>
-                    <option value="3">3x</option>
-                    <option value="4">4x</option>
-                    <option value="5">5x</option>
-                    <option value="6">6x</option>
-                    <option value="7">7x</option>
-                    <option value="8">8x</option>
-                    <option value="9">9x</option>
-                    <option value="10">10x</option>
-                    <option value="11">11x</option>
-                    <option value="12">12x</option>
-                  </select>
-                </div>
-                <div>
-                  <label htmlFor="method">Forma de pagamento</label>
-                  <br/>
-                  <select
-                    id="method"
-                    name="method"
-                    className="p-2 mb-3"
-                    onChange={handleChange}
-                    value={activePlan.method}
-                  >
-                    <option value="PIX">PIX</option>
-                    <option value="CRÉDITO">CRÉDITO</option>
-                    <option value="DÉBITO">DÉBITO</option>
-                    <option value="DINHEIRO">DINHEIRO</option>
-                  </select>
-                </div>
-                <div className="mb-3">
-                  <p>
-                    Valor do plano
-                  </p>
-                  <p className='font-bold text-2xl'>
-                  R$ { 
-                      activePlan.price.toLocaleString('pt-br', {minimumFractionDigits: 2})
-                    }
-                  </p>
-                </div>
-                {
-                  dependents.length > 0
-                  ? dependents.map((d) => (
-                    <div
-                      key={d.cpf}
-                      className="p-2 w-96 font-bold bg-gray-500 rounded-lg mr-2 mb-2 flex justify-between"
+                <div className="flex flex-wrap">
+                  <div className="p-2 border rounded-md m-2">
+                    <label htmlFor="plan" className="text-sm">Plano</label>
+                    <br/>
+                    <select
+                      id="planId"
+                      name="planId"
+                      className="p-2"
+                      onChange={handleChange}
+                      value={activePlan.planId}
                     >
-                      <div>{ `${d.firstName} ${d.lastName}` }</div>
-                      <button
-                        type='button'
-                        onClick={() => { handleRemoveDependent(d.cpf) }}
+                    {
+                      plans.map((plan) => (
+                        <option value={plan.id} key={plan.id}>{plan.title}</option>
+                      ))
+                    }
+                    </select>
+                  </div>
+                  <div className="p-2 border rounded-md m-2">
+                    <p className="text-sm">Expira em</p>
+                    <DatePicker
+                      value={expiration}
+                      format="DD/MM/YYYY"
+                      onChange={(v) => {setExpiration(v) }}
+                    />
+                  </div>
+                  <div className="p-2 border rounded-md m-2">
+                    <label htmlFor="expiration" className="text-sm">Dia de vencimento da fatura</label>
+                    <br/>
+                    <input
+                      id="expiration"
+                      name="expiration"
+                      type="text"
+                      className="w-24 p-2"
+                      onChange={handleChange}
+                      value={activePlan.expiration}
+                    />
+                  </div>
+                  <div className="p-2 border rounded-md m-2">
+                    <label htmlFor="parcels" className="text-sm">Parcelas</label>
+                    <br/>
+                    <select
+                      id="parcels"
+                      name="parcels"
+                      className="p-2 mb-3"
+                      onChange={handleChange}
+                      value={activePlan.parcels}
+                    >
+                      <option value="1">1x</option>
+                      <option value="2">2x</option>
+                      <option value="3">3x</option>
+                      <option value="4">4x</option>
+                      <option value="5">5x</option>
+                      <option value="6">6x</option>
+                      <option value="7">7x</option>
+                      <option value="8">8x</option>
+                      <option value="9">9x</option>
+                      <option value="10">10x</option>
+                      <option value="11">11x</option>
+                      <option value="12">12x</option>
+                    </select>
+                  </div>
+                  <div className="p-2 border rounded-md m-2">
+                    <label htmlFor="method" className="text-sm">Forma de pagamento</label>
+                    <br/>
+                    <select
+                      id="method"
+                      name="method"
+                      className="p-2 mb-3"
+                      onChange={handleChange}
+                      value={activePlan.method}
+                    >
+                      <option value="PIX">PIX</option>
+                      <option value="CRÉDITO">CRÉDITO</option>
+                      <option value="DÉBITO">DÉBITO</option>
+                      <option value="DINHEIRO">DINHEIRO</option>
+                    </select>
+                  </div>
+                  <div className="p-2 border rounded-md m-2">
+                    <p className="text-sm">
+                      Valor do plano
+                    </p>
+                    <p className='font-bold text-2xl'>
+                    R$ { 
+                        activePlan.price.toLocaleString('pt-br', {minimumFractionDigits: 2})
+                      }
+                    </p>
+                  </div>
+                  {
+                    dependents.length > 0
+                    ? dependents.map((d) => (
+                      <div
+                        key={d.cpf}
+                        className="p-2 w-96 font-bold bg-gray-500 rounded-lg mr-2 mb-2 flex justify-between"
                       >
-                        <HiMinusCircle color='red' />
-                      </button>
-                    </div>
-                  ))
-                  : null
-                }
+                        <div>{ `${d.firstName} ${d.lastName}` }</div>
+                        <button
+                          type='button'
+                          onClick={() => { handleRemoveDependent(d.cpf) }}
+                        >
+                          <HiMinusCircle color='red' />
+                        </button>
+                      </div>
+                    ))
+                    : null
+                  }
+                </div>
                 <button
                   type="button"
                   onClick={submitPlanForm}
-                  className="bg-green-900 p-2 text-center rounded-full text-white"
+                  className="bg-green-900 p-2 text-center h-fit self-center rounded-md w-24 text-white m-2"
                 >
                   Adicionar
                 </button>
