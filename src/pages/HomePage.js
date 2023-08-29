@@ -33,19 +33,19 @@ const HomePage = () => {
     <>
       <Header />
       <main className="p-5">
-        <p className="font-bold mb-3">Faturas</p>
+        <p className="font-bold mb-3 text-center">Faturas</p>
         <Invoices />
-        <section className="flex justify-around mt-5 border-t-2 border-gray-400">
-          <div className="m-2 text-center">
+        <section className="flex justify-center mt-5 border-t-2 border-gray-400">
+          <div className="m-5 text-center">
             <p className="font-bold">Titulares</p>
             <p className="font-bold text-green-600 text-2xl">{ total.clients }</p>
           </div>
-          <div className="m-2 text-center">
+          <div className="m-5 text-center">
             <p className="font-bold">Dependentes</p>
             <p className="font-bold text-green-600 text-2xl">{ total.dependents }</p>
           </div>
         </section>
-        <section className="flex justify-around p-5 border-t-2 border-gray-400">
+        <section className="flex justify-center p-5 border-t-2 border-gray-400">
           <ButtonSection
             title="Clientes"
             image={ <HiUserGroup /> }
@@ -67,7 +67,7 @@ const HomePage = () => {
             path="/cashflow"
           />
         </section>
-        <section className="flex flex-wrap justify-around p-5 mt-5 border-t-2 border-gray-400">
+        <section className="flex flex-wrap justify-center p-5 mt-5 border-t-2 border-gray-400">
           <ButtonPlan title="Premium Seraphis" image={imgSeraphisPremium} />
           <ButtonPlan title="Premium Maat" image={imgMaatPremium} />
           <ButtonPlan title="Gold Seraphis/Maat" image={imgMaatSeraphisPremium} />
