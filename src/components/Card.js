@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import AccountBoxIcon from '@mui/icons-material/AccountBox';
-import logo from '../media/logo1.png';
+import bgCard from '../media/bg-card.png';
 import axios from '../http';
 
 const CardPage = ({ clientId }) => {
@@ -45,40 +44,27 @@ const CardPage = ({ clientId }) => {
       {
         isShowing &&
         <div
-          className="mt-2 p-5 bg-gradient-to-r from-green-300 to-white w-96 h-fit flex justify-between rounded-lg"
+          className={`mt-2 from-green-300 to-white w-[360px] h-[231px] relative`}
+          style={{backgroundImage: `url(${bgCard})`}}
         >
-          <div>
-            <div className="mb-3">
-              <p className="text-sm">Nome do beneficiário</p>
-              <p className="font-bold">{ `${client.firstName} ${client.lastName}` }</p>
+            <div className="absolute top-[40px] left-[80px]">
+              <p className="text-xs text-white">Nome do beneficiário</p>
+              <p className="font-bold text-sm text-white">{ `${client.firstName} ${client.lastName}` }</p>
             </div>
-            <div className="mb-3">
-              <p className="text-sm">Número de inscrição</p>
-              <p className="font-bold">{ `00${client.id}` }</p>
+            <div className="absolute top-[88px] left-[80px]">
+              <p className="text-xs text-white">Número de inscrição</p>
+              <p className="font-bold text-sm text-white">{ `00${client.id}` }</p>
             </div>
-            <div className="mb-3">
-              <p className="text-sm">Documento do beneficiário</p>
-              <p className="font-bold">{ client.rg }</p>
+            <div className="absolute bottom-[63px] left-[80px]">
+              <p className="text-xs text-white">Documento do beneficiário</p>
+              <p className="font-bold text-sm text-white">{ client.rg }</p>
             </div>
-            <div>
-              <p className="text-sm">Válido até</p>
-              <p className="font-bold">
+            <div className="absolute bottom-[20px] left-[80px]">
+              <p className="text-xs text-white">Válido até</p>
+              <p className="font-bold text-sm text-white">
                 { client.assignments.length > 0 ? formatDate(client.assignments[0].expiration) : "DD/MM/YYYY" }
               </p>
             </div>
-          </div>
-          <div className="flex flex-col justify-between items-end">
-            <div className="w-24 h-24 bg-gray-300 rounded-lg">
-              {
-                client.photo
-                ? <img src={client.photo} alt="" />
-                : <AccountBoxIcon sx={{ width: 96, height: 96 }} />
-              }
-            </div>
-            <div className="flex">
-              <img className="w-12" src={logo} alt="" />
-            </div>
-          </div>
         </div>
       }
     </section>
