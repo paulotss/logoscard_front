@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import useValidateImage from "../hooks/useValidateImage";
 import Header from "../components/Header";
 import { Formik } from "formik";
 import * as Yup from "yup";
@@ -10,7 +9,6 @@ import { DatePicker } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 
 const NewClientForm = () => {
-  const { image, message, handleChangeFile } = useValidateImage();
   const [isLoading, setIsLoading] = useState(false);
   const [birthday, setBirthday] = useState(dayjs());
   const navigate = useNavigate();
@@ -20,14 +18,7 @@ const NewClientForm = () => {
     try {
       await axios.post('/client', {
         ...values,
-        photo: image.photo,
-        file: image.file,
         birthday,
-      },
-      {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        }
       });
       navigate('/clients')
     } catch (error) {
@@ -94,27 +85,6 @@ const NewClientForm = () => {
                     {formik.touched.lastName && formik.errors.lastName ? (
                       <div className="text-red-600 text-sm">{formik.errors.lastName}</div>
                     ) : null}
-                  </div>
-
-                  <div className="mb-3">
-                    <label htmlFor="photo">Foto de perfil</label>
-                    <br/>
-                    <input
-                      id="photo"
-                      type="file"
-                      name="photo"
-                      onChange={handleChangeFile}
-                      accept="image/png, image/jpeg"
-                    />
-                    {
-                      image.preview ?
-                      <img
-                        src={image.preview}
-                        alt=""
-                        className="w-24 border-2 border-green-900 mt-2"
-                      /> :
-                      <div className="text-red-600 text-sm">{message}</div>
-                    }
                   </div>
 
                   <div className="mb-5">
@@ -208,7 +178,7 @@ const NewClientForm = () => {
                       </button>
                     : <button
                         type="submit"
-                        className="p-3 w-24 bg-green-900 text-white rounded-full"
+                        className="p-3 w-24 bg-green-900 text-white rounded-md"
                       >
                         Cadastrar
                       </button>
