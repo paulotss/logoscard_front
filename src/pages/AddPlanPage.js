@@ -141,7 +141,7 @@ const AddPlanPage = () => {
             <p className="font-bold mb-3">Adicionar plano</p>
               <form className="mb-3">
                 <div className="flex flex-wrap">
-                  <div className="p-2 border rounded-md m-2">
+                  <div className="p-2 border rounded-md m-2 w-80 h-fit">
                     <label htmlFor="plan" className="text-sm">Plano</label>
                     <br/>
                     <select
@@ -158,7 +158,7 @@ const AddPlanPage = () => {
                     }
                     </select>
                   </div>
-                  <div className="p-2 border rounded-md m-2">
+                  <div className="p-2 border rounded-md m-2 w-80 h-fit">
                     <p className="text-sm">Expira em</p>
                     <DatePicker
                       value={expiration}
@@ -166,7 +166,7 @@ const AddPlanPage = () => {
                       onChange={(v) => {setExpiration(v) }}
                     />
                   </div>
-                  <div className="p-2 border rounded-md m-2">
+                  <div className="p-2 border rounded-md m-2 w-80 h-fit">
                     <label htmlFor="expiration" className="text-sm">Dia de vencimento da fatura</label>
                     <br/>
                     <input
@@ -178,7 +178,7 @@ const AddPlanPage = () => {
                       value={activePlan.expiration}
                     />
                   </div>
-                  <div className="p-2 border rounded-md m-2">
+                  <div className="p-2 border rounded-md m-2 w-80 h-fit">
                     <label htmlFor="parcels" className="text-sm">Parcelas</label>
                     <br/>
                     <select
@@ -202,7 +202,7 @@ const AddPlanPage = () => {
                       <option value="12">12x</option>
                     </select>
                   </div>
-                  <div className="p-2 border rounded-md m-2">
+                  <div className="p-2 border rounded-md m-2 w-80 h-fit">
                     <label htmlFor="method" className="text-sm">Forma de pagamento</label>
                     <br/>
                     <select
@@ -218,7 +218,31 @@ const AddPlanPage = () => {
                       <option value="DINHEIRO">DINHEIRO</option>
                     </select>
                   </div>
-                  <div className="p-2 border rounded-md m-2">
+
+                  <div className="p-2 border rounded-md m-2 w-80 h-fit">
+                    <p className="text-sm mb-1">Dependentes</p>
+                    {
+                      dependents.length > 0
+                      ? dependents.map((d) => (
+                        <div
+                          key={d.cpf}
+                          className="p-2 w-64 font-bold bg-gray-500 rounded-lg mr-2 mb-2 flex justify-between"
+                        >
+                          <div>{ `${d.firstName} ${d.lastName}` }</div>
+                          <button
+                            type='button'
+                            onClick={() => { handleRemoveDependent(d.cpf) }}
+                          >
+                            <HiMinusCircle color='red' />
+                          </button>
+                        </div>
+                      ))
+                      : null
+                    }
+                    <AddDependent setDependents={handleAddDependent} />
+                  </div>
+
+                  <div className="p-2 border rounded-md m-2 w-80 h-fit">
                     <p className="text-sm">
                       Valor do plano
                     </p>
@@ -228,24 +252,6 @@ const AddPlanPage = () => {
                       }
                     </p>
                   </div>
-                  {
-                    dependents.length > 0
-                    ? dependents.map((d) => (
-                      <div
-                        key={d.cpf}
-                        className="p-2 w-96 font-bold bg-gray-500 rounded-lg mr-2 mb-2 flex justify-between"
-                      >
-                        <div>{ `${d.firstName} ${d.lastName}` }</div>
-                        <button
-                          type='button'
-                          onClick={() => { handleRemoveDependent(d.cpf) }}
-                        >
-                          <HiMinusCircle color='red' />
-                        </button>
-                      </div>
-                    ))
-                    : null
-                  }
                 </div>
                 <button
                   type="button"
@@ -255,7 +261,6 @@ const AddPlanPage = () => {
                   Adicionar
                 </button>
               </form>
-              <AddDependent setDependents={handleAddDependent} />
             </section>
           </>
       }
