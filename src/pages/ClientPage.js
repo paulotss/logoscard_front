@@ -108,6 +108,7 @@ const ClientPage = () => {
                           <Benefits
                             data={assignment.assignmentBenefit}
                             assignmentId={assignment.id}
+                            dependents={assignment.dependents.length}
                           />
                           {
                             assignment.dependents.length > 0 && 

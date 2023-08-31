@@ -4,14 +4,14 @@ import axios from "../http";
 import { Dialog, DialogActions, DialogTitle, DialogContent, Button, TextField } from "@mui/material";
 
 const Benefits = (props) => {
-  const { data, assignmentId } = props;
+  const { data, assignmentId, dependents } = props;
 
   const [benefits, updateBenefits] = useImmer(data.map((d) => ({
     id: d.id,
     benefitId: d.benefit.id,
     title: d.benefit.title,
     type: d.benefit.type,
-    amount: d.benefit.amount,
+    amount: d.benefit.amount + dependents,
     usage: d.amount,
     notes: d.notes.map((note) => note.description),
   })));
