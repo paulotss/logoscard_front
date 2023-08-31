@@ -4,6 +4,8 @@ import axios from "../http";
 import Header from "../components/Header";
 import loading from "../media/isLoading.gif";
 import PlanDependentLink from "../components/Plan/PlanDependentLink";
+import InputEdit from "../components/EditElements/InputEdit";
+import DateEdit from "../components/EditElements/DateEdit";
 
 const DependentPage = () => {
   const [ isLoading, setIsLoading ] = useState(true);
@@ -42,37 +44,70 @@ const DependentPage = () => {
             <Header />
             <main className="p-5">
               <p className="font-bold mb-3">Dependente</p>
-              <section className="flex justify-between border-b-2 border-gray-400 pb-5">
-                <div>
-                  <p>Inscrição</p>
-                  <p className="font-bold text-4xl">00{dependent.id}</p>
+              <section className="flex flex-wrap">
+                <div className="p-2 border min-w-[256px] rounded-md mr-2 mb-2">
+                  <p className="text-sm">Titular</p>
+                  <div>
+                    <Link
+                      to={`/client/${client.id}`}
+                    >
+                      <div
+                        className="font-bold bg-gray-400 p-2 rounded-md w-full"
+                      >
+                        {`${client.firstName} ${client.lastName}`}
+                      </div>
+                    </Link>
+                  </div>
                 </div>
-              </section>
-              <section>
-                <p className="mt-5 text-sm">Titular</p>
-                <Link
-                  to={`/client/${client.id}`}
-                  className="font-bold bg-gray-400 p-1 rounded-md mb-2 w-80"
-                >
-                  {`${client.firstName} ${client.lastName}`}
-                </Link>
-                <p className="mt-5 text-sm">Nome</p>
-                <p>{`${dependent.user.firstName} ${dependent.user.lastName}`}</p>
-                <p className="mt-5 text-sm">Email</p>
-                <p>{dependent.user.email}</p>
-                <p className="mt-5 text-sm">RG</p>
-                <p>{dependent.user.rg}</p>
-                <p className="mt-5 text-sm">CPF</p>
-                <p>{dependent.user.cpf}</p>
-                <p className="mt-5 text-sm">Celular</p>
-                <p>{dependent.user.cellPhone}</p>
-                <p className="mt-5 text-sm">Nascimento</p>
-                <p>{formatDate(dependent.user.birthday)}</p>
-                <p className="mt-5 text-sm">Plano</p>
-                <PlanDependentLink
-                  assignmentId={dependent.assignments.id}
-                  assignmentTitle={dependent.assignments.plan.title}
+                <InputEdit
+                  title="Nome"
+                  entity="firstName"
+                  valueInput={dependent.user.firstName}
+                  userId={dependent.user.id}
                 />
+                <InputEdit
+                  title="Sobrenome"
+                  entity="lastName"
+                  valueInput={dependent.user.lastName}
+                  userId={dependent.user.id}
+                />
+                <InputEdit
+                  title="Email"
+                  entity="email"
+                  valueInput={dependent.user.email}
+                  userId={dependent.user.id}
+                />
+                <InputEdit
+                  title="RG"
+                  entity="rg"
+                  valueInput={dependent.user.rg}
+                  userId={dependent.user.id}
+                />
+                <InputEdit
+                  title="CPF"
+                  entity="cpf"
+                  valueInput={dependent.user.cpf}
+                  userId={dependent.user.id}
+                />
+                <InputEdit
+                  title="Celular"
+                  entity="cellPhone"
+                  valueInput={dependent.user.cellPhone}
+                  userId={dependent.user.id}
+                />
+                <DateEdit
+                  title="Nascimento"
+                  entity="birthday"
+                  valueInput={formatDate(dependent.user.birthday)}
+                  userId={dependent.user.id}
+                />
+                <div className="p-2 border min-w-[256px] rounded-md">
+                  <p className="text-sm">Plano</p>
+                  <PlanDependentLink
+                    assignmentId={dependent.assignments.id}
+                    assignmentTitle={dependent.assignments.plan.title}
+                  />
+                </div>
               </section>
             </main>
           </>
