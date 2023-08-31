@@ -2,7 +2,7 @@ import { useState } from 'react';
 import bgCard from '../media/bg-card.png';
 import axios from '../http';
 
-const CardPage = ({ clientId }) => {
+const CardPage = ({ clientId, expiration }) => {
   const [isShowing, setIsShowing] = useState(false);
   const [client, setClient] = useState({});
 
@@ -62,7 +62,13 @@ const CardPage = ({ clientId }) => {
             <div className="absolute bottom-[20px] left-[80px]">
               <p className="text-xs text-white">Válido até</p>
               <p className="font-bold text-sm text-white">
-                { client.assignments.length > 0 ? formatDate(client.assignments[0].expiration) : "DD/MM/YYYY" }
+                {
+                  expiration === undefined
+                  ? client.assignments.length > 0
+                      ? formatDate(client.assignments[0].expiration)
+                      : "DD/MM/YYYY"
+                  : expiration
+                }
               </p>
             </div>
         </div>

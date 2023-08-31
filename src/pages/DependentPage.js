@@ -6,6 +6,7 @@ import loading from "../media/isLoading.gif";
 import PlanDependentLink from "../components/Plan/PlanDependentLink";
 import InputEdit from "../components/EditElements/InputEdit";
 import DateEdit from "../components/EditElements/DateEdit";
+import Card from "../components/Card";
 
 const DependentPage = () => {
   const [ isLoading, setIsLoading ] = useState(true);
@@ -44,7 +45,7 @@ const DependentPage = () => {
             <Header />
             <main className="p-5">
               <p className="font-bold mb-3">Dependente</p>
-              <section className="flex flex-wrap">
+              <section className="flex flex-wrap border-b-2 border-gray-400 pb-5 mb-5">
                 <div className="p-2 border min-w-[256px] rounded-md mr-2 mb-2">
                   <p className="text-sm">Titular</p>
                   <div>
@@ -106,6 +107,15 @@ const DependentPage = () => {
                   <PlanDependentLink
                     assignmentId={dependent.assignments.id}
                     assignmentTitle={dependent.assignments.plan.title}
+                  />
+                </div>
+              </section>
+              <p className="font-bold mb-3">Cartão</p>
+              <section>
+                <div className="mt-2">
+                  <Card
+                    clientId={dependent.user.id}
+                    expiration={formatDate(dependent.assignments.expiration)}
                   />
                 </div>
               </section>
