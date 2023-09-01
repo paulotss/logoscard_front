@@ -100,9 +100,7 @@ const ClientPage = () => {
                           className="p-2 mb-3 border border-white-400 rounded-lg bg-gray-200"
                         >
                           <PlanLink
-                            assignmentId={assignment.id}
                             assignmentTitle={assignment.plan.title}
-                            userId={user.id}
                             expiration={assignment.expiration}
                           />
                           <Benefits

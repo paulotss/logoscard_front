@@ -1,7 +1,5 @@
-import { Link } from 'react-router-dom';
-
 const PlanLink = (props) => {
-  const { assignmentId, assignmentTitle, userId, expiration } = props;
+  const { assignmentTitle, expiration } = props;
 
   const formatDate = (value) => {
     const date = new Date(value);
@@ -21,15 +19,10 @@ const PlanLink = (props) => {
     <div
       className={`${isExpired(expiration) ? "bg-red-400" : "bg-green-500"} p-2 rounded-md mb-2`}
     >
-      <Link
-        key={assignmentId}
-        to={`/client/benefit/${userId}`}
-      >
         <p className="w-full font-bold">
           {assignmentTitle.toUpperCase()}
         </p>
         <p className="text-sm">Vencimento: {formatDate(expiration)}</p>
-      </Link>
     </div>
   )
 }

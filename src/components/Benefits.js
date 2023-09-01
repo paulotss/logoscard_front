@@ -70,17 +70,23 @@ const Benefits = (props) => {
               className="grid grid-gap grid-cols-3 grid-rows-1 p-2 text-sm bg-gray-400 mb-1 rounded-md"
             >
               <div>{benefit.title}</div>
-              <div className="text-right">{benefit.amount}</div>
-              <div className="text-right">
-                <button
-                  type="button"
-                  className="w-10 rounded-md bg-[#288D85] disabled:bg-gray-400"
-                  onClick={() => {handleClickOpen(benefit.id)}}
-                  disabled={benefit.usage >= benefit.amount}
-                >
-                  {benefit.usage}
-                </button>
-              </div>
+              {
+                benefit.type === "active"
+                ? <>
+                    <div className="text-right">{benefit.amount}</div>
+                    <div className="text-right">
+                      <button
+                        type="button"
+                        className="w-10 rounded-md bg-[#288D85] disabled:bg-gray-400"
+                        onClick={() => {handleClickOpen(benefit.id)}}
+                        disabled={benefit.usage >= benefit.amount}
+                      >
+                        {benefit.usage}
+                      </button>
+                    </div>
+                  </>
+                : <div className="col-span-2"> </div>
+              }
             </div>
             {
               benefit.notes.map((note, index) => (
