@@ -17,6 +17,18 @@ const ClientsListPage = () => {
     return result;
   }
 
+  const formatId = (id) => {
+    let result = id.toString();
+    if (result.length < 3) {
+      let zeros = 3 - result.length;
+      while (zeros > 0) {
+        result = "0" + result;
+        zeros -= 1;
+      }
+    }
+    return result;
+  }
+
   const handleChangeSearchBar = ({ target }) => {
     const { value } = target;
     const result = clients.filter((client) => {
@@ -83,7 +95,7 @@ const ClientsListPage = () => {
                     <Link to={`/client/${client.user.id}`}
                       className="grid grid-gap grid-cols-4 grid-rows-1 bg-gray-400 rounded-lg p-2 mt-2"
                     >
-                      <div>{ client.id }</div>
+                      <div>{ formatId(client.user.id) }</div>
                       <div className="col-span-2">{ `${client.user.firstName} ${client.user.lastName}` }</div>
                       <div className="text-right pr-2">
                         { !client.user.assignments[0]
@@ -103,7 +115,7 @@ const ClientsListPage = () => {
                           key={ dependent.id }
                           className="grid grid-gap grid-cols-4 grid-rows-1 bg-[#6DBDB7] p-2"
                         >
-                          <div>{ dependent.id }</div>
+                          <div>{ formatId(dependent.user.id) }</div>
                           <div className="col-span-2">{ `${dependent.user.firstName} ${dependent.user.lastName}` }</div>
                           <div> </div>
                         </Link>
