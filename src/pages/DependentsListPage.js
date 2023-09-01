@@ -7,6 +7,18 @@ import { Link } from 'react-router-dom';
 const DependentsListPage = () => {
   const [dependents, setDependents] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  const formatId = (id) => {
+    let result = id.toString();
+    if (result.length < 3) {
+      let zeros = 3 - result.length;
+      while (zeros > 0) {
+        result = "0" + result;
+        zeros -= 1;
+      }
+    }
+    return result;
+  }
   
   useEffect(() => {
     const getUsers = async () => {
@@ -37,7 +49,7 @@ const DependentsListPage = () => {
                     key={ d.id }
                     className="grid grid-gap grid-cols-3 grid-rows-1 bg-gray-400 rounded-lg p-2 mb-2"
                   >
-                    <div>{ d.id }</div>
+                    <div>{ formatId(d.user.id) }</div>
                     <div className="col-span-2">{ `${d.user.firstName} ${d.user.lastName}` }</div>
                   </Link>
                 ))

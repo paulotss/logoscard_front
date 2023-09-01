@@ -8,6 +8,7 @@ import PlanLink from "../components/Plan/PlanLink";
 import Card from "../components/Card";
 import InputEdit from "../components/EditElements/InputEdit";
 import DateEdit from "../components/EditElements/DateEdit";
+import Benefits from "../components/Benefits";
 
 const ClientPage = () => {
   const [user, setUser] = useState({});
@@ -99,10 +100,13 @@ const ClientPage = () => {
                           className="p-2 mb-3 border border-white-400 rounded-lg bg-gray-200"
                         >
                           <PlanLink
-                            assignmentId={assignment.id}
                             assignmentTitle={assignment.plan.title}
-                            userId={user.id}
                             expiration={assignment.expiration}
+                          />
+                          <Benefits
+                            data={assignment.assignmentBenefit}
+                            assignmentId={assignment.id}
+                            dependents={assignment.dependents.length}
                           />
                           {
                             assignment.dependents.length > 0 && 

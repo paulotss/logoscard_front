@@ -6,6 +6,18 @@ const CardPage = ({ clientId, expiration }) => {
   const [isShowing, setIsShowing] = useState(false);
   const [client, setClient] = useState({});
 
+  const formatId = (id) => {
+    let result = id.toString();
+    if (result.length < 3) {
+      let zeros = 3 - result.length;
+      while (zeros > 0) {
+        result = "0" + result;
+        zeros -= 1;
+      }
+    }
+    return result;
+  }
+
   const formatDate = (value) => {
     const date = new Date(value);
     const day = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate();
@@ -53,7 +65,7 @@ const CardPage = ({ clientId, expiration }) => {
             </div>
             <div className="absolute top-[88px] left-[80px]">
               <p className="text-xs text-white">Número de inscrição</p>
-              <p className="font-bold text-sm text-white">{ `00${client.id}` }</p>
+              <p className="font-bold text-sm text-white">{ formatId(client.id) }</p>
             </div>
             <div className="absolute bottom-[63px] left-[80px]">
               <p className="text-xs text-white">Documento do beneficiário</p>
