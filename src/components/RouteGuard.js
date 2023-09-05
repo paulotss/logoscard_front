@@ -3,7 +3,8 @@ import { Navigate } from "react-router-dom";
 const RouteGuard = ({ children }) => {
   const hasJWT = () => {
     let flag = false;
-    sessionStorage.getItem('auth') ? flag = true : flag = false;
+    const auth = sessionStorage.getItem('auth');
+    auth ? flag = true : flag = false;
     return flag;
   }
 

@@ -19,6 +19,7 @@ const NewClientForm = () => {
       await axios.post('/client', {
         ...values,
         birthday,
+        accessLevel: 2,
       });
       navigate('/clients')
     } catch (error) {
