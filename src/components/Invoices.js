@@ -31,7 +31,7 @@ const Invoices = () => {
   }, []);
 
   return (
-    <section className="flex justify-center">
+    <section className="flex justify-center border-b-2 border-gray-400">
       {
         isLoading
         ? <div className="flex justify-center w-full">

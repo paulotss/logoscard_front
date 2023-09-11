@@ -1,17 +1,37 @@
-import { Navigate } from "react-router-dom";
+import { useEffect, useState } from 'react';
+import { Navigate } from 'react-router-dom';
+import axios from '../http';
 
 const RouteGuard = ({ children }) => {
-  const hasJWT = () => {
-    let flag = false;
-    sessionStorage.getItem('auth') ? flag = true : flag = false;
-    return flag;
-  }
+  const LEVEL = 2;
+  const [isLoading, setIsLoading] = useState(true);
+  const [flag, setFlag] = useState(false);
 
-  if (hasJWT()) {
-    return children;
-  }
+  useEffect(() => {
+    const hasJWT = async () => {
+      setIsLoading(true);
+      try {
+        const auth = sessionStorage.getItem('auth');
+        const { data } = await axios.get('/auth/verify',
+        {
+          headers: {
+            authorization: auth,
+          },
+        })
+        data.payload.accessLevel < LEVEL ? setFlag(true) : setFlag(false);
+      } catch (error) {
+        setFlag(false);
+      }
+      setIsLoading(false);
+    }
+    hasJWT();
+  }, [flag])
 
-  return <Navigate to={`/login`} replace={true} />
+  return (
+    !isLoading
+    ? flag ? children : <Navigate to={`/login`} replace={true} />
+    : null
+  )
 }
 
 export default RouteGuard;

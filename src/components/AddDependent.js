@@ -36,6 +36,7 @@ const AddDependent = ({ setDependents }) => {
               password: "",
               rg: "",
               cpf: "",
+              accessLevel: 3,
             }}
             validationSchema={Yup.object({
               firstName: Yup.string().required('Obrigatório'),
