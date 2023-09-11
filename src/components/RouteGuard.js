@@ -3,6 +3,7 @@ import { Navigate } from 'react-router-dom';
 import axios from '../http';
 
 const RouteGuard = ({ children }) => {
+  const LEVEL = 2;
   const [isLoading, setIsLoading] = useState(true);
   const [flag, setFlag] = useState(false);
 
@@ -17,7 +18,7 @@ const RouteGuard = ({ children }) => {
             authorization: auth,
           },
         })
-        data.payload.accessLevel < 3 ? setFlag(true) : setFlag(false);
+        data.payload.accessLevel < LEVEL ? setFlag(true) : setFlag(false);
       } catch (error) {
         setFlag(false);
       }
