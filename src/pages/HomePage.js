@@ -10,6 +10,7 @@ import { HiUserPlus } from 'react-icons/hi2';
 import imgSeraphisPremium from '../media/seraphis-premium.png';
 import imgMaatPremium from '../media/maat-premium.png';
 import imgMaatSeraphisPremium from '../media/ms-gold.png';
+import GuardLevel0 from "../components/Guard/GuardLevel0";
 
 const HomePage = () => {
   const [ total, setTotal ] = useState({
@@ -33,9 +34,11 @@ const HomePage = () => {
     <>
       <Header />
       <main className="p-5">
-        <p className="font-bold mb-3 text-center">Faturas</p>
-        <Invoices />
-        <section className="flex justify-center mt-5 border-t-2 border-gray-400">
+        <GuardLevel0>
+          <p className="font-bold mb-3 text-center">Faturas</p>
+          <Invoices />
+        </GuardLevel0>
+        <section className="flex justify-center mt-5">
           <div className="m-5 text-center">
             <p className="font-bold">Titulares</p>
             <p className="font-bold text-green-600 text-2xl">{ total.clients }</p>
@@ -51,21 +54,25 @@ const HomePage = () => {
             image={ <HiUserGroup /> }
             path="/clients"
           />
-          <ButtonSection
-            title="Novo cliente"
-            image={ <HiUserPlus /> }
-            path="/client/create"
-          />
+          <GuardLevel0>
+            <ButtonSection
+              title="Novo cliente"
+              image={ <HiUserPlus /> }
+              path="/client/create"
+            />
+          </GuardLevel0>
           <ButtonSection
             title="Dependentes"
             image={ <HiUserGroup /> }
             path="/dependents"
           />
-          <ButtonSection
-            title="Caixa"
-            image={ <HiDocumentText /> }
-            path="/cashflow"
-          />
+          <GuardLevel0>
+            <ButtonSection
+              title="Caixa"
+              image={ <HiDocumentText /> }
+              path="/cashflow"
+            />
+          </GuardLevel0>
         </section>
         <section className="flex flex-wrap justify-center p-5 mt-5 border-t-2 border-gray-400">
           <ButtonPlan title="Premium Seraphis" image={imgSeraphisPremium} />
