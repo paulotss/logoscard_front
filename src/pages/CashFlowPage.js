@@ -62,7 +62,6 @@ const CashFlowPage = () => {
           authorization: sessionStorage.getItem('auth')
         }
       });
-      console.log(result.data);
       setUser(result.data);
     }
     const getTotalWithdraw = async () => {
