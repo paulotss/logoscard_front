@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import logo from '../media/logo1.png';
-import GuardLevel0 from "./Guard/GuardLevel0";
+import GuardLevel from "./Guard/GuardLevel";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -37,14 +37,14 @@ const Header = () => {
         >
           Dependentes
         </Link>
-        <GuardLevel0>
+        <GuardLevel level={0}>
           <Link
             to="/cashflow"
             className="text-lg p-2 hover:border-b-2 hover:border-b-white mr-2 border-b-2 border-b-[#1C232E]"
           >
             Caixa
           </Link>
-        </GuardLevel0>
+        </GuardLevel>
       </nav>
       <div className="flex">
         <button

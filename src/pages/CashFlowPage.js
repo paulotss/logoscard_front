@@ -57,7 +57,12 @@ const CashFlowPage = () => {
 
   useEffect(() => {
     const getUser = async () => {
-      const result = await axios.get(`/user/active/${sessionStorage.getItem('auth')}`);
+      const result = await axios.get('/user/active', {
+        headers: {
+          authorization: sessionStorage.getItem('auth')
+        }
+      });
+      console.log(result.data);
       setUser(result.data);
     }
     const getTotalWithdraw = async () => {

@@ -1,10 +1,21 @@
-import { Navigate } from "react-router-dom";
+import { Navigate } from 'react-router-dom';
+import axios from '../http';
 
 const RouteGuard = ({ children }) => {
   const hasJWT = () => {
     let flag = false;
-    const auth = sessionStorage.getItem('auth');
-    auth ? flag = true : flag = false;
+    try {
+      const auth = sessionStorage.getItem('auth');
+      axios.get('/auth/verify',
+      {
+        headers: {
+          authorization: auth,
+        },
+      })
+      flag = true;
+    } catch (error) {
+      flag = false;
+    }
     return flag;
   }
 
