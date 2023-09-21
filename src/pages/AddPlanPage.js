@@ -21,21 +21,28 @@ const AddPlanPage = () => {
     expiration: '10',
     parcels: 1,
     price: 300,
+    fees: 0,
   });
 
   const handleAddDependent = (values) => {
+    const newPrice = getPriceById(activePlan.planId, dependents.length + 1);
+    const newFee = activePlan.parcels > 1 ? newPrice * 10 / 100 : 0
     setDependents([...dependents, values]);
     setActivePlan({
       ...activePlan,
-      price: getPriceById(activePlan.planId, activePlan.price, dependents.length + 1)
+      price: newPrice,
+      fees: newFee
     });
   }
 
   const handleRemoveDependent = (cpf) => {
+    const newPrice = getPriceById(activePlan.planId, dependents.length - 1);
+    const newFee = activePlan.parcels > 1 ? newPrice * 10 / 100 : 0
     const update = dependents.filter((d) => d.cpf !== cpf);
     setActivePlan({
       ...activePlan,
-      price: getPriceById(activePlan.planId, activePlan.price, dependents.length - 1)
+      price: newPrice,
+      fees: newFee,
     });
     setDependents(update);
   }
@@ -66,7 +73,7 @@ const AddPlanPage = () => {
         method: activePlan.method,
         dependents: dependents.length,
         userId: userId,
-        totalPrice: activePlan.price,
+        totalPrice: activePlan.price + activePlan.fees,
       });
       await axios.post('/assignment/benefit', getPlanBenefits(newUser.data));
       if (dependents.length > 0) {
@@ -83,27 +90,32 @@ const AddPlanPage = () => {
     setIsLoading(false);
   }
 
-  const getPriceById = (planId, parcels = activePlan.parcels, depLenth = dependents.length) => {
+  const getPriceById = (planId, depLenth = dependents.length) => {
     const { price } = plans.find((plan) => plan.id === Number(planId));
     let finalPrice = price;
     finalPrice += depLenth * 230;
-    if (parcels > 1) finalPrice += finalPrice * 10 / 100;
     return finalPrice;
   }
 
   const handleChange = ({ target }) => {
     const { name, value } = target;
     if (name === "planId") {
+      const newPrice = getPriceById(value);
+      console.log(newPrice);
       setActivePlan({
         ...activePlan,
         [name]: Number(value),
-        price: getPriceById(value)
+        price: newPrice,
+        fees: activePlan.parcels > 1 ? newPrice * 10 / 100 : 0
       });
     } else if (name === "parcels") {
+      const newPrice = getPriceById(activePlan.planId);
+      const newFee = value > 1 ? getPriceById(activePlan.planId) * 10 / 100 : 0
       setActivePlan({
         ...activePlan,
         [name]: value,
-        price: getPriceById(activePlan.planId, value),
+        price: newPrice + newFee,
+        fees: newFee
       });
     }
     else {
@@ -137,9 +149,10 @@ const AddPlanPage = () => {
           </div>
         : <>
             <Header />
-            <section className='p-3'>
-            <p className="font-bold mb-3">Adicionar plano</p>
-              <form className="mb-3">
+            <section className="p-3">
+              <p className="font-bold mb-3">Adicionar plano</p>
+            <div className="flex">
+              <form className="mb-3 w-fit">
                 <div className="flex flex-wrap">
                   <div className="p-2 border rounded-md m-2 w-80 h-fit">
                     <label htmlFor="plan" className="text-sm">Plano</label>
@@ -248,7 +261,7 @@ const AddPlanPage = () => {
                     </p>
                     <p className='font-bold text-2xl'>
                     R$ { 
-                        activePlan.price.toLocaleString('pt-br', {minimumFractionDigits: 2})
+                        (activePlan.price + activePlan.fees).toLocaleString('pt-br', {minimumFractionDigits: 2})
                       }
                     </p>
                   </div>
@@ -261,6 +274,54 @@ const AddPlanPage = () => {
                   Adicionar
                 </button>
               </form>
+              <aside className="w-96 border rounded bg-white p-5 h-fit">
+                <div className="flex justify-between">
+                  <div className="text-sm">Plano</div>
+                  <div
+                    className="text-2xl font-bold"
+                  >
+                    + R$ {
+                      plans.find((plan) => plan.id === Number(activePlan.planId))
+                        .price.toLocaleString('pt-br', {minimumFractionDigits: 2})
+                    }
+                  </div>
+                </div>
+                <div className="flex justify-between">
+                  <div className="text-sm">Dependentes</div>
+                  <div>
+                    {
+                      dependents.length > 0 ?
+                      dependents.map((_dependent, index) => (
+                        <div key={index} className="text-2xl font-bold">
+                          + R$ { (230).toLocaleString('pt-br', {minimumFractionDigits: 2}) }
+                        </div>
+                      ))
+                      : <div className="text-2xl font-bold">
+                          + R$ { (0).toLocaleString('pt-br', {minimumFractionDigits: 2}) }
+                        </div>
+                    }
+                  </div>
+                </div>
+                <div className="flex justify-between">
+                  <div className="text-sm">Parcelas (10%)</div>
+                  <div
+                    className="text-2xl font-bold"
+                  >
+                    + R$ { activePlan.fees.toLocaleString('pt-br', {minimumFractionDigits: 2}) }
+                  </div>
+                </div>
+                <div className="flex justify-between border-t mt-2">
+                  <div className="text-sm font-bold">Total</div>
+                  <div
+                    className="text-2xl font-bold"
+                  >
+                    R$ {
+                      (activePlan.price + activePlan.fees).toLocaleString('pt-br', {minimumFractionDigits: 2})
+                    }
+                  </div>
+                </div>
+              </aside>
+            </div>
             </section>
           </>
       }
