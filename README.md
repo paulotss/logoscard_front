@@ -1,6 +1,6 @@
 # LogosCard Front-End
 
-O LogosCard é um sistema de cartão de benefícios para clientes a partir de uma assinatura anual. O sistema faz o controle e gerenciamento dos planos e faturas mensais. Aqui você encontrará o código front-end da aplicação.
+O LogosCard é um sistema de cartão de benefícios para clientes a partir de uma assinatura anual. O sistema faz o controle e gerenciamento dos planos e faturas mensais. Aqui você encontrará o código front-end da aplicação. <a href="https://github.com/paulotss/logoscard_back" target="_blank">Clique aqui</a> para acessar o repositório do back-end.
 
 ### Tecnologias utilizadas
 
