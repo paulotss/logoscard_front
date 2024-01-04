@@ -81,6 +81,8 @@ const AddPlanPage = () => {
           user: d,
           assignmentId: newUser.data.assignments[0].id,
         }));
+      console.log('DependentsData')
+      console.log(dependentsData)
         await axios.post('/user/dependent', dependentsData);
       }
       navigate(`/client/${userId}`);
@@ -137,8 +139,30 @@ const AddPlanPage = () => {
         }
       setIsLoading(false);
     }
+    const getUser = async () => {
+      setIsLoading(true);
+      const result = await axios.get(`/user/${userId}`);
+      const dependents = []
+      result.data.assignments.forEach(assignment => {
+        dependents.push(...assignment.dependents)
+      });
+      const users = dependents.reduce((c, d) => {
+        delete d.user.id
+        if (c.length > 0) {
+          if (c.every((v) => v.cpf !== d.user.cpf )) {
+            return c = [...c, d.user]
+          } else {
+            return c
+          }
+        }
+        return c = [...c, d.user]
+      }, []);
+      setDependents(users)
+      setIsLoading(false);
+    }
     getPlans();
-  }, []);
+    getUser();
+  }, [userId]);
 
   return (
     <main>
