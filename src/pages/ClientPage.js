@@ -128,7 +128,6 @@ const ClientPage = () => {
                       ))
                     }
                     {
-                      new Date() > new Date(user.assignments[0].expiration) &&
                       <div className="mt-2">
                         <Link
                           to={`/plan/add/${user.id}`}
