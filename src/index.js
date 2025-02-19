@@ -17,6 +17,7 @@ import DependentsListPage from './pages/DependentsListPage';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import CashFlowPage from './pages/CashFlowPage';
+import NewCardForm from './pages/NewCardForm';
 
 const router = createBrowserRouter([
   {
@@ -62,6 +63,10 @@ const router = createBrowserRouter([
   {
     path: "/cashflow",
     element: <RouteGuard><CashFlowPage /></RouteGuard>
+  },
+  {
+    path: "/card/create",
+    element: <RouteGuard><NewCardForm /></RouteGuard>
   },
 ]);
 

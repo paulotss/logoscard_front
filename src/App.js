@@ -10,6 +10,7 @@ import InvoicePage from './pages/InvoicePage';
 import NotFoundPage from './pages/NotFoundPage';
 import NewClientForm from './pages/NewClientForm';
 import BenefitsPage from './pages/BenefitsPage';
+import NewCardForm from './pages/NewCardForm';
 
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
         <Route path='/client/benefit/:id' element={<BenefitsPage />} />
         <Route path='/invoice/:id' element={<InvoicePage />} />
         <Route path='/404' element={<NotFoundPage />} />
+        <Route path='/card/create' element={<NewCardForm />} />
       </Routes>
     </BrowserRouter>
   );
