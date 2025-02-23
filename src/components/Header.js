@@ -1,61 +1,53 @@
 import { Link, useNavigate } from "react-router-dom";
-import ExitToAppIcon from '@mui/icons-material/ExitToApp';
-import logo from '../media/logo1.png';
+import ExitToAppIcon from "@mui/icons-material/ExitToApp";
+import logo from "../media/logo1.png";
 import GuardLevel from "./Guard/GuardLevel";
 
-const Header = () => {
+const Header = ({ hideNav = false }) => {
   const navigate = useNavigate();
 
   const logout = () => {
-    sessionStorage.removeItem('auth');
-    navigate('/login');
-  }
+    sessionStorage.removeItem("auth");
+    navigate("/login");
+  };
 
   return (
-    <header
-    className="flex justify-between bg-[#1C232E] text-white p-5 items-center"
-    >
-      <Link to="/">
+    <header className="flex justify-between bg-[#1C232E] text-white p-5 items-center">
+      {hideNav ? (
         <img src={logo} alt="logo" />
-      </Link>
-      <nav className="flex list-none w-full p-2 justify-center">
-        <Link
-          to="/"
-          className="text-lg p-2 hover:border-b-2 border-b-white mr-2"
-        >
-          Home
+      ) : (
+        <Link to="/">
+          <img src={logo} alt="logo" />
         </Link>
-        <Link
-          to="/clients"
-          className="text-lg p-2 hover:border-b-2 border-b-white mr-2"
-        >
-          Clientes
-        </Link>
-        <Link
-          to="/dependents"
-          className="text-lg p-2 hover:border-b-2 border-b-white mr-2"
-        >
-          Dependentes
-        </Link>
-        <GuardLevel level={0}>
-          <Link
-            to="/cashflow"
-            className="text-lg p-2 hover:border-b-2 hover:border-b-white mr-2 border-b-2 border-b-[#1C232E]"
-          >
-            Caixa
+      )}
+      {!hideNav && (
+        <nav className="flex list-none w-full p-2 justify-center">
+          <Link to="/" className="text-lg p-2 hover:border-b-2 border-b-white mr-2">
+            Home
           </Link>
-        </GuardLevel>
-      </nav>
+          <Link to="/clients" className="text-lg p-2 hover:border-b-2 border-b-white mr-2">
+            Clientes
+          </Link>
+          <Link to="/dependents" className="text-lg p-2 hover:border-b-2 border-b-white mr-2">
+            Dependentes
+          </Link>
+          <GuardLevel level={0}>
+            <Link
+              to="/cashflow"
+              className="text-lg p-2 hover:border-b-2 hover:border-b-white mr-2 border-b-2 border-b-[#1C232E]"
+            >
+              Caixa
+            </Link>
+          </GuardLevel>
+        </nav>
+      )}
       <div className="flex">
-        <button
-          onClick={logout}
-        >
+        <button onClick={logout}>
           <ExitToAppIcon />
         </button>
       </div>
     </header>
-  )
-
-}
+  );
+};
 
 export default Header;
