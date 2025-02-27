@@ -9,6 +9,7 @@ import Card from "../components/Card";
 import InputEdit from "../components/EditElements/InputEdit";
 import DateEdit from "../components/EditElements/DateEdit";
 import Benefits from "../components/Benefits";
+import ButtonCard from "../components/ButtonCard";
 
 const ClientPage = () => {
   const [user, setUser] = useState({});
@@ -155,6 +156,13 @@ const ClientPage = () => {
               </div>
             </section>
             {user.invoices && user.invoices.length > 0 && <InvoicesList invoices={user.invoices} />}
+            <section/>
+            <p className="font-bold mb-3">Cartão de crédito</p>
+            <section className="flex justify-between">
+              <div className="mt-2">
+                <ButtonCard />
+              </div>
+            </section>
           </main>
           </>
       }

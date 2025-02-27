@@ -1,37 +1,86 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+/* global PagSeguro */
+
+import { useState, useEffect } from "react";
 import Header from "../components/Header";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import axios from "../http";
 import loading from "../media/isLoading.gif";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const NewCardForm = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const navigate = useNavigate();
+  const [pagSeguroReady, setPagSeguroReady] = useState(false);
 
+
+  // Carrega o SDK quando o componente é montado
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "https://assets.pagseguro.com.br/checkout-sdk-js/rc/dist/browser/pagseguro.min.js";
+    script.async = true;
+    script.onload = () => setPagSeguroReady(true);
+    document.body.appendChild(script);
+  }, []);
+
+  // Garantir que o script do PagSeguro foi carregado
   const submitForm = async (values) => {
+    if (!pagSeguroReady) {
+      toast.error("Erro, tente novamente"); 
+      return;
+    }
+    // Muda para um estado de carregamento 
     setIsLoading(true);
+
+    // TODO: Criar rota para chamar a chave pelo back-end
+
     try {
-      await axios.post("/", {
+      // Criptografa os dados do cartão
+      const card = PagSeguro.encryptCard({
+        publicKey: process.env.PUBLIC_KEY,
         holder: values.holder,
         number: values.number,
         expMonth: values.expMonth,
         expYear: values.expYear,
         securityCode: values.securityCode,
       });
-      navigate("/clients");
+
+      // Verificar erros na criptografia do cartão
+      if (card.hasErrors) {
+        console.error("Erros na criptografia:", card.errors);
+        toast.error("Erro ao criptografar os dados do cartão");
+        setIsLoading(false);
+        return;
+      }
+
+      // Envia os dados criptografados para a API
+      await axios.post("/", {
+        encryptedCard: card.encryptedCard,
+      });
+
+      toast.success("Cartão cadastrado com sucesso!");
+
     } catch (error) {
-      console.log(error);
+        console.error("Erro na requisição:", error.response?.data || error.message);
+        toast.error(error.response?.data?.message || "Erro ao cadastrar cartão");
     }
+
+    // Reativa o botão de envio
     setIsLoading(false);
   };
 
   return (
     <>
+      {/* Carrega o componente de tela Header */}
       <Header hideNav={true} />
+
+      {/* Bloco principal, container mais externo */}
       <main className="p-5 flex justify-center">
+
+        {/* Seção que agrupa o formulário, está dentro da main */}
         <section className="w-full max-w-md">
+
+          {/*componente da biblioteca Formik que facilita a criação e gerenciamento de formulários */}
           <Formik
             initialValues={{
               holder: "",
@@ -40,11 +89,12 @@ const NewCardForm = () => {
               expYear: "",
               securityCode: "",
             }}
+            // Define as regras de validação com a biblioteca Yup
             validationSchema={Yup.object({
               holder: Yup.string().required("Obrigatório"),
               number: Yup.string()
-              .matches(/^\d{14,19}$/, "Número do cartão deve ter entre 14 e 19 dígitos")
-              .required("Obrigatório"),
+                .matches(/^\d{14,19}$/, "Número do cartão deve ter entre 14 e 19 dígitos")
+                .required("Obrigatório"),
               expMonth: Yup.string()
                 .matches(/^(0[1-9]|1[0-2])$/, "Informe um valor entre 01 e 12")
                 .required("Obrigatório"),
@@ -58,7 +108,9 @@ const NewCardForm = () => {
             onSubmit={submitForm}
           >
             {(formik) => (
+              // Formulário dentro da section
               <form className="flex flex-col items-center" onSubmit={formik.handleSubmit}>
+                {/* Várias div com os inputs do formulário estilizados com Tailwind*/}
                 <div className="mb-5 w-full text-center">
                   <label htmlFor="holder" className="block">Titular</label>
                   <input
@@ -116,7 +168,7 @@ const NewCardForm = () => {
                     <label htmlFor="securityCode" className="block">CVV</label>
                     <input
                       id="securityCode"
-                      type="text"
+                      type="password"
                       className="w-full p-2 text-center"
                       {...formik.getFieldProps("securityCode")}
                     />
@@ -126,7 +178,10 @@ const NewCardForm = () => {
                   </div>
                 </div>
 
+                {/* Se isLoading for true → O botão fica desativado e exibe um GIF de carregamento
+                    Se isLoading for false → O botão volta ao normal */}
                 {isLoading ? (
+                  // Botão para envio do formulário
                   <button
                     type="button"
                     disabled={true}
@@ -144,6 +199,8 @@ const NewCardForm = () => {
           </Formik>
         </section>
       </main>
+
+      <ToastContainer />
     </>
   );
 };
