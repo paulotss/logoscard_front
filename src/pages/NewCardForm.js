@@ -8,10 +8,14 @@ import axios from "../http";
 import loading from "../media/isLoading.gif";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useParams } from "react-router-dom";
 
 const NewCardForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [pagSeguroReady, setPagSeguroReady] = useState(false);
+  const { id } = useParams();
+  const [user, setUser] = useState({});
+
 
 
   // Carrega o SDK quando o componente é montado
@@ -19,9 +23,28 @@ const NewCardForm = () => {
     const script = document.createElement("script");
     script.src = "https://assets.pagseguro.com.br/checkout-sdk-js/rc/dist/browser/pagseguro.min.js";
     script.async = true;
-    script.onload = () => setPagSeguroReady(true);
+    script.onload = () => {
+      setPagSeguroReady(true);
+      console.log("PagSeguro SDK carregado!");
+    };
+    script.onerror = (err) => {
+      console.error("Erro ao carregar PagSeguro SDK:", err);
+    };
     document.body.appendChild(script);
-  }, []);
+
+    const getUser = async () => {
+        setIsLoading(true);
+        try {
+          const result = await axios.get(`/user/${id}`);
+          console.log(result)
+          setUser(result.data);
+        } catch (error) {
+          console.error("Erro ao buscar o usuário:", error);
+        }
+        setIsLoading(false);
+      };
+      getUser();
+  }, [id]);
 
   // Garantir que o script do PagSeguro foi carregado
   const submitForm = async (values) => {
@@ -37,7 +60,7 @@ const NewCardForm = () => {
     try {
       // Criptografa os dados do cartão
       const card = PagSeguro.encryptCard({
-        publicKey: process.env.PUBLIC_KEY,
+        publicKey: "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAw0nc7xP2/MHB6AHbXle7xcwFky3hduqi383UwkjKYEADWThiFPa1tUnAAxzHJDhDYyDtssHsiuUE/GR0Q19ZdfRvfaSYk0sZTuzLU7mE6ilOis7J2jdB6QqZyqFxZ6Y4w8md8CRDrFr45p6WCo9T3VsWnOYhHaT4pcUsfxnSDkKfDHOcAzr6BMPKroacQPv/D7AOVrCwTY14dHcMfyTzfqhhHf2XayzSu3OQi0Jwx9vSDT4a+N7BCCCub7n1o7O0GzlX9N2Mbdw2Y+VwvyE5bICynr6PD/9uPkRsp+kaK+UJsZ1ulQPFsVkFjbJBAqFHANvDll3JJ/kPanR30AcQ1QIDAQAB",
         holder: values.holder,
         number: values.number,
         expMonth: values.expMonth,
@@ -48,14 +71,50 @@ const NewCardForm = () => {
       // Verificar erros na criptografia do cartão
       if (card.hasErrors) {
         console.error("Erros na criptografia:", card.errors);
+        console.log(card);
+        console.log(card.hasErrors);
         toast.error("Erro ao criptografar os dados do cartão");
         setIsLoading(false);
         return;
       }
 
       // Envia os dados criptografados para a API
-      await axios.post("/", {
-        encryptedCard: card.encryptedCard,
+      const requestBody = {
+        name: user.firstName,
+        email: user.email,
+        tax_id: user.cpf,
+        phones: [
+          {
+            country: "55",
+            area: user.cellPhone.substring(0, 2),
+            number: user.cellPhone.substring(2)
+          }
+        ],
+        birth_date: user.birthday.split("T")[0],
+        billing_info: [
+          {
+            card: {
+              holder: {
+                phone: {
+                  country: "55",
+                  area: user.cellPhone.substring(0, 2),
+                  number: user.cellPhone.substring(2)
+                },
+                name: user.firstName,
+                birth_date: user.birthday.split("T")[0],
+                tax_id: user.cpf
+              },
+              encrypted: card.encryptedCard
+            },
+            type: "CREDIT_CARD"
+          }
+        ]
+      };
+      
+      console.log("Dados enviados para a API:", JSON.stringify(requestBody, null, 2));
+      
+      await axios.post("/signature/subscription", requestBody, {
+        headers: { "Content-Type": "application/json" }
       });
 
       toast.success("Cartão cadastrado com sucesso!");

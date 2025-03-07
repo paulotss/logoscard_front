@@ -16,36 +16,27 @@ const Header = ({ hideNav = false }) => {
       {hideNav ? (
         <img src={logo} alt="logo" />
       ) : (
-        <Link to="/">
-          <img src={logo} alt="logo" />
-        </Link>
+        <>
+          <Link to="/">
+            <img src={logo} alt="logo" />
+          </Link>
+          <nav className="flex list-none w-full p-2 justify-center">
+            <Link to="/" className="text-lg p-2 hover:border-b-2 border-b-white mr-2">Home</Link>
+            <Link to="/clients" className="text-lg p-2 hover:border-b-2 border-b-white mr-2">Clientes</Link>
+            <Link to="/dependents" className="text-lg p-2 hover:border-b-2 border-b-white mr-2">Dependentes</Link>
+            <GuardLevel level={0}>
+              <Link to="/cashflow" className="text-lg p-2 hover:border-b-2 hover:border-b-white mr-2 border-b-2 border-b-[#1C232E]">
+                Caixa
+              </Link>
+            </GuardLevel>
+          </nav>
+          <div className="flex">
+            <button onClick={logout}>
+              <ExitToAppIcon />
+            </button>
+          </div>
+        </>
       )}
-      {!hideNav && (
-        <nav className="flex list-none w-full p-2 justify-center">
-          <Link to="/" className="text-lg p-2 hover:border-b-2 border-b-white mr-2">
-            Home
-          </Link>
-          <Link to="/clients" className="text-lg p-2 hover:border-b-2 border-b-white mr-2">
-            Clientes
-          </Link>
-          <Link to="/dependents" className="text-lg p-2 hover:border-b-2 border-b-white mr-2">
-            Dependentes
-          </Link>
-          <GuardLevel level={0}>
-            <Link
-              to="/cashflow"
-              className="text-lg p-2 hover:border-b-2 hover:border-b-white mr-2 border-b-2 border-b-[#1C232E]"
-            >
-              Caixa
-            </Link>
-          </GuardLevel>
-        </nav>
-      )}
-      <div className="flex">
-        <button onClick={logout}>
-          <ExitToAppIcon />
-        </button>
-      </div>
     </header>
   );
 };

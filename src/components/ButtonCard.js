@@ -1,12 +1,12 @@
 import { useState } from "react";
 
-const ButtonCard = () => {
-  const [link, setLink] = useState("");
-
-  const generateLink = () => {
-    const newLink = `${window.location.origin}/card/create`;
-    setLink(newLink);
-  };
+const ButtonCard = ({ id }) => {
+    const [link, setLink] = useState("");
+  
+    const generateLink = () => {
+      const newLink = `${window.location.origin}/card/create/${id}`;
+      setLink(newLink);
+    };
 
   return (
     <div className="flex flex-col items-start w-80"> 

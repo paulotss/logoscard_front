@@ -160,7 +160,7 @@ const ClientPage = () => {
             <p className="font-bold mb-3">Cartão de crédito</p>
             <section className="flex justify-between">
               <div className="mt-2">
-                <ButtonCard />
+              <ButtonCard id={user.id} />
               </div>
             </section>
           </main>
