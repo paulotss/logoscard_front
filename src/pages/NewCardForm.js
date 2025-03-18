@@ -119,13 +119,10 @@ const NewCardForm = () => {
         headers: { "Content-Type": "application/json" }
       });
 
-      toast.success("Cartão cadastrado com sucesso!");
-
       const customerId = customerResponse.data.id;
       console.log("Cliente criado com sucesso:", customerId);
 
       // Criar plano
-
       const planData = {
         amount: { currency: "BRL", value: 200000 },
         interval: { unit: "MONTH", length: 1 },
@@ -143,7 +140,6 @@ const NewCardForm = () => {
       console.log("Plano criado com sucesso:", planId);
 
       // Criar assinatura
-
     const subscriptionData = {
         plan: { id: planId },
         customer: { id: customerId },
@@ -167,6 +163,8 @@ const NewCardForm = () => {
       await axios.post("/signature/subscription", subscriptionData, {
         headers: { "Content-Type": "application/json" }
       });
+
+      toast.success("Cartão cadastrado com sucesso!");
   
     } catch (error) {
         console.error("Erro na requisição:", error.response?.data || error.message);
