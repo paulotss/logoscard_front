@@ -79,7 +79,9 @@ const NewCardForm = () => {
       }
 
       // Envia os dados criptografados para a API
-      const requestBody = {
+
+      // Criar cliente
+      const customerData = {
         name: user.firstName,
         email: user.email,
         tax_id: user.cpf,
@@ -111,14 +113,61 @@ const NewCardForm = () => {
         ]
       };
       
-      console.log("Dados enviados para a API:", JSON.stringify(requestBody, null, 2));
+      console.log("Dados enviados para a API:", JSON.stringify(customerData, null, 2));
       
-      await axios.post("/signature/subscription", requestBody, {
+      const customerResponse = await axios.post("/signature/customers", customerData, {
         headers: { "Content-Type": "application/json" }
       });
 
       toast.success("Cartão cadastrado com sucesso!");
 
+      const customerId = customerResponse.data.id;
+      console.log("Cliente criado com sucesso:", customerId);
+
+      // Criar plano
+
+      const planData = {
+        amount: { currency: "BRL", value: 200000 },
+        interval: { unit: "MONTH", length: 1 },
+        trial: { enabled: false, hold_setup_fee: false, days: 0 },
+        reference_id: "id_plano_test",
+        name: "Plano Teste",
+        description: "Plano para teste"
+      };
+  
+      const planResponse = await axios.post("/signature/plans", planData, {
+        headers: { "Content-Type": "application/json" }
+      });
+  
+      const planId = planResponse.data.id;
+      console.log("Plano criado com sucesso:", planId);
+
+      // Criar assinatura
+
+    const subscriptionData = {
+        plan: { id: planId },
+        customer: { id: customerId },
+        amount: { value: 99900, currency: "BRL" },
+        splits: {
+          method: "FIXED",
+          receivers: [{
+            account: { id: "id_recebidor" },
+            amount: { value: 10000 }
+          }]
+        },
+        payment_method: [{
+          type: "CREDIT_CARD",
+          card: { security_code: values.securityCode }
+        }],
+        pro_rata: false,
+        split_enabled: false,
+        reference_id: "id_assinatura"
+      };
+  
+      await axios.post("/signature/subscription", subscriptionData, {
+        headers: { "Content-Type": "application/json" }
+      });
+  
     } catch (error) {
         console.error("Erro na requisição:", error.response?.data || error.message);
         toast.error(error.response?.data?.message || "Erro ao cadastrar cartão");
