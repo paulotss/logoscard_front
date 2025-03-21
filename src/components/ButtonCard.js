@@ -19,13 +19,14 @@ const ButtonCard = ({ id }) => {
       {link && (
         <div className="mt-3 w-full"> 
           <label htmlFor="generatedLink" className="block">Formulário:</label>
-          <input
-            id="generatedLink"
-            type="text"
-            readOnly
-            value={link}
-            className="w-full p-3 text-center mt-2 border rounded-md"  
-          />
+          <a
+            href={link}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block w-full p-3 text-center mt-2 border border-black rounded-md text-blue-600 underline bg-white"
+          >
+            {link}
+          </a>
         </div>
       )}
     </div>

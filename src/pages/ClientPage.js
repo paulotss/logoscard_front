@@ -157,6 +157,8 @@ const ClientPage = () => {
             </section>
             {user.invoices && user.invoices.length > 0 && <InvoicesList invoices={user.invoices} />}
             <section/>
+            <br/>
+            <br/>
             <p className="font-bold mb-3">Cartão de crédito</p>
             <section className="flex justify-between">
               <div className="mt-2">
