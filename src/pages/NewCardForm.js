@@ -124,7 +124,7 @@ const NewCardForm = () => {
 
       // Criar plano
       const planData = {
-        amount: { currency: "BRL", value: 200000 },
+        amount: { currency: "BRL", value: 2000 },
         interval: { unit: "MONTH", length: 1 },
         trial: { enabled: false, hold_setup_fee: false, days: 0 },
         reference_id: "id_plano_test",
