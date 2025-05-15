@@ -33,7 +33,7 @@ const ButtonCard = ({ id }) => {
         type="text"
         value={inputValue}
         onChange={handleAmountChange}
-        className="w-full p-2 border border-black rounded-md mb-3"
+        className="w-full max-w-md p-2 border border-black rounded-md mb-3"
         placeholder="Ex: 19,90"
       />
       <button
