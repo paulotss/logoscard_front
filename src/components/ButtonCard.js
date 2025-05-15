@@ -26,7 +26,7 @@ const ButtonCard = ({ id }) => {
   };
 
   return (
-    <div className="flex flex-col items-start w-80">
+    <div className="flex flex-col items-start w-full max-w-lg">
       <label htmlFor="amount" className="mb-2">Digite o valor da assinatura:</label>
       <input
         id="amount"
