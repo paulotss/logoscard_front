@@ -65,7 +65,7 @@ const router = createBrowserRouter([
     element: <RouteGuard><CashFlowPage /></RouteGuard>
   },
   {
-    path: "/card/create/:id",
+    path: "/card/create/:id/:amount",
     element: <NewCardForm />
   },
 ]);

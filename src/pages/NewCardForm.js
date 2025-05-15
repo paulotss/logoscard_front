@@ -13,7 +13,7 @@ import { useParams } from "react-router-dom";
 const NewCardForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [pagSeguroReady, setPagSeguroReady] = useState(false);
-  const { id } = useParams();
+  const { id, amount } = useParams();
   const [user, setUser] = useState({});
 
 
@@ -124,7 +124,7 @@ const NewCardForm = () => {
 
       // Criar plano
       const planData = {
-        amount: { currency: "BRL", value: 2000 },
+        amount: { currency: "BRL", value: parseInt(amount) },
         interval: { unit: "MONTH", length: 1 },
         trial: { enabled: false, hold_setup_fee: false, days: 0 },
         reference_id: "id_plano_test",
