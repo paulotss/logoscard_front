@@ -9,8 +9,8 @@ const ButtonCard = ({ id }) => {
   useEffect(() => {
     const fetchPlans = async () => {
       try {
-        const response = await axios.get("hhttps://logoscardback-production.up.railway.app/plans");
-        const activePlans = response.data.plans.filter(plan => plan.status === "ACTIVE");
+        const response = await axios.get("/plans");
+        const activePlans = response.data;
         setPlans(activePlans);
       } catch (error) {
         console.error("Erro ao buscar planos:", error);
@@ -46,7 +46,7 @@ const ButtonCard = ({ id }) => {
         <option value="">-- Selecione --</option>
         {plans.map(plan => (
           <option key={plan.id} value={plan.id}>
-            {plan.name} - R$ {(plan.amount.value / 100).toFixed(2)}
+            {plan.title} - R$ {plan.price.toFixed(2)}
           </option>
         ))}
       </select>
