@@ -10,7 +10,8 @@ const ButtonCard = ({ id }) => {
     const fetchPlans = async () => {
       try {
         const response = await axios.get("https://logoscardback-production.up.railway.app/pagbank/plans");
-        const activePlans = response.data;
+        const allPlans = Array.isArray(response?.data?.plans) ? response.data.plans : [];
+        const activePlans = allPlans.filter(plan => plan.status === "ACTIVE");
         setPlans(activePlans);
       } catch (error) {
         console.error("Erro ao buscar planos:", error);
@@ -46,12 +47,12 @@ const ButtonCard = ({ id }) => {
         <option value="">-- Selecione --</option>
         {plans.map(plan => (
           <option key={plan.id} value={plan.id}>
-            {plan.title} - R$ {plan.price.toFixed(2)}
+            {plan.name} - R$ {(plan.amount.value / 100).toFixed(2)}
           </option>
         ))}
       </select>
 
-      <br/>
+      <br />
 
       <button
         onClick={generateLink}
