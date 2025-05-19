@@ -9,7 +9,7 @@ const ButtonCard = ({ id }) => {
   useEffect(() => {
     const fetchPlans = async () => {
       try {
-        const response = await axios.get("https://logoscardback-production.up.railway.app/plans");
+        const response = await axios.get("https://logoscardback-production.up.railway.app/pagbank/plans");
         const activePlans = response.data;
         setPlans(activePlans);
       } catch (error) {
