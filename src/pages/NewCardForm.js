@@ -205,7 +205,7 @@ const NewCardForm = () => {
                 .matches(/^(0[1-9]|1[0-2])$/, "Informe um valor entre 01 e 12")
                 .required("Obrigatório"),
               expYear: Yup.string()
-                .matches(/^(2\d{3}|\d{2})$/, "Ano inválido")
+                .matches(/^2\d{3}$/, "Informe o ano completo")
                 .required("Obrigatório"),
               securityCode: Yup.string()
                 .matches(/^\d{3,4}$/, "Código inválido")

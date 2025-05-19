@@ -1,48 +1,66 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 const ButtonCard = ({ id }) => {
-  const [inputValue, setInputValue] = useState("");
+  const [plans, setPlans] = useState([]);
+  const [selectedPlanId, setSelectedPlanId] = useState("");
   const [link, setLink] = useState("");
 
-  const convertToCents = (value) => {
-    const cleaned = value.replace(/[^\d.,]/g, "").replace(",", ".");
-    const parsed = parseFloat(cleaned);
-    if (isNaN(parsed)) return null;
-    return Math.round(parsed * 100);
+  useEffect(() => {
+    const fetchPlans = async () => {
+      try {
+        const response = await axios.get("hhttps://logoscardback-production.up.railway.app/plans");
+        const activePlans = response.data.plans.filter(plan => plan.status === "ACTIVE");
+        setPlans(activePlans);
+      } catch (error) {
+        console.error("Erro ao buscar planos:", error);
+      }
+    };
+
+    fetchPlans();
+  }, []);
+
+  const handleSelectChange = (event) => {
+    setSelectedPlanId(event.target.value);
   };
 
   const generateLink = () => {
-    const amountInCents = convertToCents(inputValue);
-    if (amountInCents === null) {
-      alert("Digite um valor válido (ex: 19,90)");
+    if (!selectedPlanId) {
+      alert("Selecione um plano válido");
       return;
     }
-    const newLink = `${window.location.origin}/card/create/${id}/${amountInCents}`;
-    setLink(newLink);
-  };
 
-  const handleAmountChange = (event) => {
-    setInputValue(event.target.value);
+    const newLink = `${window.location.origin}/card/create/${id}/${selectedPlanId}`;
+    setLink(newLink);
   };
 
   return (
     <div className="flex flex-col items-start w-full max-w-lg">
-      <label htmlFor="amount" className="mb-2">Digite o valor da assinatura:</label>
-      <input
-        id="amount"
-        type="text"
-        value={inputValue}
-        onChange={handleAmountChange}
+      <label htmlFor="planSelect" className="mb-2">Selecione um plano:</label>
+      <select
+        id="planSelect"
+        value={selectedPlanId}
+        onChange={handleSelectChange}
         className="w-full max-w-md p-2 border border-black rounded-md mb-3"
-        placeholder="Ex: 19,90"
-      />
+      >
+        <option value="">-- Selecione --</option>
+        {plans.map(plan => (
+          <option key={plan.id} value={plan.id}>
+            {plan.name} - R$ {(plan.amount.value / 100).toFixed(2)}
+          </option>
+        ))}
+      </select>
+
+      <br/>
+
       <button
         onClick={generateLink}
-        className={`p-2 w-24 bg-green-900 text-white rounded-md ${!inputValue ? 'opacity-50 cursor-not-allowed' : ''}`}
-        disabled={!inputValue}
+        className={`p-2 w-24 bg-green-900 text-white rounded-md ${!selectedPlanId ? 'opacity-50 cursor-not-allowed' : ''}`}
+        disabled={!selectedPlanId}
       >
         Gerar
       </button>
+
       {link && (
         <div className="mt-3 w-full">
           <label htmlFor="generatedLink" className="block">Formulário:</label>
