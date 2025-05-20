@@ -13,7 +13,7 @@ import { useParams } from "react-router-dom";
 const NewCardForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [pagSeguroReady, setPagSeguroReady] = useState(false);
-  const { id, amount } = useParams();
+  const { id, selectedPlanId } = useParams();
   const [user, setUser] = useState({});
 
 
@@ -115,52 +115,31 @@ const NewCardForm = () => {
       
       console.log("Dados enviados para a API:", JSON.stringify(customerData, null, 2));
       
-      const customerResponse = await axios.post("/signature/customers", customerData, {
+      const customerResponse = await axios.post(
+        "https://logoscardback-production.up.railway.app/signature/customers",
+         customerData, {
         headers: { "Content-Type": "application/json" }
       });
 
       const customerId = customerResponse.data.id;
       console.log("Cliente criado com sucesso:", customerId);
 
-      // Criar plano
-      const planData = {
-        amount: { currency: "BRL", value: parseInt(amount) },
-        interval: { unit: "MONTH", length: 1 },
-        trial: { enabled: false, hold_setup_fee: false, days: 0 },
-        reference_id: "id_plano_test",
-        name: "Plano Teste",
-        description: "Plano para teste"
-      };
-  
-      const planResponse = await axios.post("/signature/plans", planData, {
-        headers: { "Content-Type": "application/json" }
-      });
-  
-      const planId = planResponse.data.id;
-      console.log("Plano criado com sucesso:", planId);
-
       // Criar assinatura
     const subscriptionData = {
-        plan: { id: planId },
+        plan: { id: selectedPlanId },
         customer: { id: customerId },
-        amount: { value: 99900, currency: "BRL" },
-        splits: {
-          method: "FIXED",
-          receivers: [{
-            account: { id: "id_recebidor" },
-            amount: { value: 10000 }
-          }]
-        },
         payment_method: [{
           type: "CREDIT_CARD",
           card: { security_code: values.securityCode }
         }],
         pro_rata: false,
         split_enabled: false,
-        reference_id: "id_assinatura"
+        reference_id: "Assinatura Logos Card"
       };
   
-      await axios.post("/signature/subscription", subscriptionData, {
+      await axios.post(
+        "https://logoscardback-production.up.railway.app/signature/subscription",
+         subscriptionData, {
         headers: { "Content-Type": "application/json" }
       });
 
