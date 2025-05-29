@@ -16,8 +16,6 @@ const NewCardForm = () => {
   const { id, selectedPlanId } = useParams();
   const [user, setUser] = useState({});
 
-
-
   // Carrega o SDK quando o componente é montado
   useEffect(() => {
     const script = document.createElement("script");
@@ -26,6 +24,8 @@ const NewCardForm = () => {
     script.onload = () => {
       setPagSeguroReady(true);
       console.log("PagSeguro SDK carregado!");
+      console.log("id do cliente: ", id)
+      console.log("id do plano: ", selectedPlanId)
     };
     script.onerror = (err) => {
       console.error("Erro ao carregar PagSeguro SDK:", err);
@@ -44,7 +44,7 @@ const NewCardForm = () => {
         setIsLoading(false);
       };
       getUser();
-  }, [id]);
+  }, [id, selectedPlanId]);
 
   // Garantir que o script do PagSeguro foi carregado
   const submitForm = async (values) => {
@@ -80,68 +80,84 @@ const NewCardForm = () => {
 
       // Envia os dados criptografados para a API
 
-      // Criar cliente
-      const customerData = {
-        name: user.firstName,
-        email: user.email,
-        tax_id: user.cpf,
-        phones: [
-          {
-            country: "55",
-            area: user.cellPhone.substring(0, 2),
-            number: user.cellPhone.substring(2)
-          }
-        ],
-        birth_date: user.birthday.split("T")[0],
-        billing_info: [
-          {
-            card: {
-              holder: {
-                phone: {
-                  country: "55",
-                  area: user.cellPhone.substring(0, 2),
-                  number: user.cellPhone.substring(2)
-                },
-                name: user.firstName,
-                birth_date: user.birthday.split("T")[0],
-                tax_id: user.cpf
-              },
-              encrypted: card.encryptedCard
-            },
-            type: "CREDIT_CARD"
-          }
-        ]
-      };
-      
-      console.log("Dados enviados para a API:", JSON.stringify(customerData, null, 2));
-      
-      const customerResponse = await axios.post(
-        "https://logoscardback-production.up.railway.app/signature/customers",
-         customerData, {
-        headers: { "Content-Type": "application/json" }
-      });
+      let customerId;
 
-      const customerId = customerResponse.data.id;
-      console.log("Cliente criado com sucesso:", customerId);
+      // NOVO BLOCO: Verifica se o cliente já existe
+      const existingCustomer = await axios.get(
+        `https://logoscardback-production.up.railway.app/pagbank/customers/${user.cpf}`
+      );
+      if (existingCustomer.data) {
+        // Se o cliente já existir, usa o ID retornado
+        customerId = existingCustomer.data;
+        console.log("Cliente já existente, usando o ID:", customerId);
+      } else {
+        // Se o cliente não existir, cria um novo
+
+        // Criar cliente
+        const customerData = {
+          name: user.firstName,
+          email: user.email,
+          tax_id: user.cpf,
+          phones: [
+            {
+              country: "55",
+              area: user.cellPhone.substring(0, 2),
+              number: user.cellPhone.substring(2)
+            }
+          ],
+          birth_date: user.birthday.split("T")[0],
+          billing_info: [
+            {
+              card: {
+                holder: {
+                  phone: {
+                    country: "55",
+                    area: user.cellPhone.substring(0, 2),
+                    number: user.cellPhone.substring(2)
+                  },
+                  name: user.firstName,
+                  birth_date: user.birthday.split("T")[0],
+                  tax_id: user.cpf
+                },
+                encrypted: card.encryptedCard
+              },
+              type: "CREDIT_CARD"
+            }
+          ],
+        };
+
+        console.log("Dados enviados do cliente para a API:", JSON.stringify(customerData, null, 2));
+
+        const customerResponse = await axios.post(
+          "https://logoscardback-production.up.railway.app/signature/customers",
+          customerData, {
+            headers: { "Content-Type": "application/json" }
+          });
+
+        customerId = customerResponse.data.id;
+        console.log("Cliente criado com sucesso:", customerId);
+      }
 
       // Criar assinatura
-    const subscriptionData = {
+      const subscriptionData = {
         plan: { id: selectedPlanId },
         customer: { id: customerId },
         payment_method: [{
           type: "CREDIT_CARD",
-          card: { security_code: values.securityCode }
+          card: { 
+            security_code: values.securityCode
+           }
         }],
-        pro_rata: false,
-        split_enabled: false,
-        reference_id: "Assinatura Logos Card"
+        reference_id: "Assinatura_LogosCard"
       };
-  
+
+      console.log("Dados enviados da assinatura para a API:", JSON.stringify(subscriptionData, null, 2));
+
       await axios.post(
         "https://logoscardback-production.up.railway.app/signature/subscription",
-         subscriptionData, {
-        headers: { "Content-Type": "application/json" }
-      });
+        subscriptionData, {
+          headers: { "Content-Type": "application/json" }
+        });
 
       toast.success("Cartão cadastrado com sucesso!");
   
