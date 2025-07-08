@@ -19,29 +19,32 @@ const ClientPage = () => {
   const formatDate = (value) => {
     const date = new Date(value);
     const day = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate();
-    const month = (date.getMonth() + 1) < 10 ? `0${date.getMonth() + 1}` : (date.getMonth() + 1);
+    const month =
+      date.getMonth() + 1 < 10
+        ? `0${date.getMonth() + 1}`
+        : date.getMonth() + 1;
     const year = date.getFullYear();
     return `${day}/${month}/${year}`;
-  }
+  };
 
   useEffect(() => {
     const getUser = async () => {
       setIsLoading(true);
-      const result = await axios.get(`/user/${id}`);
+      const result = await axios.get(`/users/user/${id}`);
       setUser(result.data);
       setIsLoading(false);
-    }
+    };
     getUser();
   }, [id]);
 
   return (
     <>
-      {
-        isLoading
-        ? <div className="flex justify-center w-full mt-5">
-            <img src={ loading } alt="" />
-          </div>
-        : <>
+      {isLoading ? (
+        <div className="flex justify-center w-full mt-5">
+          <img src={loading} alt="" />
+        </div>
+      ) : (
+        <>
           <Header name={user.firstName} />
           <main className="p-5">
             <p className="font-bold mb-3">Cliente</p>
@@ -91,63 +94,60 @@ const ClientPage = () => {
             </section>
             <p className="font-bold mb-3">Plano</p>
             <section className="border-b-2 border-gray-400 pb-5 mb-5">
-              {
-                user.assignments.length > 0
-                ? <div>
-                    {
-                      user.assignments.map((assignment) => (
-                        <div
-                          key={assignment.id}
-                          className="p-2 mb-3 border border-white-400 rounded-lg bg-gray-200"
-                        >
-                          <PlanLink
-                            assignmentTitle={assignment.plan.title}
-                            expiration={assignment.expiration}
-                          />
-                          <Benefits
-                            data={assignment.assignmentBenefit}
-                            assignmentId={assignment.id}
-                            dependents={assignment.dependents.length}
-                          />
-                          {
-                            assignment.dependents.length > 0 && 
-                            <div>
-                              <p className="text-sm">Dependentes</p>
-                              { assignment.dependents.map(d => (
-                                <div
-                                  key={d.id}
-                                  className="font-bold bg-gray-400 p-2 rounded-md mb-2 flex justify-between"
-                                >
-                                  <Link to={`/dependent/${d.id}`}>
-                                    { `${d.user.firstName} ${d.user.lastName}` }
-                                  </Link>
-                                </div>
-                              )) }
-                            </div>
-                          }
-                        </div>
-                      ))
-                    }
-                    {
-                      <div className="mt-2">
-                        <Link
-                          to={`/plan/add/${user.id}`}
-                          className="bg-green-900 p-2 w-40 text-center rounded-md text-white"
-                        >
-                          Adicionar Plano
-                        </Link>
-                      </div>
-                    }
-                  </div>
-                : <div className="mt-2">
-                    <Link
-                      to={`/plan/add/${user.id}`}
-                      className="bg-green-900 p-2 w-40 text-center rounded-md text-white"
+              {user.assignments.length > 0 ? (
+                <div>
+                  {user.assignments.map((assignment) => (
+                    <div
+                      key={assignment.id}
+                      className="p-2 mb-3 border border-white-400 rounded-lg bg-gray-200"
                     >
-                      Adicionar Plano
-                    </Link>
-                  </div>
-                }
+                      <PlanLink
+                        assignmentTitle={assignment.plan.title}
+                        expiration={assignment.expiration}
+                      />
+                      <Benefits
+                        data={assignment.assignmentBenefit}
+                        assignmentId={assignment.id}
+                        dependents={assignment.dependents.length}
+                      />
+                      {assignment.dependents.length > 0 && (
+                        <div>
+                          <p className="text-sm">Dependentes</p>
+                          {assignment.dependents.map((d) => (
+                            <div
+                              key={d.id}
+                              className="font-bold bg-gray-400 p-2 rounded-md mb-2 flex justify-between"
+                            >
+                              <Link to={`/dependent/${d.id}`}>
+                                {`${d.user.firstName} ${d.user.lastName}`}
+                              </Link>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                  {
+                    <div className="mt-2">
+                      <Link
+                        to={`/plan/add/${user.id}`}
+                        className="bg-green-900 p-2 w-40 text-center rounded-md text-white"
+                      >
+                        Adicionar Plano
+                      </Link>
+                    </div>
+                  }
+                </div>
+              ) : (
+                <div className="mt-2">
+                  <Link
+                    to={`/plan/add/${user.id}`}
+                    className="bg-green-900 p-2 w-40 text-center rounded-md text-white"
+                  >
+                    Adicionar Plano
+                  </Link>
+                </div>
+              )}
             </section>
             <p className="font-bold mb-3">Cartão</p>
             <section className="flex justify-between">
@@ -155,20 +155,21 @@ const ClientPage = () => {
                 <Card clientId={user.id} />
               </div>
             </section>
-            {user.invoices && user.invoices.length > 0 && <InvoicesList invoices={user.invoices} />}
-            <section/>
+            {user.invoices && user.invoices.length > 0 && (
+              <InvoicesList invoices={user.invoices} />
+            )}
+            <section />
             <p className="font-bold mb-3">Cartão de crédito</p>
             <section className="flex justify-between">
               <div className="mt-2">
-              <ButtonCard id={user.id} />
+                <ButtonCard id={user.id} />
               </div>
             </section>
           </main>
-          </>
-      }
-      
+        </>
+      )}
     </>
-  )
-}
+  );
+};
 
 export default ClientPage;
