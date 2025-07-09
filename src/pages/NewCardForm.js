@@ -15,7 +15,6 @@ const NewCardForm = () => {
   const [pagSeguroReady, setPagSeguroReady] = useState(false);
   const { token } = useParams();
   const [user, setUser] = useState({});
-  const [publicKey, setPublicKey] = useState("");
   const [isValidToken, setIsValidToken] = useState(false);
   const [rateLimitError, setRateLimitError] = useState(false);
   const navigate = useNavigate();
@@ -44,9 +43,8 @@ const NewCardForm = () => {
           token: token,
         });
 
-        if (result.data.valid) {
+        if (result.data.isValid) {
           setUser(result.data.user);
-          setPublicKey(result.data.publicKey);
           setIsValidToken(true);
         } else {
           toast.error("Link inválido ou expirado");
@@ -74,19 +72,13 @@ const NewCardForm = () => {
       toast.error("Sistema de pagamento não carregado. Tente novamente.");
       return;
     }
-
-    if (!publicKey) {
-      toast.error("Erro de configuração. Tente novamente.");
-      return;
-    }
-
-    // Muda para um estado de carregamento
     setIsLoading(true);
 
     try {
       // Criptografa os dados do cartão usando a chave obtida do backend
       const card = PagSeguro.encryptCard({
-        publicKey: publicKey,
+        publicKey:
+          "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAw0nc7xP2/MHB6AHbXle7xcwFky3hduqi383UwkjKYEADWThiFPa1tUnAAxzHJDhDYyDtssHsiuUE/GR0Q19ZdfRvfaSYk0sZTuzLU7mE6ilOis7J2jdB6QqZyqFxZ6Y4w8md8CRDrFr45p6WCo9T3VsWnOYhHaT4pcUsfxnSDkKfDHOcAzr6BMPKroacQPv/D7AOVrCwTY14dHcMfyTzfqhhHf2XayzSu3OQi0Jwx9vSDT4a+N7BCCCub7n1o7O0GzlX9N2Mbdw2Y+VwvyE5bICynr6PD/9uPkRsp+kaK+UJsZ1ulQPFsVkFjbJBAqFHANvDll3JJ/kPanR30AcQ1QIDAQAB",
         holder: values.holder,
         number: values.number,
         expMonth: values.expMonth,
