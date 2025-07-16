@@ -148,7 +148,7 @@ const NewCardForm = () => {
             security_code: values.securityCode
            }
         }],
-        reference_id: "Assinatura_LogosCard"
+        reference_id: `usr${id}-pln${selectedPlanId.replace('PLAN_', '')}`
       };
 
       console.log("Dados enviados da assinatura para a API:", JSON.stringify(subscriptionData, null, 2));
