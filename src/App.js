@@ -24,7 +24,7 @@ function App() {
         <Route path='/client/benefit/:id' element={<BenefitsPage />} />
         <Route path='/invoice/:id' element={<InvoicePage />} />
         <Route path='/404' element={<NotFoundPage />} />
-        <Route path='/card/create/:id' element={<NewCardForm />} />
+        <Route path='/card/create/:id/:selectedPlanId' element={<NewCardForm />} />
       </Routes>
     </BrowserRouter>
   );
