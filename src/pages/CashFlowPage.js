@@ -35,7 +35,7 @@ const CashFlowPage = () => {
   }
 
   const handleSubmitWithdraw = async () => {
-    const result = await axios.post('/withdraw',{
+    const result = await axios.post('/api/withdraws/withdraw',{
       amount: withdrawForm.amount,
       description: withdrawForm.description,
       userId: user.id,
@@ -57,7 +57,7 @@ const CashFlowPage = () => {
 
   useEffect(() => {
     const getUser = async () => {
-      const result = await axios.get('/user/active', {
+      const result = await axios.get('/api/users/user/active', {
         headers: {
           authorization: sessionStorage.getItem('auth')
         }
@@ -65,19 +65,19 @@ const CashFlowPage = () => {
       setUser(result.data);
     }
     const getTotalWithdraw = async () => {
-      const result = await axios.get('/withdraw');
+      const result = await axios.get('/api/withdraws/withdraw');
       setTotalWithdraw(result.data);
     }
     const getTotalDeposit = async () => {
-      const result = await axios.get('/deposit');
+      const result = await axios.get('/api/deposits/deposit');
       setTotalDeposit(result.data);
     }
     const getWithdraws = async () => {
-      const result = await axios.get('/withdraws');
+      const result = await axios.get('/api/withdraws/withdraws');
       setWithdraws(result.data);
     }
     const getDeposits = async () => {
-      const result = await axios.get('/deposits');
+      const result = await axios.get('/api/deposits/deposits');
       setDeposits(result.data);
     }
     getUser();

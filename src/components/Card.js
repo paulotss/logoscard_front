@@ -30,7 +30,7 @@ const CardPage = ({ clientId, expiration }) => {
   }
 
   const handleClickShow = async () => {
-    const result = await axios.get(`/user/${clientId}`);
+    const result = await axios.get(`/api/users/user/${clientId}`);
     setClient(result.data);
     setIsShowing(true);
   }

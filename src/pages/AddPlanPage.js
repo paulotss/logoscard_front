@@ -61,13 +61,13 @@ const AddPlanPage = () => {
   const submitPlanForm = async () => {
     setIsLoading(true);
     try {
-      const newUser = await axios.post('/assignment', {
+      const newUser = await axios.post('/api/assignments/assignment', {
         planId: activePlan.planId,
         userId: userId,
         expiration,
       });
       console.log(newUser.data);
-      await axios.post('/invoices', {
+      await axios.post('/api/invoices/invoices', {
         parcels: activePlan.parcels,
         day: activePlan.expiration,
         method: activePlan.method,
@@ -75,7 +75,7 @@ const AddPlanPage = () => {
         userId: userId,
         totalPrice: activePlan.price + activePlan.fees,
       });
-      await axios.post('/assignment/benefit', getPlanBenefits(newUser.data));
+      await axios.post('/api/benefits/assignment/benefit', getPlanBenefits(newUser.data));
       if (dependents.length > 0) {
         const dependentsData = dependents.map((d) => ({
           user: d,
@@ -83,7 +83,7 @@ const AddPlanPage = () => {
         }));
       console.log('DependentsData')
       console.log(dependentsData)
-        await axios.post('/user/dependent', dependentsData);
+        await axios.post('/api/users/user/dependent', dependentsData);
       }
       navigate(`/client/${userId}`);
     } catch (error) {
@@ -132,7 +132,7 @@ const AddPlanPage = () => {
     const getPlans = async () => {
       setIsLoading(true);
         try {
-          const result = await axios.get('/plans');
+          const result = await axios.get('/api/plans/plans');
           setPlans(result.data);
         } catch (error) {
           console.log(error);
@@ -141,7 +141,7 @@ const AddPlanPage = () => {
     }
     const getUser = async () => {
       setIsLoading(true);
-      const result = await axios.get(`/user/${userId}`);
+      const result = await axios.get(`/api/users/user/${userId}`);
       const dependents = []
       result.data.assignments.forEach(assignment => {
         dependents.push(...assignment.dependents)

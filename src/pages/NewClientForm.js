@@ -16,7 +16,7 @@ const NewClientForm = () => {
   const submitForm = async (values) => {
     setIsLoading(true);
     try {
-      await axios.post('/client', {
+      await axios.post('/api/clients/client', {
         ...values,
         birthday,
         accessLevel: 2,

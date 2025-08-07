@@ -50,12 +50,12 @@ const BenefitsPage = () => {
     const nDependents = user.assignments[0].dependents.length;
     if (assignmentBenefit.benefit.amount + nDependents > Number(amount)) {
       try {
-        const result = await axios.put('/assignment/benefit', {
+        const result = await axios.put('/api/benefits/assignment/benefit', {
           amount: Number(amount) + 1,
           benefitId: id,
           assignmentId: user.assignments[0].id,
         });
-        await axios.post('/benefit/note', {
+        await axios.post('/api/benefits/benefit/note', {
           assignmentBenefitId: assignmentBenefit.id,
           description: currentBenefit.description,
         })
@@ -71,7 +71,7 @@ const BenefitsPage = () => {
     const getUser = async () => {
       setIsLoading(true);
       try {
-        const result = await axios(`/user/${id}`);
+        const result = await axios(`/api/users/user/${id}`);
         setUser(result.data);
         console.log(result.data);
       } catch (error) {

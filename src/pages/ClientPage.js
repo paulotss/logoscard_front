@@ -27,7 +27,7 @@ const ClientPage = () => {
   useEffect(() => {
     const getUser = async () => {
       setIsLoading(true);
-      const result = await axios.get(`/user/${id}`);
+      const result = await axios.get(`api/users/user/${id}`);
       setUser(result.data);
       setIsLoading(false);
     }
@@ -118,7 +118,7 @@ const ClientPage = () => {
                                   key={d.id}
                                   className="font-bold bg-gray-400 p-2 rounded-md mb-2 flex justify-between"
                                 >
-                                  <Link to={`/dependent/${d.id}`}>
+                                  <Link to={`/api/dependents/dependent/${d.id}`}>
                                     { `${d.user.firstName} ${d.user.lastName}` }
                                   </Link>
                                 </div>

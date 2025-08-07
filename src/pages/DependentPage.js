@@ -25,9 +25,9 @@ const DependentPage = () => {
   useEffect(() => {
     const getDependent = async () => {
       setIsLoading(true);
-      const result = await axios.get(`/dependent/${id}`);
+      const result = await axios.get(`'/api/dependents/dependent/${id}`);
       setDependent(result.data);
-      const getClient = await axios.get(`/user/${result.data.assignments.userId}`);
+      const getClient = await axios.get(`/api/users/user/${result.data.assignments.userId}`);
       setClient(getClient.data);
       setIsLoading(false);
     }

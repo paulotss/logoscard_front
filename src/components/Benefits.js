@@ -33,12 +33,12 @@ const Benefits = (props) => {
 
   const handleSubmit = async () => {
     try {
-      await axios.put('/assignment/benefit', {
+      await axios.put('/api/benefits/assignment/benefit', {
         amount: benefits.find((b) => b.id === currentBenefit.id).usage + 1,
         benefitId: benefits.find((b) => b.id === currentBenefit.id).benefitId,
         assignmentId: assignmentId,
       });
-      await axios.post('/benefit/note', {
+      await axios.post('/api/benefits/benefit/note', {
         assignmentBenefitId: currentBenefit.id,
         description: currentBenefit.note,
       })

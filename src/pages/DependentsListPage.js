@@ -23,7 +23,7 @@ const DependentsListPage = () => {
   useEffect(() => {
     const getUsers = async () => {
       setIsLoading(true);
-      const result = await axios.get('/dependents');
+      const result = await axios.get('/api/dependents/dependents');
       setDependents(result.data);
       setIsLoading(false);
     }

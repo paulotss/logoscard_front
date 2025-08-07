@@ -1,7 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import logo from "../media/logo1.png";
-import GuardLevel from "./Guard/GuardLevel";
 
 const Header = ({ hideNav = false }) => {
   const navigate = useNavigate();
@@ -24,11 +23,9 @@ const Header = ({ hideNav = false }) => {
             <Link to="/" className="text-lg p-2 hover:border-b-2 border-b-white mr-2">Home</Link>
             <Link to="/clients" className="text-lg p-2 hover:border-b-2 border-b-white mr-2">Clientes</Link>
             <Link to="/dependents" className="text-lg p-2 hover:border-b-2 border-b-white mr-2">Dependentes</Link>
-            <GuardLevel level={0}>
-              <Link to="/cashflow" className="text-lg p-2 hover:border-b-2 hover:border-b-white mr-2 border-b-2 border-b-[#1C232E]">
-                Caixa
-              </Link>
-            </GuardLevel>
+            <Link to="/cashflow" className="text-lg p-2 hover:border-b-2 hover:border-b-white mr-2 border-b-2 border-b-[#1C232E]">
+              Caixa
+            </Link>
           </nav>
           <div className="flex">
             <button onClick={logout}>

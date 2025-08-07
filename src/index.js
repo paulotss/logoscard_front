@@ -1,9 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
+
+// Imports de Componentes
 import RouteGuard from './components/RouteGuard';
+
+// Imports de Páginas
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import ClientsListPage from './pages/ClientsListPage';
@@ -14,60 +18,58 @@ import InvoicePage from './pages/InvoicePage';
 import AddPlanPage from './pages/AddPlanPage';
 import DependentPage from './pages/DependentPage';
 import DependentsListPage from './pages/DependentsListPage';
-import { LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import CashFlowPage from './pages/CashFlowPage';
 import NewCardForm from './pages/NewCardForm';
+import NotFoundPage from './pages/NotFoundPage';
+
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+
+// Layout protegido que usa RouteGuard
+const ProtectedLayout = () => (
+  <RouteGuard>
+    <Outlet />
+  </RouteGuard>
+);
 
 const router = createBrowserRouter([
-  {
-    path:"/",
-    element: <RouteGuard><HomePage /></RouteGuard>
-  },
+  // Rotas Públicas
   {
     path: "/login",
     element: <LoginPage />
   },
   {
-    path: "/clients",
-    element: <RouteGuard><ClientsListPage /></RouteGuard>
-  },
-  {
-    path: "/client/:id",
-    element: <RouteGuard><ClientPage /></RouteGuard>
-  },
-  {
-    path: "/client/create",
-    element: <RouteGuard><NewClientForm /></RouteGuard>
-  },
-  {
-    path: "/client/benefit/:id",
-    element: <RouteGuard><BenefitsPage /></RouteGuard>
-  },
-  {
-    path: "/invoice/:id",
-    element: <RouteGuard><InvoicePage /></RouteGuard>
-  },
-  {
-    path: "/plan/add/:userId",
-    element: <RouteGuard><AddPlanPage /></RouteGuard>
-  },
-  {
-    path: "/dependent/:id",
-    element: <RouteGuard><DependentPage /></RouteGuard>
-  },
-  {
-    path: "/dependents",
-    element: <RouteGuard><DependentsListPage /></RouteGuard>
-  },
-  {
-    path: "/cashflow",
-    element: <RouteGuard><CashFlowPage /></RouteGuard>
-  },
-  {
     path: "/card/create/:id/:selectedPlanId",
     element: <NewCardForm />
   },
+  // Rota de "Não Encontrado"
+  {
+    path: "*",
+    element: <NotFoundPage />
+  },
+
+  // Rotas Protegidas
+  {
+    element: <ProtectedLayout />,
+    children: [
+      { path: "/", element: <HomePage /> },
+      { path: "/clients", element: <ClientsListPage /> },
+      { path: "/client/:id", element: <ClientPage /> },
+      { path: "/client/create", element: <NewClientForm /> },
+      { path: "/client/benefit/:id", element: <BenefitsPage /> },
+      { path: "/invoice/:id", element: <InvoicePage /> },
+      { path: "/plan/add/:userId", element: <AddPlanPage /> },
+      { path: "/dependent/:id", element: <DependentPage /> },
+      { path: "/dependents", element: <DependentsListPage /> },
+      { path: "/cashflow", element: <RouteGuard level={0}><CashFlowPage /></RouteGuard>  },
+      // Se você tiver uma rota que precise de um nível de acesso específico,
+      // você pode fazer assim:
+      // {
+      //   path: "/admin",
+      //   element: <RouteGuard level={0}><AdminPage /></RouteGuard>
+      // }
+    ]
+  }
 ]);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -79,7 +81,4 @@ root.render(
   </React.StrictMode>
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();

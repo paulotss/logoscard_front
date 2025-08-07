@@ -15,7 +15,7 @@ const InputEdit = (props) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await axios.put('user/edit', {
+    await axios.put('/api/users/user/edit', {
       userId,
       data: { [entity]: editValue }
     });

@@ -59,7 +59,7 @@ const ClientsListPage = () => {
   useEffect(() => {
     const getUsers = async () => {
       setIsLoading(true);
-      const result = await axios.get('/clients');
+      const result = await axios.get('/api/clients/clients');
       setClients(result.data);
       setFilterClients(result.data);
       setIsLoading(false);
@@ -111,7 +111,7 @@ const ClientsListPage = () => {
                     {
                       client.user.assignments.length > 0 &&
                       client.user.assignments[0].dependents.map((dependent) => (
-                        <Link to={`/dependent/${dependent.id}`}
+                        <Link to={`'/api/dependents/dependent/${dependent.id}`}
                           key={ dependent.id }
                           className="grid grid-gap grid-cols-4 grid-rows-1 bg-[#6DBDB7] p-2"
                         >

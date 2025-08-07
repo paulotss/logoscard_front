@@ -9,7 +9,7 @@ const ButtonCard = ({ id }) => {
   useEffect(() => {
     const fetchPlans = async () => {
       try {
-        const response = await axios.get("https://logoscardback-production.up.railway.app/pagbank/plans");
+        const response = await axios.get("http://localhost:3001/api/pagbank/plans");
         const allPlans = Array.isArray(response?.data?.plans) ? response.data.plans : [];
         const activePlans = allPlans.filter(plan => plan.status === "ACTIVE");
         setPlans(activePlans);

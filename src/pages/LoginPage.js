@@ -4,13 +4,15 @@ import { Formik } from "formik";
 import * as Yup from "yup";
 import logo from '../media/logo1.png';
 
+console.log('A baseURL do Axios configurada é:', axios.defaults.baseURL);
+
 const LoginPage = () => {
   const navigate = useNavigate();
 
   const submitForm = async (values) => {
     try {
-      const result = await axios.post('/login', { ...values });
-      sessionStorage.setItem('auth', result.data);
+      const result = await axios.post('/api/users/login', { ...values });
+      sessionStorage.setItem('auth', result.data.token);
       navigate('/');
     } catch (error) {
       console.log(error);

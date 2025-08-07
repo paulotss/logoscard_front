@@ -68,10 +68,10 @@ const InvoicePage = () => {
 
   const handleClickPay = async () => {
     try {
-      await axios.put('/invoice/pay', {
+      await axios.put('/api/invoices/invoice/pay', {
         invoiceId: invoice.id
       });
-      await axios.post('/deposit', {
+      await axios.post('/api/deposits/deposit', {
         amount: invoice.amount,
         invoiceId: invoice.id,
       });
@@ -89,7 +89,7 @@ const InvoicePage = () => {
     const getInvoice = async () => {
       setIsLoading(true);
       try {
-        const result = await axios.get(`/invoice/${id}`);
+        const result = await axios.get(`/api/invoices/invoice/${id}`);
         setInvoice(result.data);
       } catch (error) {
         navigate('/404');

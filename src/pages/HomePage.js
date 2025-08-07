@@ -10,7 +10,7 @@ import { HiUserPlus } from 'react-icons/hi2';
 import imgSeraphisPremium from '../media/seraphis-premium.png';
 import imgMaatPremium from '../media/maat-premium.png';
 import imgMaatSeraphisPremium from '../media/ms-gold.png';
-import GuardLevel from "../components/Guard/GuardLevel";
+
 
 const HomePage = () => {
   const [ total, setTotal ] = useState({
@@ -20,8 +20,8 @@ const HomePage = () => {
 
   useEffect(() => {
     const getTotal = async () => {
-      const clients = await axios.get('/clients/total');
-      const dependents = await axios.get('/dependents/total');
+      const clients = await axios.get('/api/clients/clients/total');
+      const dependents = await axios.get('/api/dependents/dependents/total');
       setTotal({
         clients: clients.data,
         dependents: dependents.data,
@@ -34,10 +34,8 @@ const HomePage = () => {
     <>
       <Header />
       <main className="p-5">
-        <GuardLevel level={0}>
           <p className="font-bold mb-3 text-center">Faturas</p>
           <Invoices />
-        </GuardLevel>
         <section className="flex justify-center mt-5">
           <div className="m-5 text-center">
             <p className="font-bold">Titulares</p>
@@ -54,25 +52,21 @@ const HomePage = () => {
             image={ <HiUserGroup /> }
             path="/clients"
           />
-          <GuardLevel level={0}>
             <ButtonSection
               title="Novo cliente"
               image={ <HiUserPlus /> }
               path="/client/create"
             />
-          </GuardLevel>
           <ButtonSection
             title="Dependentes"
             image={ <HiUserGroup /> }
             path="/dependents"
           />
-          <GuardLevel level={0}>
             <ButtonSection
               title="Caixa"
               image={ <HiDocumentText /> }
               path="/cashflow"
             />
-          </GuardLevel>
         </section>
         <section className="flex flex-wrap justify-center p-5 mt-5 border-t-2 border-gray-400">
           <ButtonPlan title="Premium Seraphis" image={imgSeraphisPremium} />

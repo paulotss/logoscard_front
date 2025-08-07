@@ -14,11 +14,11 @@ const Invoices = () => {
   useEffect(() => {
     const getTotalInvoices = async () => {
       setIsLoading(true);
-      const paid = await axios.get('/invoices/total/paid');
-      const pending = await axios.get('/invoices/total/pending');
-      const overdue = await axios.get('/invoices/total/overdue');
-      const deposit = await axios.get('/deposit');
-      const withdraw = await axios.get('/withdraw')
+      const paid = await axios.get('/api/invoices/invoices/total/paid');
+      const pending = await axios.get('/api/invoices/invoices/total/pending');
+      const overdue = await axios.get('/api/invoices/invoices/total/overdue');
+      const deposit = await axios.get('/api/deposits/deposit');
+      const withdraw = await axios.get('/api/withdraws/withdraw')
       setInvoice({
         paid: paid.data,
         pending: pending.data,
