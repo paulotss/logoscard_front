@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import axios from "../http";
 import Header from "../components/Header";
@@ -10,10 +10,10 @@ import InputEdit from "../components/EditElements/InputEdit";
 import DateEdit from "../components/EditElements/DateEdit";
 import Benefits from "../components/Benefits";
 import ButtonCard from "../components/ButtonCard";
+import { useUser } from "../contexts/UserContext";
 
 const ClientPage = () => {
-  const [user, setUser] = useState({});
-  const [isLoading, setIsLoading] = useState(true);
+  const { user, isLoading, fetchUser } = useUser();
   const { id } = useParams();
 
   const formatDate = (value) => {
@@ -28,14 +28,39 @@ const ClientPage = () => {
   };
 
   useEffect(() => {
-    const getUser = async () => {
-      setIsLoading(true);
-      const result = await axios.get(`/users/user/${id}`);
-      setUser(result.data);
-      setIsLoading(false);
+    const fetchClient = async () => {
+      await fetchUser(id);
     };
-    getUser();
-  }, [id]);
+    if (id) {
+      fetchClient();
+    }
+  }, [id, fetchUser]);
+  useEffect(() => {
+    if (user?.subscriptionId) {
+      const subscriptions = async () => {
+        const result = await axios.get(
+          `/pagbank/subscriptions/${user?.subscriptionId}`
+        );
+        console.log(result.data);
+        console.log(user.invoices);
+        if (user.invoices.length > 0) {
+          if (
+            !user.invoices[0].paid &&
+            result.data.invoices[0].status !== "ACTIVE"
+          ) {
+            const res = await axios.post(
+              `/pagbank/subscriptions/equalize-invoices`,
+              {
+                subscriptionId: user.subscriptionId,
+              }
+            );
+            console.log(res.data);
+          }
+        }
+      };
+      subscriptions();
+    }
+  }, [user]);
 
   return (
     <>
@@ -94,7 +119,7 @@ const ClientPage = () => {
             </section>
             <p className="font-bold mb-3">Plano</p>
             <section className="border-b-2 border-gray-400 pb-5 mb-5">
-              {user.assignments.length > 0 ? (
+              {user.assignments && user.assignments.length > 0 ? (
                 <div>
                   {user.assignments.map((assignment) => (
                     <div
@@ -149,7 +174,7 @@ const ClientPage = () => {
                 </div>
               )}
             </section>
-            <p className="font-bold mb-3">Cartão</p>
+            <p className="font-bold mb-3">Cartão logoscard</p>
             <section className="flex justify-between">
               <div className="mt-2">
                 <Card clientId={user.id} />
@@ -158,13 +183,14 @@ const ClientPage = () => {
             {user.invoices && user.invoices.length > 0 && (
               <InvoicesList invoices={user.invoices} />
             )}
+            {!user?.subscriptionId && (
+              <section className="flex justify-between">
+                <div className="mt-2">
+                  <ButtonCard id={user.id} />
+                </div>
+              </section>
+            )}
             <section />
-            <p className="font-bold mb-3">Cartão de crédito</p>
-            <section className="flex justify-between">
-              <div className="mt-2">
-                <ButtonCard id={user.id} />
-              </div>
-            </section>
           </main>
         </>
       )}
