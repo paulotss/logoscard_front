@@ -4,29 +4,29 @@ import ButtonPlan from "../components/ButtonPlan";
 import ButtonSection from "../components/ButtonSection";
 import Header from "../components/Header";
 import Invoices from "../components/Invoices";
-import { HiUserGroup } from 'react-icons/hi2';
-import { HiDocumentText } from 'react-icons/hi2';
-import { HiUserPlus } from 'react-icons/hi2';
-import imgSeraphisPremium from '../media/seraphis-premium.png';
-import imgMaatPremium from '../media/maat-premium.png';
-import imgMaatSeraphisPremium from '../media/ms-gold.png';
+import { HiUserGroup } from "react-icons/hi2";
+import { HiDocumentText } from "react-icons/hi2";
+import { HiUserPlus } from "react-icons/hi2";
+import imgSeraphisPremium from "../media/seraphis-premium.png";
+import imgMaatPremium from "../media/maat-premium.png";
+import imgMaatSeraphisPremium from "../media/ms-gold.png";
 import GuardLevel from "../components/Guard/GuardLevel";
 
 const HomePage = () => {
-  const [ total, setTotal ] = useState({
+  const [total, setTotal] = useState({
     clients: 0,
     dependents: 0,
-  })
+  });
 
   useEffect(() => {
     const getTotal = async () => {
-      const clients = await axios.get('/clients/total');
-      const dependents = await axios.get('/dependents/total');
+      const clients = await axios.get("/clients/clients/total");
+      const dependents = await axios.get("/dependents/dependents/total");
       setTotal({
         clients: clients.data,
         dependents: dependents.data,
       });
-    }
+    };
     getTotal();
   }, []);
 
@@ -41,35 +41,37 @@ const HomePage = () => {
         <section className="flex justify-center mt-5">
           <div className="m-5 text-center">
             <p className="font-bold">Titulares</p>
-            <p className="font-bold text-green-600 text-2xl">{ total.clients }</p>
+            <p className="font-bold text-green-600 text-2xl">{total.clients}</p>
           </div>
           <div className="m-5 text-center">
             <p className="font-bold">Dependentes</p>
-            <p className="font-bold text-green-600 text-2xl">{ total.dependents }</p>
+            <p className="font-bold text-green-600 text-2xl">
+              {total.dependents}
+            </p>
           </div>
         </section>
         <section className="flex justify-center p-5 border-t-2 border-gray-400">
           <ButtonSection
             title="Clientes"
-            image={ <HiUserGroup /> }
+            image={<HiUserGroup />}
             path="/clients"
           />
           <GuardLevel level={0}>
             <ButtonSection
               title="Novo cliente"
-              image={ <HiUserPlus /> }
+              image={<HiUserPlus />}
               path="/client/create"
             />
           </GuardLevel>
           <ButtonSection
             title="Dependentes"
-            image={ <HiUserGroup /> }
+            image={<HiUserGroup />}
             path="/dependents"
           />
           <GuardLevel level={0}>
             <ButtonSection
               title="Caixa"
-              image={ <HiDocumentText /> }
+              image={<HiDocumentText />}
               path="/cashflow"
             />
           </GuardLevel>
@@ -77,11 +79,14 @@ const HomePage = () => {
         <section className="flex flex-wrap justify-center p-5 mt-5 border-t-2 border-gray-400">
           <ButtonPlan title="Premium Seraphis" image={imgSeraphisPremium} />
           <ButtonPlan title="Premium Maat" image={imgMaatPremium} />
-          <ButtonPlan title="Gold Seraphis/Maat" image={imgMaatSeraphisPremium} />
+          <ButtonPlan
+            title="Gold Seraphis/Maat"
+            image={imgMaatSeraphisPremium}
+          />
         </section>
       </main>
     </>
-  )
-}
+  );
+};
 
 export default HomePage;

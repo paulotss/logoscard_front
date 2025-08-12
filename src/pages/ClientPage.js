@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import axios from "../http";
 import Header from "../components/Header";
@@ -10,38 +10,66 @@ import InputEdit from "../components/EditElements/InputEdit";
 import DateEdit from "../components/EditElements/DateEdit";
 import Benefits from "../components/Benefits";
 import ButtonCard from "../components/ButtonCard";
+import { useUser } from "../contexts/UserContext";
 
 const ClientPage = () => {
-  const [user, setUser] = useState({});
-  const [isLoading, setIsLoading] = useState(true);
+  const { user, isLoading, fetchUser } = useUser();
   const { id } = useParams();
 
   const formatDate = (value) => {
     const date = new Date(value);
     const day = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate();
-    const month = (date.getMonth() + 1) < 10 ? `0${date.getMonth() + 1}` : (date.getMonth() + 1);
+    const month =
+      date.getMonth() + 1 < 10
+        ? `0${date.getMonth() + 1}`
+        : date.getMonth() + 1;
     const year = date.getFullYear();
     return `${day}/${month}/${year}`;
-  }
+  };
 
   useEffect(() => {
-    const getUser = async () => {
-      setIsLoading(true);
-      const result = await axios.get(`/user/${id}`);
-      setUser(result.data);
-      setIsLoading(false);
+    const fetchClient = async () => {
+      await fetchUser(id);
+    };
+    if (id) {
+      fetchClient();
     }
-    getUser();
-  }, [id]);
+  }, [id, fetchUser]);
+  useEffect(() => {
+    if (user?.subscriptionId) {
+      const subscriptions = async () => {
+        const result = await axios.get(
+          `/pagbank/subscriptions/${user?.subscriptionId}`
+        );
+        console.log(result.data);
+        console.log(user.invoices);
+        if (user.invoices.length > 0) {
+          if (
+            !user.invoices[0].paid &&
+            result.data.invoices[0].status !== "ACTIVE"
+          ) {
+            const res = await axios.post(
+              `/pagbank/subscriptions/equalize-invoices`,
+              {
+                subscriptionId: user.subscriptionId,
+              }
+            );
+            console.log(res.data);
+          }
+        }
+      };
+      subscriptions();
+    }
+  }, [user]);
 
   return (
     <>
-      {
-        isLoading
-        ? <div className="flex justify-center w-full mt-5">
-            <img src={ loading } alt="" />
-          </div>
-        : <>
+      {isLoading ? (
+        <div className="flex justify-center w-full mt-5">
+          <img src={loading} alt="" />
+        </div>
+      ) : (
+        <>
           <Header name={user.firstName} />
           <main className="p-5">
             <p className="font-bold mb-3">Cliente</p>
@@ -91,86 +119,83 @@ const ClientPage = () => {
             </section>
             <p className="font-bold mb-3">Plano</p>
             <section className="border-b-2 border-gray-400 pb-5 mb-5">
-              {
-                user.assignments.length > 0
-                ? <div>
-                    {
-                      user.assignments.map((assignment) => (
-                        <div
-                          key={assignment.id}
-                          className="p-2 mb-3 border border-white-400 rounded-lg bg-gray-200"
-                        >
-                          <PlanLink
-                            assignmentTitle={assignment.plan.title}
-                            expiration={assignment.expiration}
-                          />
-                          <Benefits
-                            data={assignment.assignmentBenefit}
-                            assignmentId={assignment.id}
-                            dependents={assignment.dependents.length}
-                          />
-                          {
-                            assignment.dependents.length > 0 && 
-                            <div>
-                              <p className="text-sm">Dependentes</p>
-                              { assignment.dependents.map(d => (
-                                <div
-                                  key={d.id}
-                                  className="font-bold bg-gray-400 p-2 rounded-md mb-2 flex justify-between"
-                                >
-                                  <Link to={`/dependent/${d.id}`}>
-                                    { `${d.user.firstName} ${d.user.lastName}` }
-                                  </Link>
-                                </div>
-                              )) }
-                            </div>
-                          }
-                        </div>
-                      ))
-                    }
-                    {
-                      <div className="mt-2">
-                        <Link
-                          to={`/plan/add/${user.id}`}
-                          className="bg-green-900 p-2 w-40 text-center rounded-md text-white"
-                        >
-                          Adicionar Plano
-                        </Link>
-                      </div>
-                    }
-                  </div>
-                : <div className="mt-2">
-                    <Link
-                      to={`/plan/add/${user.id}`}
-                      className="bg-green-900 p-2 w-40 text-center rounded-md text-white"
+              {user.assignments && user.assignments.length > 0 ? (
+                <div>
+                  {user.assignments.map((assignment) => (
+                    <div
+                      key={assignment.id}
+                      className="p-2 mb-3 border border-white-400 rounded-lg bg-gray-200"
                     >
-                      Adicionar Plano
-                    </Link>
-                  </div>
-                }
+                      <PlanLink
+                        assignmentTitle={assignment.plan.title}
+                        expiration={assignment.expiration}
+                      />
+                      <Benefits
+                        data={assignment.assignmentBenefit}
+                        assignmentId={assignment.id}
+                        dependents={assignment.dependents.length}
+                      />
+                      {assignment.dependents.length > 0 && (
+                        <div>
+                          <p className="text-sm">Dependentes</p>
+                          {assignment.dependents.map((d) => (
+                            <div
+                              key={d.id}
+                              className="font-bold bg-gray-400 p-2 rounded-md mb-2 flex justify-between"
+                            >
+                              <Link to={`/dependent/${d.id}`}>
+                                {`${d.user.firstName} ${d.user.lastName}`}
+                              </Link>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                  {
+                    <div className="mt-2">
+                      <Link
+                        to={`/plan/add/${user.id}`}
+                        className="bg-green-900 p-2 w-40 text-center rounded-md text-white"
+                      >
+                        Adicionar Plano
+                      </Link>
+                    </div>
+                  }
+                </div>
+              ) : (
+                <div className="mt-2">
+                  <Link
+                    to={`/plan/add/${user.id}`}
+                    className="bg-green-900 p-2 w-40 text-center rounded-md text-white"
+                  >
+                    Adicionar Plano
+                  </Link>
+                </div>
+              )}
             </section>
-            <p className="font-bold mb-3">Cartão</p>
+            <p className="font-bold mb-3">Cartão logoscard</p>
             <section className="flex justify-between">
               <div className="mt-2">
                 <Card clientId={user.id} />
               </div>
             </section>
-            {user.invoices && user.invoices.length > 0 && <InvoicesList invoices={user.invoices} />}
-            <section/>
-            <br/>
-            <br/>
-            <p className="font-bold mb-3">Cartão de crédito</p>
-            <section className="flex justify-between">
-              <div className="mt-2">
-              <ButtonCard id={user.id} />
-              </div>
-            </section>
+            {user.invoices && user.invoices.length > 0 && (
+              <InvoicesList invoices={user.invoices} />
+            )}
+            {!user?.subscriptionId && (
+              <section className="flex justify-between">
+                <div className="mt-2">
+                  <ButtonCard id={user.id} />
+                </div>
+              </section>
+            )}
+            <section />
           </main>
-          </>
-      }
-      
+        </>
+      )}
     </>
-  )
-}
+  );
+};
 
 export default ClientPage;

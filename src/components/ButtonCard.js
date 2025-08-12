@@ -1,81 +1,142 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import axios from "../http";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useUser } from "../contexts/UserContext";
 
 const ButtonCard = ({ id }) => {
+  const [link, setLink] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const { user } = useUser();
+
   const [plans, setPlans] = useState([]);
   const [selectedPlanId, setSelectedPlanId] = useState("");
-  const [link, setLink] = useState("");
 
   useEffect(() => {
     const fetchPlans = async () => {
       try {
-        const response = await axios.get("https://logoscardback-production.up.railway.app/pagbank/plans");
-        const allPlans = Array.isArray(response?.data?.plans) ? response.data.plans : [];
-        const activePlans = allPlans.filter(plan => plan.status === "ACTIVE");
+        const response = await axios.get("/pagbank/pagbank/plans");
+        const allPlans = Array.isArray(response?.data?.plans)
+          ? response.data.plans
+          : [];
+        const activePlans = allPlans.filter((plan) => plan.status === "ACTIVE");
         setPlans(activePlans);
       } catch (error) {
         console.error("Erro ao buscar planos:", error);
       }
     };
+    if (!user?.subscriptionId) {
+      fetchPlans();
+    }
+  }, [user]);
 
-    fetchPlans();
-  }, []);
+  const generateLink = async () => {
+    setIsLoading(true);
+    try {
+      // Generate secure token on backend instead of simple URL
+      const response = await axios.post(
+        "/card/generate-token",
+        {
+          userId: id,
+        },
+        {
+          headers: {
+            authorization: sessionStorage.getItem("auth"),
+          },
+        }
+      );
+
+      const { token } = response.data;
+      const newLink = `${window.location.origin}/card/create/${token}-${selectedPlanId}`;
+      setLink(newLink);
+
+      // Find the complete plan object and store it in localStorage for the NewCardForm
+      const selectedPlan = plans.find((plan) => plan.id === selectedPlanId);
+      if (selectedPlan) {
+        localStorage.setItem("selectedPlan", JSON.stringify(selectedPlan));
+      }
+
+      toast.success("Link gerado com sucesso!");
+    } catch (error) {
+      console.error("Erro ao gerar link:", error);
+      toast.error("Erro ao gerar link. Tente novamente.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(link);
+    toast.success("Link copiado para a área de transferência!");
+  };
 
   const handleSelectChange = (event) => {
     setSelectedPlanId(event.target.value);
   };
 
-  const generateLink = () => {
-    if (!selectedPlanId) {
-      alert("Selecione um plano válido");
-      return;
-    }
-
-    const newLink = `${window.location.origin}/card/create/${id}/${selectedPlanId}`;
-    setLink(newLink);
-  };
-
   return (
-    <div className="flex flex-col items-start w-full max-w-lg">
-      <label htmlFor="planSelect" className="mb-2">Selecione um plano:</label>
-      <select
-        id="planSelect"
-        value={selectedPlanId}
-        onChange={handleSelectChange}
-        className="w-full max-w-md p-2 border border-black rounded-md mb-3"
-      >
-        <option value="">-- Selecione --</option>
-        {plans.map(plan => (
-          <option key={plan.id} value={plan.id}>
-            {plan.name} - R$ {(plan.amount.value / 100).toFixed(2)}
-          </option>
-        ))}
-      </select>
-
-      <br />
-
-      <button
-        onClick={generateLink}
-        className={`p-2 w-24 bg-green-900 text-white rounded-md ${!selectedPlanId ? 'opacity-50 cursor-not-allowed' : ''}`}
-        disabled={!selectedPlanId}
-      >
-        Gerar
-      </button>
-
-      {link && (
-        <div className="mt-3 w-full">
-          <label htmlFor="generatedLink" className="block">Formulário:</label>
-          <a
-            href={link}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="block w-full p-3 text-center mt-2 border border-black rounded-md text-blue-600 underline bg-white"
+    <>
+      {!user?.subscriptionId && (
+        <>
+          <label htmlFor="planSelect" className="mb-2">
+            Selecione um plano:
+          </label>
+          <select
+            id="planSelect"
+            value={selectedPlanId}
+            onChange={handleSelectChange}
+            className="w-full max-w-md p-2 border border-black rounded-md mb-3"
           >
-            {link}
-          </a>
-        </div>
+            <option value="">-- Selecione --</option>
+            {plans.map((plan) => (
+              <option key={plan.id} value={plan.id}>
+                {plan.name} - R$ {(plan.amount.value / 100).toFixed(2)}
+              </option>
+            ))}
+          </select>
+        </>
       )}
-    </div>
+      <br />
+      <div className="flex flex-col items-start w-80">
+        <button
+          onClick={generateLink}
+          disabled={isLoading}
+          className={`p-2 w-24 rounded-md ${
+            isLoading
+              ? "bg-gray-500 cursor-not-allowed"
+              : "bg-green-900 hover:bg-green-800"
+          } text-white`}
+        >
+          {isLoading ? "Gerando..." : "Gerar"}
+        </button>
+        {link && (
+          <div className="mt-3 w-full">
+            <label htmlFor="generatedLink" className="block">
+              Formulário (válido por 24h):
+            </label>
+            <div className="flex mt-2">
+              <input
+                id="generatedLink"
+                type="text"
+                readOnly
+                value={link}
+                className="w-full p-3 text-center border rounded-l-md"
+              />
+              <button
+                onClick={copyToClipboard}
+                className="px-3 bg-blue-500 hover:bg-blue-600 text-white rounded-r-md"
+              >
+                Copiar
+              </button>
+            </div>
+            <p className="text-xs text-gray-600 mt-1">
+              Este link expira em 24 horas e pode ser usado apenas uma vez.
+            </p>
+          </div>
+        )}
+      </div>
+      <ToastContainer />
+    </>
   );
 };
 
