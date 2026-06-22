@@ -9,9 +9,34 @@ O LogosCard é um sistema de cartão de benefícios para clientes a partir de um
 
 ### Execução
 
-Crie um arquivo .env utilizando .envexample com o exemplo.
-Você pode inicializar a aplicação utilizando docker-compose.
+Crie um arquivo `.env` a partir do `.envexample` e ajuste o IP da máquina na rede local. O `REACT_APP_API_BASE_URL` deve apontar para o backend acessível pelos outros computadores da intranet (não use `localhost`).
 
-`docker-compose up -d`
+```bash
+cp .envexample .env
+```
 
-O acesso é pelo endereço: http://localhost:3000
+#### Desenvolvimento (hot reload)
+
+```bash
+docker compose --profile dev up --build
+```
+
+#### Produção (build estático + nginx)
+
+```bash
+docker compose --profile prod up --build -d
+```
+
+Se alterar variáveis `REACT_APP_*` em produção, é necessário rebuild:
+
+```bash
+docker compose --profile prod up --build -d
+```
+
+### Acesso na intranet
+
+A aplicação fica disponível em `http://<IP_DA_MAQUINA>:3000` para outros computadores na rede.
+
+Garanta que as portas **3000** (front-end) e **3001** (back-end) estejam liberadas no firewall do host.
+
+Em modo dev, o hot reload funciona melhor no próprio host; outros PCs na rede carregam a aplicação normalmente, mas o live reload remoto pode ser instável.

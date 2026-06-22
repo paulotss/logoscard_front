@@ -1,13 +1,32 @@
 services:
-  frontend:
-    build: .
+  frontend-dev:
+    profiles: [dev]
+    build:
+      context: .
+      target: development
     working_dir: /app
     ports:
-      - "3000:3000"
-    restart: always
+      - "0.0.0.0:3000:3000"
+    env_file: .env
+    environment:
+      HOST: 0.0.0.0
+      CHOKIDAR_USEPOLLING: "true"
+      WATCHPACK_POLLING: "true"
     volumes:
       - .:/app:Z
       - app_node_modules:/app/node_modules
-    
+
+  frontend-prod:
+    profiles: [prod]
+    build:
+      context: .
+      target: production
+      args:
+        REACT_APP_API_BASE_URL: ${REACT_APP_API_BASE_URL}
+        REACT_APP_AWS_BUCKET: ${REACT_APP_AWS_BUCKET}
+    ports:
+      - "0.0.0.0:3000:80"
+    restart: unless-stopped
+
 volumes:
   app_node_modules:
